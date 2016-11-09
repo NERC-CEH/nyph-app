@@ -10,6 +10,11 @@ import informalGroups from 'informal_groups.data';
 import './styles.scss';
 
 const MIN_SEARCH_LENGTH = 2;
+const UNKNOWN_SPECIES = {
+  id: 12,
+  scientific_name: 'Unknown Flowering Plant',
+  found_in_name: 'scientific_name',
+};
 
 const SpeciesView = Marionette.View.extend({
   tagName: 'li',
@@ -93,6 +98,14 @@ export default Marionette.View.extend({
     'keydown #taxon': '_keydown',
     'keyup #taxon': '_keyup',
     'click .delete': 'deleteSearch',
+    'click #unknown': 'selectUnknown',
+  },
+
+  selectUnknown(e) {
+    Log('taxon: selected.', 'd');
+    const edit = e.target.tagName === 'BUTTON';
+
+    this.trigger('taxon:selected', UNKNOWN_SPECIES, edit);
   },
 
   regions: {
