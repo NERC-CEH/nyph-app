@@ -67,10 +67,6 @@ const API = {
         model: recordModel,
       });
 
-      headerView.on('save', () => {
-        API.save(recordModel);
-      });
-
       App.regions.getRegion('header').show(headerView);
 
       // FOOTER
@@ -95,43 +91,6 @@ const API = {
 
       App.regions.getRegion('footer').show(footerView);
     });
-  },
-
-  save(recordModel) {
-    const valid = API.saveRecord(recordModel, (saveErr) => {
-      if (saveErr) {
-        App.regions.getRegion('dialog').error(saveErr);
-      }
-    });
-
-    // invalid sample
-    if (!valid) {
-      const invalids = recordModel.validationError;
-      API.showInvalidsMessage(invalids);
-    }
-  },
-
-  saveRecord(recordModel, callback) {
-    Log('Records:Edit:Controller: save clicked');
-
-    const valid = recordModel.setToSend((setError) => {
-      if (setError) {
-        callback(setError);
-        return;
-      }
-
-      if (Device.isOnline() && !userModel.hasLogIn()) {
-        App.trigger('user:login', { replace: true });
-        return;
-      }
-
-      // sync
-      // todo: call callback
-      recordModel.save(null, { remote: true });
-      App.trigger('record:saved');
-    });
-
-    return valid;
   },
 
   showInvalidsMessage(invalids) {

@@ -39,6 +39,9 @@ const API = {
         const recordModel = childView.model;
         API.recordDelete(recordModel);
       });
+
+      mainView.on('records:submit:all', API.sendAllRecords);
+
       App.regions.getRegion('main').show(mainView);
     });
 
@@ -170,6 +173,40 @@ const API = {
         }
         callback();
       });
+    });
+  },
+
+  sendAllRecords() {
+    App.regions.getRegion('dialog').show({
+      title: 'Submit All',
+      body: 'Are you sure you want to set all valid records for submission?',
+      buttons: [
+        {
+          title: 'Cancel',
+          onClick() {
+            App.regions.getRegion('dialog').hide();
+          },
+        },
+        {
+          title: 'OK',
+          class: 'btn-positive',
+          onClick() {
+            Log('Settings:Menu:Controller: sending all records');
+
+            // delete all
+            recordManager.setAllToSend((err) => {
+              if (err) {
+                App.regions.getRegion('dialog').error(err);
+                return;
+              }
+              App.regions.getRegion('dialog').show({
+                title: 'Done!',
+                timeout: 1000,
+              });
+            });
+          },
+        },
+      ],
     });
   },
 };

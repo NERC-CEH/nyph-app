@@ -13,10 +13,6 @@ export default Marionette.View.extend({
     'click a[data-rel="back"]': 'navigateBack',
   },
 
-  triggers: {
-    'click #record-save-btn': 'save',
-  },
-
   modelEvents: {
     'request sync error': 'render',
   },
