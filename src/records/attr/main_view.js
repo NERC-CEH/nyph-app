@@ -5,6 +5,7 @@ import $ from 'jquery';
 import Marionette from 'backbone.marionette';
 import { Device, DateHelp, StringHelp, Log } from 'helpers';
 import JST from 'JST';
+import CONFIG from 'config';
 
 export default Marionette.View.extend({
   initialize(options) {
@@ -46,7 +47,13 @@ export default Marionette.View.extend({
     switch (this.options.attr) {
       case 'date':
         templateData.date = DateHelp.toDateInputValue(this.model.get('date'));
-        templateData.maxDate = DateHelp.toDateInputValue(new Date());
+		
+		if (CONFIG.ENFORCE_DATE_CONSTRAINT) {
+			let today = new Date();
+			templateData.maxDate = DateHelp.toDateInputValue(today <= CONFIG.MAX_RECORDING_DATE ? today : CONFIG.MAX_RECORDING_DATE);
+		} else {
+			templateData.maxDate = DateHelp.toDateInputValue(new Date());
+		}
         break;
       case 'identifiers':
         templateData.identifiers = occ.get('identifiers');
