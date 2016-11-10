@@ -5,6 +5,7 @@ import Marionette from 'backbone.marionette';
 import Morel from 'morel';
 import JST from 'JST';
 import { DateHelp, StringHelp } from 'helpers';
+import CONFIG from 'config';
 
 import './styles.scss';
 
@@ -35,6 +36,9 @@ export default Marionette.View.extend({
       identifiers: appModel.isAttrLocked('identifiers', occ.get('identifiers')),
       comment: appModel.isAttrLocked('comment', occ.get('comment')),
     };
+	
+	// regardless of CONFIG.ENFORCE_DATE_CONSTRAINT flag date range problems in UI
+	const modelDate = new Date(recordModel.get('date'));
 
     return {
       id: recordModel.id || recordModel.cid,
@@ -48,6 +52,9 @@ export default Marionette.View.extend({
       identifiers: occ.get('identifiers') && StringHelp.limit(occ.get('identifiers')),
       comment: occ.get('comment') && StringHelp.limit(occ.get('comment')),
       locks: attrLocks,
+	  dateRangeError: (modelDate < CONFIG.MIN_RECORDING_DATE || 
+		modelDate > CONFIG.MAX_RECORDING_DATE ||
+		modelDate > (new Date()))
     };
   },
 });

@@ -54,11 +54,6 @@ export default Marionette.View.extend({
 		} else {
 			templateData.maxDate = DateHelp.toDateInputValue(new Date());
 		}
-		// regardless of CONFIG.ENFORCE_DATE_CONSTRAINT flag date range problems in UI
-		const modelDate = new Date(this.model.get('date'));
-		templateData.dateRangeError = (modelDate < CONFIG.MIN_RECORDING_DATE || 
-			modelDate > CONFIG.MAX_RECORDING_DATE ||
-			modelDate > today)
         break;
       case 'identifiers':
         templateData.identifiers = occ.get('identifiers');
