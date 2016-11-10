@@ -5,19 +5,53 @@
 #records-header {
   border-bottom: 1px $header-color solid;
 
+  .pull-left {
+    width: 20%;
+    a {
+      width: 100%;
+    }
+  }
+
   .pull-right {
-    width: 45%;
-    max-width: 200px;
+    justify-content: flex-end;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+
+    width: 80%;
+    max-width: 400px;
     background-color: $color-white;
     border-bottom: 1px solid $header-color;
 
     a {
-      width: 48%;
+      width: 33%;
       max-width: none;
 
       &:hover {
         text-shadow: 0px 0px 0px $header-color, 0px 0px 0px $header-color;
       }
+    }
+
+    #submit-all-btn {
+      width: 34%;
+      height: 44px;
+      margin: 0;
+      padding: 0;
+      top: 0;
+
+      border-radius: 0;
     }
 
     .icon:before {
@@ -27,7 +61,7 @@
 }
 
 .img-picker {
-  width: 45%;
+  width: 33%;
   display: inline-block;
   text-align: center;
 

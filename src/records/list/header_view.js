@@ -13,6 +13,10 @@ export default Marionette.View.extend({
     'change input': 'photoUpload',
   },
 
+  triggers: {
+    'click #submit-all-btn': 'records:submit:all',
+  },
+
   photoUpload(e) {
     this.trigger('photo:upload', e);
   },

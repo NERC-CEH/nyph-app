@@ -191,10 +191,6 @@ export default Marionette.CompositeView.extend({
   emptyView: NoRecordsView,
   childView: RecordView,
 
-  triggers: {
-    'click #submit-all-btn': 'records:submit:all',
-  },
-
   // invert the order
   attachHtml(collectionView, childView) {
     collectionView.$el.find(this.childViewContainer).prepend(childView.el);

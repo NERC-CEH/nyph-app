@@ -40,13 +40,12 @@ const API = {
         API.recordDelete(recordModel);
       });
 
-      mainView.on('records:submit:all', API.sendAllRecords);
-
       App.regions.getRegion('main').show(mainView);
     });
 
     // HEADER
     const headerView = new HeaderView({ model: appModel });
+    headerView.on('records:submit:all', API.sendAllRecords);
 
     headerView.on('photo:upload', (e) => {
       const photo = e.target.files[0];
