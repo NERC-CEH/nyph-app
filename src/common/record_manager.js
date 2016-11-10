@@ -77,6 +77,12 @@ class Manager extends Morel {
   }
 
   setAllToSend(callback) {
+    let returnPromiseResolve;
+    let returnPromiseReject;
+    const returnPromise = new Promise((resolve, reject) => {
+      returnPromiseResolve = resolve;
+      returnPromiseReject = reject;
+    });
     const that = this;
     let noneUsed = true;
     let saving = 0;
@@ -98,7 +104,9 @@ class Manager extends Morel {
           saving--;
           if (saving === 0) {
             callback && callback();
-            that.syncAll();
+            that.syncAll().then(() => {
+              returnPromiseResolve();
+            });
           }
         });
 
@@ -111,6 +119,7 @@ class Manager extends Morel {
         callback && callback();
       }
     });
+    return returnPromise;
   }
 
   clearAll(local, callback) {
