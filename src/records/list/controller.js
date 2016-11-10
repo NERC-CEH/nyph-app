@@ -198,9 +198,43 @@ const API = {
                 App.regions.getRegion('dialog').error(err);
                 return;
               }
-              App.regions.getRegion('dialog').show({
-                title: 'Done!',
-                timeout: 1000,
+              App.regions.getRegion('dialog').hide();
+            }).then(() => {
+              let incomplete = false;
+              recordManager.getAll((err, records) => {
+                if (err) {
+                  Log(err, 'e');
+                  return;
+                }
+                records.each((record) => {
+                  const status = record.getSyncStatus();
+                  if (record.metadata.saved && status !== Morel.SYNCED) {
+                    incomplete = true;
+                  }
+                });
+
+                // give feedback
+                if (incomplete) {
+                  App.regions.getRegion('dialog').show({
+                    title: 'Sorry',
+                    body: 'Some records could not be submitted at the moment. ' +
+                    'Try again later',
+                  });
+                } else {
+                  App.regions.getRegion('dialog').show({
+                    title: 'Thank you!',
+                    body: 'Check out progress <a href="https://nyph.bsbi.org" target="_blank">here</a>',
+                    buttons: [
+                      {
+                        title: 'OK',
+                        class: 'btn-positive',
+                        onClick() {
+                          App.regions.getRegion('dialog').hide();
+                        },
+                      },
+                    ]
+                  });
+                }
               });
             });
           },
