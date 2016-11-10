@@ -67,7 +67,7 @@ let Sample = Morel.Sample.extend({
       this.occurrences.each((occurrence) => {
         // kludge to substitute default 'Flowering Plant' if taxon is missing
 		    if (('attributes' in occurrence) && !occurrence.attributes.taxon) {
-			    occurrence.attributes.taxon = Object.assign({}, UNKNOWN_SPECIES);
+			    occurrence.attributes.taxon = Object.assign({}, CONFIG.UNKNOWN_SPECIES);
         }
         
         const errors = occurrence.validate();

@@ -4,17 +4,13 @@
 import _ from 'lodash';
 import Backbone from 'backbone';
 import Marionette from 'backbone.marionette';
+import CONFIG from 'config';
 import JST from 'JST';
 import { Log, Device } from 'helpers';
 import informalGroups from 'informal_groups.data';
 import './styles.scss';
 
 const MIN_SEARCH_LENGTH = 2;
-const UNKNOWN_SPECIES = {
-  id: 125442, //Plantae kingdom
-  scientific_name: 'Unknown Flowering Plant',
-  found_in_name: 'scientific_name',
-};
 
 const SpeciesView = Marionette.View.extend({
   tagName: 'li',
@@ -105,7 +101,7 @@ export default Marionette.View.extend({
     Log('taxon: selected.', 'd');
     const edit = e.target.tagName === 'BUTTON';
 
-    this.trigger('taxon:selected', UNKNOWN_SPECIES, edit);
+    this.trigger('taxon:selected', CONFIG.UNKNOWN_SPECIES, edit);
   },
 
   regions: {

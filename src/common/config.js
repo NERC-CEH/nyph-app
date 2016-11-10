@@ -11,6 +11,12 @@ export default {
   build: APP_BUILD,
   name: APP_NAME,
 
+  UNKNOWN_SPECIES: {
+    id: 125442, //Plantae kingdom
+    scientific_name: 'Unknown Flowering Plant',
+    found_in_name: 'scientific_name',
+  },
+
   gps_accuracy_limit: 100,
 
   // logging
