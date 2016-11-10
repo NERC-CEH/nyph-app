@@ -7,6 +7,7 @@ import Marionette from 'backbone.marionette';
 import FastClick from 'fastclick';
 import { Log, Update, Analytics, Device } from 'helpers';
 import CommonController from './common/controller';
+import appModel from './common/models/app_model';
 import DialogRegion from './common/views/dialog_region';
 import HideableRegion from './common/views/hideable_region';
 import './common/router_extension';
@@ -56,7 +57,11 @@ App.on('start', () => {
       Backbone.history.start();
 
       if (App.getCurrentRoute() === '') {
-        App.trigger('records:list');
+        if (appModel.get('showIntro')) {
+          App.trigger('info:intro');
+        } else {
+          App.trigger('records:list');
+        }
       }
 
       App.on('404:show', () => {
