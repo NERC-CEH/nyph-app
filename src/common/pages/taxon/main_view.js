@@ -11,7 +11,7 @@ import './styles.scss';
 
 const MIN_SEARCH_LENGTH = 2;
 const UNKNOWN_SPECIES = {
-  id: 12,
+  id: 125442, //Plantae kingdom
   scientific_name: 'Unknown Flowering Plant',
   found_in_name: 'scientific_name',
 };
