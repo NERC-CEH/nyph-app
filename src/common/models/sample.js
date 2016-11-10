@@ -70,7 +70,7 @@ let Sample = Morel.Sample.extend({
 			occurrence.attributes.taxon = Object.assign({}, CONFIG.UNKNOWN_SPECIES);
         }
 		
-        const errors = occurrence.validate();
+        let errors = occurrence.validate();
 		
 		// @todo move to occurrence module
 		// don't allow 'unknown species' if no photo
