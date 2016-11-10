@@ -1,5 +1,5 @@
 <ul class="table-view">
-  <li class="table-view-cell">
+  <li>
     <p><strong>Welcome to the BSBI's 2017 New Year Plant Hunt</strong></p>
     <p>
       For the sixth year running you are cordially invited to join in our
@@ -8,7 +8,7 @@
       period.
     </p>
   </li>
-  <li class="table-view-cell">
+  <li>
     <p>
       The rules are simple to try to keep data comparable between different
       areas and over different years:
