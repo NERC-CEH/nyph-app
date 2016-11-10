@@ -7,6 +7,7 @@ import { Log } from 'helpers';
 import CONFIG from 'config';
 import App from 'app';
 import CommonController from '../common/controller';
+import IntroController from './intro/controller';
 import InfoMenuController from './menu/controller';
 import './brc_approved/BRC_approved_logo.png';
 import './brc_approved/styles.scss';
@@ -18,6 +19,7 @@ App.info = {};
 const Router = Marionette.AppRouter.extend({
   routes: {
     'info(/)': InfoMenuController.show,
+    'info/intro(/)':  IntroController.show,
     'info/about(/)': () => {
       CommonController.show({
         title: 'About',
@@ -51,6 +53,11 @@ const Router = Marionette.AppRouter.extend({
 App.on('info', () => {
   App.navigate('info');
   InfoMenuController.show();
+});
+
+App.on('info:intro', () => {
+  App.navigate('info/intro');
+  IntroController.show();
 });
 
 App.on('info:about', () => {

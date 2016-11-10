@@ -11,6 +11,7 @@ let AppModel = Backbone.Model.extend({
   id: 'app',
 
   defaults: {
+    showIntro: true,
     exceptions: [],
 
     locations: [],
