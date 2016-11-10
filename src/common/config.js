@@ -43,7 +43,7 @@ export default {
 
   // mapping
   map: {
-    os_api_key: '28994B5673A86451E0530C6CA40A91A5',
+    os_api_key: '3AE71B01F6EE4829E0530C6CA40A35B3',
     mapbox_api_key: 'pk.eyJ1IjoiY2VoYXBwcyIsImEiOiJjaXBxdTZyOWYwMDZoaWVuYjI3Y3Z0a2x5In0.YXrZA_DgWCdjyE0vnTCrmw',
     mapbox_osm_id: 'cehapps.0fenl1fe',
     mapbox_satellite_id: 'cehapps.0femh3mh',
