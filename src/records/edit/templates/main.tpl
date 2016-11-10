@@ -32,9 +32,9 @@
   </li>
   <li class="table-view-cell">
     <a href="#records/<%- obj.id %>/edit/date" id="date-button"
-       class="<%- obj.locks['date'] ? 'lock' : 'navigate-right' %><%- obj.dateRangeError ? ' date-error' : '' %>">
+       class="<%- obj.locks['date'] ? 'lock' : 'navigate-right' %>">
       <span class="media-object pull-left icon icon-calendar"></span>
-      <span class="media-object pull-right descript"><%- obj.date %></span>
+      <span class="media-object pull-right descript<%- obj.dateRangeError ? ' date-error' : '' %>"><%- obj.date %></span>
       Date
     </a>
   </li>
