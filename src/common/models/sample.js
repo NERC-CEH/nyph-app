@@ -50,9 +50,19 @@ let Sample = Morel.Sample.extend({
       sample.date = 'missing';
     } else {
       const date = new Date(attrs.date);
-      if (date === 'Invalid Date' || date > new Date()) {
-        sample.date = (new Date(date) > new Date()) ? 'future date' : 'invalid';
-      }
+	  
+	  if (CONFIG.ENFORCE_DATE_CONSTRAINT) {
+		// use NYPH constrained dates
+		
+		if (date === 'Invalid Date' || date < CONFIG.MIN_RECORDING_DATE || date > CONFIG.MAX_RECORDING_DATE) {
+			sample.date = (date === 'Invalid Date') ? 'invalid' : 'date is not within the permitted range';
+		}
+	  } else {
+		// enforce only presence and non-future date
+	     if (date === 'Invalid Date' || date > new Date()) {
+	       sample.date = (date === 'Invalid Date') ? 'invalid' : 'future date';
+	     }
+	   }
     }
 
     // location type

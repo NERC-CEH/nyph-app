@@ -14,8 +14,14 @@ export default {
   UNKNOWN_SPECIES: {
     id: 125442, //Plantae kingdom
     scientific_name: 'Unknown Flowering Plant',
-    found_in_name: 'scientific_name',
+    found_in_name: 'scientific_name'
   },
+  /**
+   * if set then limit dates to the range specified by MIN_RECORDING_DATE, MAX_RECORDING_DATE
+   */
+  ENFORCE_DATE_CONSTRAINT: false,
+  MIN_RECORDING_DATE: new Date(2017,0,1),
+  MAX_RECORDING_DATE: new Date(2017,0,4,23,59),
 
   gps_accuracy_limit: 100,
 
