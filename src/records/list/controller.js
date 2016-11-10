@@ -31,8 +31,8 @@ const API = {
         appModel,
       });
 
-      mainView.on('childview:record:edit:attr', (childView, attr) => {
-        App.trigger('records:edit:attr', childView.model.id || childView.model.cid, attr);
+      mainView.on('childview:record:edit:attr', (model, attr) => {
+        App.trigger('records:edit:attr', model.id || model.cid, attr);
       });
 
       mainView.on('childview:record:delete', (childView) => {

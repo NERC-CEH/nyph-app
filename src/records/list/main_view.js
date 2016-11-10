@@ -20,10 +20,7 @@ const RecordView = Marionette.View.extend({
 
   events: {
     // need to pass the attribute therefore 'triggers' method does not suit
-    'click .js-attr': (e) => {
-      e.preventDefault();
-      this.trigger('record:edit:attr', $(e.target).data('attr'));
-    },
+    'click .js-attr': 'clickShortcut',
     'click img': 'photoView',
   },
 
@@ -33,7 +30,7 @@ const RecordView = Marionette.View.extend({
   },
 
   initialize() {
-    this.template = JST['records/list/record'];
+    this.template = JST[`records/list/record${(Device.isMobile() ? '_mobile' : '')}`];
   },
 
   photoView(e) {
@@ -174,6 +171,11 @@ const RecordView = Marionette.View.extend({
       this.$record.css('transform', `translateX(${this.position}px)`);
       this.docked = false;
     }
+  },
+
+  clickShortcut(e) {
+    e.preventDefault();
+    this.trigger('record:edit:attr', this.model, $(e.target).data('attr'));
   },
 });
 
