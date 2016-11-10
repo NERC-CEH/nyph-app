@@ -42,13 +42,11 @@
     </a>
     <p id="c2" class="collapse"
        aria-labelledby="headingOne" aria-expanded="false">
-      The application holds all of the UK’s species (70000+) and all the associated taxonomy ranks.
-      For quicker searching of the taxa you can use different shortcuts.
-      For example, to find <i>Puffinus puffinus</i> you can type in the search bar:
+      The application holds all of the UK’s plant species. You can search using scientific or English names. 
+      Names can be abbreviated e.g. T repens or Tri rep for <i>Tripholium repens</i>. Keep typing until the name
+      you want appears on the list.
       <br>
-      <br><i>puf puf</i>
-      <br><i>p puf</i>
-      <br><i>p .nus</i>
+      If you don't know the name of the plant then leave the search box blank and click on 'Unknown flowering plant'
     </p>
   </li>
   <li class="table-view-cell">
@@ -167,7 +165,7 @@
     </p>
   </li>
   <li>
-    For more help please visit the iRecord <a href="http://www.brc.ac.uk/irecord/forum/26" target="_blank">forum</a>.
+    For more help please visit the <a href="https://nyph.bsbi.org" target="_blank">New Year Plant Hunt</a> website.
     <p>Or drop us an <a href='mailto:appshelp%40ceh.ac.uk?subject=iRecord%20App%20Support%20%26%20Feedback&body=%0A%0A%0AVersion%3A%20<%- obj.version %>%0ABrowser%3A <%- window.navigator.appVersion %>%0A'>email</a>.
     </p>
   </li>
