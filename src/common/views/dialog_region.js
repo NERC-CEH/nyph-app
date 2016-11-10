@@ -200,7 +200,7 @@ export default Marionette.Region.extend({
     let options = {
       class: 'error',
       title: 'Yikes!',
-      body: err.message || err,
+      body: (err.message || err) + "There's been a problem, your records may not have been sent yet. Please check that you have a network connection and try again. If this problem persists then please let us know.",
       buttons: [{
         id: 'ok',
         title: 'OK',
