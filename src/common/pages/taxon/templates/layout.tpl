@@ -8,15 +8,16 @@
 <div id="suggestions">
   <div class="info-message">
     <p>
-      Please enter the plant name, you can use scientific or English names.
-      Select the option below if you wish us to identify it from a photo.
+      Please enter a scientific or English plant name.
+      <br/>
+      If you do not know the name then select the option below and be sure to include photos.
     </p>
   </div>
 
 
   <ul class="table-view">
     <li id="unknown" class="table-view-cell">
-      <h3 class="taxon">Unknown Flowering Plant</h3>
+      <h3 class="taxon">Unknown plant</h3>
       <% if (!obj.removeEditBtn) { %>
       <button class="btn icon icon-edit icon-small"></button>
       <% } %>
