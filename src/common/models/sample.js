@@ -65,19 +65,28 @@ let Sample = Morel.Sample.extend({
       sample.occurrences = 'no species selected';
     } else {
       this.occurrences.each((occurrence) => {
-        // kludge to substitute default 'Flowering Plant' if taxon is missing
-		if (('attributes' in occurrence) && !occurrence.attributes.taxon) {
-			occurrence.attributes.taxon = Object.assign({}, CONFIG.UNKNOWN_SPECIES);
-        }
+        // kludge to substitute default 'Flowering Plant' if taxon is missing and have photo
+		// @todo move to occurrence module
+		if (!occurrence.attributes.taxon || occurrence.attributes.taxon.id === CONFIG.UNKNOWN_SPECIES.id) {
+			// either no taxon or general 'flowering plant'
+			
+			if (occurrence.images.length === 0) {
+				// no image so force species id error
+				occurrence.attributes.taxon = null;
+			} else {
+				// have photo so substitute in 'flowering plant'
+				occurrence.attributes.taxon = Object.assign({}, CONFIG.UNKNOWN_SPECIES);
+			}
+		}
 		
         let errors = occurrence.validate();
 		
 		// @todo move to occurrence module
 		// don't allow 'unknown species' if no photo
-		if (occurrence.images.length === 0 && occurrence.attributes.taxon.id === CONFIG.UNKNOWN_SPECIES.id) {
-			errors = errors || {};
-			errors.taxon = 'Taxon name or photo needed';
-		}
+		//if (occurrence.images.length === 0 && occurrence.attributes.taxon.id === CONFIG.UNKNOWN_SPECIES.id) {
+		//	errors = errors || {};
+		//	errors.taxon = 'Taxon name or photo needed';
+		//}
 		
         if (errors) {
           const occurrenceID = occurrence.id || occurrence.cid;
