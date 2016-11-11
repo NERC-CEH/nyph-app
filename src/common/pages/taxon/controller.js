@@ -86,8 +86,20 @@ const API = {
           const updatedSampleID = sample.id || sample.cid;
           App.trigger('records:edit', updatedSampleID, { replace: true });
         } else {
-          // return to previous page
-          window.history.back();
+		  // interfere with app flow
+		  // if location not set then navigate to that screen
+		  // otherwise go back to list
+		  
+		  if (sample.attributes.location && sample.attribute.location.name) {
+			// already have a satisfactory locked location
+		  
+            // return to previous page
+            window.history.back();
+		  } else {
+			// navigate to edit the location of the new record
+			
+			App.trigger('records:edit:location', sample.cid, { replace: true });
+		  }
         }
       });
     }, that);
