@@ -101,7 +101,7 @@ const RecordView = Marionette.View.extend({
     const recordModel = this.model;
     const occ = recordModel.occurrences.at(0);
     const date = DateHelp.print(recordModel.get('date'));
-    const specie = occ.get('taxon') || {};
+    const specie = occ.get('taxon');
     const images = occ.images;
     let img = images.length && images.at(0).get('thumbnail');
 
@@ -110,7 +110,7 @@ const RecordView = Marionette.View.extend({
       img = images.length && images.at(0).getURL();
     }
 
-    const taxon = specie[specie.found_in_name];
+    const taxon = specie ? specie[specie.found_in_name] : CONFIG.UNKNOWN_SPECIES.scientific_name;
 
     const syncStatus = this.model.getSyncStatus();
 
@@ -134,7 +134,8 @@ const RecordView = Marionette.View.extend({
       img: img ? `<img src="${img}"/>` : '',
 	  dateRangeError: (modelDate < CONFIG.MIN_RECORDING_DATE || 
 		modelDate > CONFIG.MAX_RECORDING_DATE ||
-		modelDate > (new Date()))
+		modelDate > (new Date())),
+	  taxonMissingOrNotValid: (!specie || specie.id === CONFIG.UNKNOWN_SPECIES.id) && images.length === 0
     };
   },
 
