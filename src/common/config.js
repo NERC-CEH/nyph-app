@@ -17,6 +17,10 @@ export default {
     found_in_name: 'scientific_name'
   },
   /**
+   * if set then the most recently submitted location is auto-locked
+   */
+  AUTO_LOCK_LOCATION_NAME: true,
+  /**
    * if set then limit dates to the range specified by MIN_RECORDING_DATE, MAX_RECORDING_DATE
    */
   ENFORCE_DATE_CONSTRAINT: false,
