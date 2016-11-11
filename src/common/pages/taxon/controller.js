@@ -90,7 +90,7 @@ const API = {
 		  // if location not set then navigate to that screen
 		  // otherwise go back to list
 		  
-		  if (sample.attributes.location && sample.attribute.location.name) {
+		  if (sample.attributes.location && sample.attributes.location.name) {
 			// already have a satisfactory locked location
 		  
             // return to previous page
