@@ -18,14 +18,15 @@
     </div>
 
     <div class="media-body">
-      <% if (obj.taxon) { %>
+      <% if (!obj.taxonMissingOrNotValid) { %>
       <div class="species"> <%= obj.taxon %></div>
       <% } else { %>
-      <div class="species error">Species missing</div>
+      <div class="species"> <%= obj.taxon %></div>
+      <div class="taxonphotomessage error">(photo required)</div>
       <% } %>
 
       <% if (obj.date) { %>
-      <div class="date<%- obj.dateRangeError ? ' error' : '' %>"><%= obj.date %></div>
+      <div class="date<%- obj.dateRangeError ? ' warn' : '' %>"><%= obj.date %></div>
       <% } else { %>
       <div class="date error">Date</div>
       <% } %>
