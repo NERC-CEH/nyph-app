@@ -25,7 +25,7 @@
       <% } %>
 
       <% if (obj.date) { %>
-      <div class="date"><%= obj.date %></div>
+      <div class="date<%- obj.dateRangeError ? ' error' : '' %>"><%= obj.date %></div>
       <% } else { %>
       <div class="date error">Date</div>
       <% } %>
