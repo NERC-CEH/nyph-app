@@ -9,6 +9,7 @@ import { Log, StringHelp, Device, DateHelp } from 'helpers';
 import JST from 'JST';
 import Gallery from '../../common/gallery';
 import './styles.scss';
+import CONFIG from 'config';
 
 const RecordView = Marionette.View.extend({
   tagName: 'li',
@@ -116,6 +117,9 @@ const RecordView = Marionette.View.extend({
     const locationPrint = recordModel.printLocation();
     const location = recordModel.get('location') || {};
 
+    // regardless of CONFIG.ENFORCE_DATE_CONSTRAINT flag date range problems in UI
+	const modelDate = new Date(recordModel.get('date'));
+
     return {
       id: recordModel.id || recordModel.cid,
       saved: recordModel.metadata.saved,
@@ -128,6 +132,9 @@ const RecordView = Marionette.View.extend({
       taxon,
       comment: occ.get('comment'),
       img: img ? `<img src="${img}"/>` : '',
+	  dateRangeError: (modelDate < CONFIG.MIN_RECORDING_DATE || 
+		modelDate > CONFIG.MAX_RECORDING_DATE ||
+		modelDate > (new Date()))
     };
   },
 
