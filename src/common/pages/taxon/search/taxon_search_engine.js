@@ -7,6 +7,7 @@ import { Log } from 'helpers';
 import searchCommonNames from './commonNamesSearch';
 import searchSciNames from './scientificNamesSearch';
 import helpers from './searchHelpers';
+import CONFIG from 'config';
 
 let species;
 let loading = false;
@@ -60,7 +61,13 @@ const API = {
 
     let results = [];
 
-    if (!searchPhrase) return results;
+	if (!searchPhrase) {
+      if (CONFIG.ALLOW_UNKNOWN_SPECIES) {
+        results.push(Object.assign({}, CONFIG.UNKNOWN_SPECIES));
+	    callback(results);
+	  }
+	  return;
+	}
 
     // normalize the search phrase
     const normSearchPhrase = searchPhrase.toLowerCase();

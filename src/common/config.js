@@ -13,9 +13,10 @@ export default {
 
   UNKNOWN_SPECIES: {
     id: 125442, //Plantae kingdom
-    scientific_name: 'Unknown Flowering Plant',
-    found_in_name: 'scientific_name'
+    scientific_name: 'Unknown flowering plant',
+    found_in_name: 'scientific_name',
   },
+  ALLOW_UNKNOWN_SPECIES: true,
   /**
    * if set then the most recently submitted location is auto-locked
    */
