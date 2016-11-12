@@ -63,11 +63,12 @@ const API = {
 
     //if (!searchPhrase) return results;
 	if (!searchPhrase) {
-      results.push({
-	    warehouse_id: CONFIG.UNKNOWN_SPECIES.id, // is it correct to map 'warehouse_id' to 'id'?
-	    scientific_name: CONFIG.UNKNOWN_SPECIES.scientific_name,
-        found_in_name: CONFIG.UNKNOWN_SPECIES.found_in_name,
-	  });
+      //results.push({
+	  //  species_id: CONFIG.UNKNOWN_SPECIES.id, // is it correct to map 'warehouse_id' or 'species_id' to 'id'?
+	  //  scientific_name: CONFIG.UNKNOWN_SPECIES.scientific_name,
+      //  found_in_name: CONFIG.UNKNOWN_SPECIES.found_in_name,
+	  //});
+	  results.push(Object.assign({}, CONFIG.UNKNOWN_SPECIES));
 		
 	  callback(results);
 	  return;
