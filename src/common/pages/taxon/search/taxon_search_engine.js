@@ -62,7 +62,8 @@ const API = {
 
     //if (!searchPhrase) return results;
 	if (!searchPhrase) {
-		callback(results);
+		callback([]);
+		return [];
 	}
 
     // normalize the search phrase
