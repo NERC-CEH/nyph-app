@@ -15,7 +15,7 @@ const helpers = {
   },
 
   parseGrid(gridrefString) {
-	const easterlySquares = {
+	const westerlySquares = {
 		SV : true,
 		SQ : true,
 		SL : true,
@@ -39,7 +39,7 @@ const helpers = {
 	  let eastingLength = incorrectGridref.easting.toString().length;
 
       // length calculation will break for squares with Eastings < 100km
-	  if (easterlySquares.hasOwnProperty(gridrefString.substr(0, 2).toUpperCase())) {
+	  if (westerlySquares.hasOwnProperty(gridrefString.substr(0, 2).toUpperCase())) {
 		  eastingLength += 1;
 	  }
 
