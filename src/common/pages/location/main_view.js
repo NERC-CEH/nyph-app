@@ -27,7 +27,7 @@ const GRID_STEP = 100000; // meters
 
 import './styles.scss';
 
-export default Marionette.View.extend({
+const LocationView = Marionette.View.extend({
   template: JST['common/location/location'],
 
   //initialize() {
@@ -329,3 +329,5 @@ export default Marionette.View.extend({
     };
   },
 });
+
+export default LocationView.extend(mapMarker);
