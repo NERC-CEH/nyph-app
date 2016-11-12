@@ -7,6 +7,7 @@ import { Log } from 'helpers';
 import searchCommonNames from './commonNamesSearch';
 import searchSciNames from './scientificNamesSearch';
 import helpers from './searchHelpers';
+import CONFIG from 'config';
 
 let species;
 let loading = false;
@@ -62,8 +63,14 @@ const API = {
 
     //if (!searchPhrase) return results;
 	if (!searchPhrase) {
-		callback([]);
-		return [];
+      results.push({
+	    warehouse_id: CONFIG.UNKNOWN_SPECIES.id, // is it correct to map 'warehouse_id' to 'id'?
+	    scientific_name: CONFIG.UNKNOWN_SPECIES.scientific_name,
+        found_in_name: CONFIG.UNKNOWN_SPECIES.found_in_name,
+	  });
+		
+	  callback(results);
+	  return;
 	}
 
     // normalize the search phrase
