@@ -44,7 +44,7 @@ const helpers = {
 	  }
 
       switch (eastingLength) {
-        case 1: e += '50000'; n += '50000'; 
+        case 1: e += '50000'; n += '50000'; break;
         case 2: e += '5000'; n += '5000'; break;
         case 3: e += '500'; n += '500'; break;
         case 4: e += '50'; n += '50'; break;
