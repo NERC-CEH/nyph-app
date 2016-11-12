@@ -10,13 +10,13 @@ import App from 'app';
 
 import recordManager from '../../record_manager';
 import appModel from '../../models/app_model';
-import TabsLayout from '../../views/tabs_layout';
+//import TabsLayout from '../../views/tabs_layout';
 import HeaderView from '../../views/header_view';
 import LockView from '../../views/attr_lock_view';
-
-import GpsView from './gps_view';
-import MapView from './map_view';
-import GridRefView from './grid_ref_view';
+import MainView from './main_view';
+//import GpsView from './gps_view';
+//import MapView from './map_view';
+//import GridRefView from './grid_ref_view';
 import CONFIG from 'config';
 
 import './styles.scss';
@@ -39,33 +39,15 @@ const API = {
 
       // MAIN
       const recordLocation = recordModel.get('location') || {};
-      const active = {};
-      if (!recordLocation.source) {
-        active.gps = true;
-      } else {
-        active[recordLocation.source] = true;
-      }
-      const mainView = new TabsLayout({
-        tabs: [
-          {
-            active: active.gps,
-            id: 'gps',
-            title: '<span class="icon icon-location"></span>',
-            ContentView: GpsView,
-          },
-          {
-            active: active.map,
-            id: 'map',
-            title: '<span class="icon icon-map"></span>',
-            ContentView: MapView,
-          },
-          {
-            active: active.gridref,
-            id: 'grid-ref',
-            title: 'GR',
-            ContentView: GridRefView,
-          },
-        ],
+	  
+      //const active = {};
+      //if (!recordLocation.source) {
+      //  active.gps = true;
+      //} else {
+      //  active[recordLocation.source] = true;
+      //}
+	  
+      const mainView = new MainView({
         model: new Backbone.Model({ recordModel, appModel }),
         vent: App,
       });
