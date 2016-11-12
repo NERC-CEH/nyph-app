@@ -145,8 +145,8 @@ const API = {
           },
         });
       }
-      mainView.on('childview:location:select:map', onLocationSelect);
-      mainView.on('childview:location:select:gridref', (data) => {
+      mainView.on('location:select:map', onLocationSelect);
+      mainView.on('location:select:gridref', (data) => {
         /**
          * Validates the new location
          * @param attrs
