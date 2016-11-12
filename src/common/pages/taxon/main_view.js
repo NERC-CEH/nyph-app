@@ -238,8 +238,8 @@ export default Marionette.View.extend({
             // let controller know
             that.trigger('taxon:searched', text.toLowerCase());
           }, 100);
-        } else if ((text.replace(/\.|\s/g, '').length) === 0) {
-			// no text at all
+        } else if (CONFIG.ALLOW_UNKNOWN_SPECIES && (text.replace(/\.|\s/g, '').length === 0)) {
+			// no search text, but pass through search, so that 'Unknown sp' can be shown
 			
 			// Clear previous timeout
           if (this.timeout !== -1) {
