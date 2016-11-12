@@ -71,7 +71,7 @@ const helpers = {
 	  
 	  if (parts) {
 		  // numeric part of gridref in parts[1]
-		  const halfLength = parts[1].length;
+		  const halfLength = parts[1].length / 2;
 		  
 		  if (halfLength < 5) {
 		    const offset = Math.pow(10, 4 - halfLength) * 5;
