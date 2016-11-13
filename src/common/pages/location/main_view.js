@@ -30,14 +30,14 @@ import './styles.scss';
 const LocationView = Marionette.View.extend({
   template: JST['common/location/location'],
 
-  //initialize() {
-  //  const recordModel = this.model.get('recordModel');
-    //this.listenTo(recordModel, 'request sync error geolocation', this.render);
-  //},
+  triggers: {
+    'click #gps-button': 'gps:click',
+  },
+  
   events: {
     'change #location-name': 'changeName',
     'typeahead:select #location-name': 'changeName',
-	'change #location-gridref': 'changeGridRef',
+	  'change #location-gridref': 'changeGridRef',
   },
 
   changeName(e) {
@@ -55,6 +55,12 @@ const LocationView = Marionette.View.extend({
     this.currentLayerControlSelected = false;
     this.currentLayer = null;
     this.markerAdded = false;
+    
+    const recordModel = this.model.get('recordModel');
+    
+    this.listenTo(recordModel, 'geolocation:start geolocation:stop geolocation:error', this.render);
+    this.listenTo(recordModel, 'geolocation:update', this.geolocationUpdate);
+    this.listenTo(recordModel, 'geolocation:success', this.geolocationSuccess);
   },
 
   onAttach() {
@@ -171,7 +177,7 @@ const LocationView = Marionette.View.extend({
   _getCenter() {
     const currentLocation = this._getCurrentLocation();
     let center = DEFAULT_CENTER;
-    if (currentLocation.latitude && currentLocation.longitude) {
+    if (currentLocation.latitude) {
       center = [currentLocation.latitude, currentLocation.longitude];
     }
     return center;
@@ -321,6 +327,20 @@ const LocationView = Marionette.View.extend({
       }
     }
   },
+  
+  /**
+   * Update the temporary location fix
+   * @param location
+   */
+  geolocationUpdate(location) {
+    this.locationUpdate = location;
+    this.render();
+  },
+
+  geolocationSuccess(location) {
+    this.locationUpdate = location;
+    this.render();
+  },
 
   _getCurrentLocation() {
     return this.model.get('recordModel').get('location') || {};
@@ -328,9 +348,23 @@ const LocationView = Marionette.View.extend({
 
   serializeData() {
     const location = this._getCurrentLocation();
+    let gridref;
+
+    // avoid testing location.longitude as this can validly be zero within the UK
+    if (location.source !== 'gridref' && location.latitude) {
+      gridref = LocHelp.coord2grid(location);
+    } else {
+      gridref = location.gridref;
+    }
 
     return {
       name: location.name,
+      gridref: gridref,
+      locationSource: location.source,
+      accuracy: location.accuracy,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      accuracyLimit: CONFIG.gps_accuracy_limit, // TODO: get from GPS
     };
   },
 });

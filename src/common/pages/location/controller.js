@@ -69,6 +69,9 @@ const API = {
           if (!_.isObject(oldLocation)) oldLocation = {}; // check for locked true
           location = $.extend(oldLocation, location);
         }
+        
+        this.updateMapMarker(location);
+        this.map.setView(this._getCenter(), this._getZoomLevel());
 
         recordModel.set('location', location);
         recordModel.trigger('change:location');
@@ -96,51 +99,51 @@ const API = {
 	  
 	  function onManualGridrefChange(gridRefString) {
 		  /**
-         * Validates grid ref
-         * @param {string} gridRefString
-         * @returns {{}}
-         */
-        function validate(gridRefString) {
-          const errors = {};
-          gridRefString = gridRefString.replace(/\s/g, '');
-          if (!LocHelp.grid2coord(gridRefString)) {
-            errors.gridref = 'invalid';
-          }
-          
-          if (!_.isEmpty(errors)) {
-            return errors;
-          }
-
-          return null;
+      * Validates grid ref
+      * @param {string} gridRefString
+      * @returns {{}}
+      */
+      function validate(gridRefString) {
+        const errors = {};
+        gridRefString = gridRefString.replace(/\s/g, '');
+        if (!LocHelp.grid2coord(gridRefString)) {
+          errors.gridref = 'invalid';
         }
 
-        const validationError = validate(gridRefString);
-        if (!validationError) {
-          App.trigger('gridref:form:data:invalid', {}); // update form
-          const latLon = LocHelp.grid2coord(gridRefString);
-		  
-		  const location = recordModel.get('location') || {};
-          location.name = StringHelp.escape(name);
-          recordModel.set('location', location);
-          recordModel.trigger('change:location');
-		  
-          location.source = 'gridref';
-          location.gridref = gridRefString;
-          location.latitude = parseFloat(latLon.lat.toFixed(8));
-          location.longitude = parseFloat(latLon.lon.toFixed(8));
-          
-
-          // -2 because of gridref letters, 2 because this is min precision
-		  //@todo Irish GR issue
-		  //@todo tetrad issue
-          const accuracy = (gridRefString.replace(/\s/g, '').length - 2) || 2;
-          location.accuracy = accuracy;
-
-          onLocationSelect(location);
-          //onPageExit();
-        } else {
-          App.trigger('gridref:form:data:invalid', validationError);
+        if (!_.isEmpty(errors)) {
+          return errors;
         }
+
+        return null;
+      }
+
+      const validationError = validate(gridRefString);
+      if (!validationError) {
+        App.trigger('gridref:form:data:invalid', {}); // update form
+        const latLon = LocHelp.grid2coord(gridRefString);
+
+        const location = recordModel.get('location') || {};
+        //location.name = StringHelp.escape(name);
+        recordModel.set('location', location);
+        recordModel.trigger('change:location');
+
+        location.source = 'gridref';
+        location.gridref = gridRefString;
+        location.latitude = parseFloat(latLon.lat.toFixed(8));
+        location.longitude = parseFloat(latLon.lon.toFixed(8));
+
+
+        // -2 because of gridref letters, 2 because this is min precision
+        //@todo Irish GR issue
+        //@todo tetrad issue
+        const accuracy = (gridRefString.replace(/\s/g, '').length - 2) || 2;
+        location.accuracy = accuracy;
+
+        onLocationSelect(location, false);
+        //onPageExit();
+      } else {
+        App.trigger('gridref:form:data:invalid', validationError);
+      }
 	  }
 
       const currentVal = recordModel.get('location') || {};
@@ -195,65 +198,9 @@ const API = {
         });
       }
       mainView.on('location:select:map', onLocationSelect);
-	  /**
-	   * @deprecated
-	   */
-      mainView.on('location:select:gridref', (data) => {
-        /**
-         * Validates the new location
-         * @param attrs
-         * @returns {{}}
-         */
-        function validate(attrs) {
-          const errors = {};
-
-          if (!attrs.name) {
-            errors.name = "can't be blank";
-          }
-
-          if (!attrs.gridref) {
-            errors.gridref = "can't be blank";
-          } else {
-            const gridref = attrs.gridref.replace(/\s/g, '');
-            if (!Validate.gridRef(gridref)) {
-              errors.gridref = 'invalid';
-            } else if (!LocHelp.grid2coord(gridref)) {
-              errors.gridref = 'invalid';
-            }
-          }
-
-          if (!_.isEmpty(errors)) {
-            return errors;
-          }
-
-          return null;
-        }
-
-        const validationError = validate(data);
-        if (!validationError) {
-          App.trigger('gridref:form:data:invalid', {}); // update form
-          const latLon = LocHelp.grid2coord(data.gridref);
-          const location = {
-            source: 'gridref',
-            name: data.name,
-            gridref: data.gridref,
-            latitude: parseFloat(latLon.lat.toFixed(8)),
-            longitude: parseFloat(latLon.lon.toFixed(8)),
-          };
-
-          // -2 because of gridref letters, 2 because this is min precision
-          const accuracy = (data.gridref.replace(/\s/g, '').length - 2) || 2;
-          location.accuracy = accuracy;
-
-          onLocationSelect(location);
-          onPageExit();
-        } else {
-          App.trigger('gridref:form:data:invalid', validationError);
-        }
-      });
       mainView.on('gps:click', onGPSClick);
       mainView.on('location:name:change', onLocationNameChange);
-	  mainView.on('location:gridref:change', onManualGridrefChange);
+      mainView.on('location:gridref:change', onManualGridrefChange);
 
       App.regions.getRegion('main').show(mainView);
 
