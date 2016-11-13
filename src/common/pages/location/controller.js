@@ -121,8 +121,8 @@ const API = {
 
         const location = recordModel.get('location') || {};
         //location.name = StringHelp.escape(name);
-        recordModel.set('location', location);
-        recordModel.trigger('change:location');
+        //recordModel.set('location', location);
+        //recordModel.trigger('change:location');
 
         location.source = 'gridref';
         location.gridref = gridRefString;
@@ -135,7 +135,7 @@ const API = {
         const accuracy = (gridRefString.replace(/\s/g, '').length - 2) || 2;
         location.accuracy = accuracy;
 
-        onLocationSelect(location, false);
+        onLocationSelect(location);
         //onPageExit();
       } else {
         App.trigger('gridref:form:data:invalid', validationError);

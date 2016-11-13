@@ -343,7 +343,9 @@ const LocationView = Marionette.View.extend({
     this.render();
   },
   
-  locationChange(location) {
+  locationChange() {
+    const location = this._getCurrentLocation();
+    
     this.updateMapMarker(location);
     this.map.setView(this._getCenter(), this._getZoomLevel());
   },
