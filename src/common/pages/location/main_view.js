@@ -37,10 +37,15 @@ const LocationView = Marionette.View.extend({
   events: {
     'change #location-name': 'changeName',
     'typeahead:select #location-name': 'changeName',
+	'change #location-gridref': 'changeGridRef',
   },
 
   changeName(e) {
     this.triggerMethod('location:name:change', $(e.target).val());
+  },
+  
+  changeGridRef(e) {
+    this.triggerMethod('location:gridref:change', $(e.target).val());
   },
 
   initialize() {
