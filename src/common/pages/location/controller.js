@@ -199,8 +199,8 @@ const API = {
           App.trigger('gridref:form:data:invalid', validationError);
         }
       });
-      mainView.on('childview:gps:click', onGPSClick);
-      mainView.on('childview:location:name:change', onLocationNameChange);
+      mainView.on('gps:click', onGPSClick);
+      mainView.on('location:name:change', onLocationNameChange);
 
       App.regions.getRegion('main').show(mainView);
 
