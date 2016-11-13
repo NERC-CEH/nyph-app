@@ -61,6 +61,7 @@ const LocationView = Marionette.View.extend({
     this.listenTo(recordModel, 'geolocation:start geolocation:stop geolocation:error', this.render);
     this.listenTo(recordModel, 'geolocation:update', this.geolocationUpdate);
     this.listenTo(recordModel, 'geolocation:success', this.geolocationSuccess);
+    this.listenTo(recordModel, 'change:location', this.locationChange);
   },
 
   onAttach() {
@@ -341,6 +342,11 @@ const LocationView = Marionette.View.extend({
     this.locationUpdate = location;
     this.render();
   },
+  
+  locationChange(location) {
+    this.updateMapMarker(location);
+    this.map.setView(this._getCenter(), this._getZoomLevel());
+  }
 
   _getCurrentLocation() {
     return this.model.get('recordModel').get('location') || {};

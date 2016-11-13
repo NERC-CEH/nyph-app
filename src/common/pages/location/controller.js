@@ -70,9 +70,6 @@ const API = {
           location = $.extend(oldLocation, location);
         }
         
-        this.updateMapMarker(location);
-        this.map.setView(this._getCenter(), this._getZoomLevel());
-
         recordModel.set('location', location);
         recordModel.trigger('change:location');
       }
@@ -131,7 +128,6 @@ const API = {
         location.gridref = gridRefString;
         location.latitude = parseFloat(latLon.lat.toFixed(8));
         location.longitude = parseFloat(latLon.lon.toFixed(8));
-
 
         // -2 because of gridref letters, 2 because this is min precision
         //@todo Irish GR issue
