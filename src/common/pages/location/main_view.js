@@ -346,7 +346,7 @@ const LocationView = Marionette.View.extend({
   locationChange(location) {
     this.updateMapMarker(location);
     this.map.setView(this._getCenter(), this._getZoomLevel());
-  }
+  },
 
   _getCurrentLocation() {
     return this.model.get('recordModel').get('location') || {};
