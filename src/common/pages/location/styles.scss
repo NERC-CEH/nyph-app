@@ -194,3 +194,22 @@ button.btn-gps {
   margin-bottom: 0px;
   height: 32px;
 }
+
+button.btn-gps[data-gps-progress='fixed'] {
+  background-color: #5cb85c;
+  border-color: #5cb85c;
+}
+
+button.btn-gps[data-gps-progress='pending'] {
+  background-color: #ffff4f;
+  border-color: #ffff4f;
+}
+
+button.btn-gps[data-gps-progress='failed'] {
+  background-color: #d9534f;
+  border-color: #d9534f;
+}
+
+input#location-gridref[data-source='gps'] {
+  color: #5cb85c;
+}

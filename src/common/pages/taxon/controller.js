@@ -137,7 +137,7 @@ const API = {
         if (!locks.location) {
           // no previous location
           sample.startGPS();
-        } else if (!locks.location.latitude || !locks.location.longitude) {
+        } else if (!locks.location.latitude) {
           // previously locked location was through GPS
           // so try again
           sample.startGPS();

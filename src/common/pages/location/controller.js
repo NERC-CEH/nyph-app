@@ -10,7 +10,6 @@ import App from 'app';
 
 import recordManager from '../../record_manager';
 import appModel from '../../models/app_model';
-//import TabsLayout from '../../views/tabs_layout';
 import HeaderView from '../../views/header_view';
 import LockView from '../../views/attr_lock_view';
 import MainView from './main_view';
@@ -61,7 +60,9 @@ const API = {
 
         let location = loc;
         // we don't need the GPS running and overwriting the selected location
-        //recordModel.stopGPS();
+        if (recordModel.isGPSRunning()) {
+          recordModel.stopGPS({silent: true});
+        }
 
         if (!createNew) {
           // extend old location to preserve its previous attributes like name or id

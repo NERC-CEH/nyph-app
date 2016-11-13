@@ -38,6 +38,7 @@ const LocationView = Marionette.View.extend({
     'change #location-name': 'changeName',
     'typeahead:select #location-name': 'changeName',
 	  'change #location-gridref': 'changeGridRef',
+    //'click #gps-button': 'geolocationStart',
   },
 
   changeName(e) {
@@ -58,7 +59,10 @@ const LocationView = Marionette.View.extend({
     
     const recordModel = this.model.get('recordModel');
     
-    this.listenTo(recordModel, 'geolocation:start geolocation:stop geolocation:error', this.render);
+    //this.listenTo(recordModel, 'geolocation:start geolocation:stop geolocation:error', this.render);
+    this.listenTo(recordModel, 'geolocation:start', this.geolocationStart);
+    this.listenTo(recordModel, 'geolocation:stop', this.geolocationStop);
+    this.listenTo(recordModel, 'geolocation:error', this.geolocationError);
     this.listenTo(recordModel, 'geolocation:update', this.geolocationUpdate);
     this.listenTo(recordModel, 'geolocation:success', this.geolocationSuccess);
     this.listenTo(recordModel, 'change:location', this.locationChange);
@@ -66,7 +70,7 @@ const LocationView = Marionette.View.extend({
 
   onAttach() {
     // set full remaining height
-    const mapHeight = $(document).height() - 47 - 38.5;
+    const mapHeight = $(document).height() - 47 - 47 - 44;// - 47 - 38.5;
     this.$container = this.$el.find('#map')[0];
     $(this.$container).height(mapHeight);
 
@@ -329,18 +333,37 @@ const LocationView = Marionette.View.extend({
     }
   },
   
+  geolocationStart() {
+    this._set_gps_progress_feedback('pending');
+  },
+  
   /**
    * Update the temporary location fix
    * @param location
    */
   geolocationUpdate(location) {
     this.locationUpdate = location;
-    this.render();
+    this._set_gps_progress_feedback('pending');
   },
 
   geolocationSuccess(location) {
     this.locationUpdate = location;
-    this.render();
+    this._set_gps_progress_feedback('fixed');
+  },
+  
+  geolocationStop() {
+    this._set_gps_progress_feedback('');
+  },
+  
+  geolocationError() {
+    this._set_gps_progress_feedback('failed');
+  },
+  
+  _set_gps_progress_feedback(state) {
+    const gpsButtonEl = document.getElementById('gps-button');
+    if (gpsButtonEl) {
+      gpsButtonEl.setAttribute('data-gps-progress', state);
+    }
   },
   
   locationChange() {
@@ -348,10 +371,23 @@ const LocationView = Marionette.View.extend({
     
     this.updateMapMarker(location);
     this.map.setView(this._getCenter(), this._getZoomLevel());
+    this._refreshGridRefElement(location);
   },
 
   _getCurrentLocation() {
     return this.model.get('recordModel').get('location') || {};
+  },
+  
+  _refreshGridRefElement(location) {
+    // rather than full refresh of the view, directly update the relavant input element
+    const grEl = document.getElementById('location-gridref');
+    grEl.value = location.gridref;
+    grEl.setAttribute('data-source', location.source);
+    
+    const gpsButtonEl = document.getElementById('gps-button');
+    if (gpsButtonEl) {
+      gpsButtonEl.setAttribute('data-source', location.source);
+    }
   },
 
   serializeData() {
