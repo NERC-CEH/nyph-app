@@ -61,7 +61,7 @@ const API = {
 
         let location = loc;
         // we don't need the GPS running and overwriting the selected location
-        recordModel.stopGPS();
+        //recordModel.stopGPS();
 
         if (!createNew) {
           // extend old location to preserve its previous attributes like name or id
