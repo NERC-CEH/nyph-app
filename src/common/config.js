@@ -121,6 +121,10 @@ export default {
 
       entry_time: {
         id: 939,
+      },
+
+      recorder: {
+        id: 127,
       }
     },
     occurrence: {
@@ -132,9 +136,6 @@ export default {
         values(taxon) {
           return taxon.warehouse_id;
         },
-      },
-      identifiers: {
-        id: 18,
       },
     },
   },
