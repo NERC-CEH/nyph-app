@@ -103,7 +103,7 @@ const API = {
       */
       function validate(gridRefString) {
         const errors = {};
-        gridRefString = gridRefString.replace(/\s/g, '');
+        gridRefString = gridRefString.replace(/\s/g, '').toUpperCase();
         if (!LocHelp.grid2coord(gridRefString)) {
           errors.gridref = 'invalid';
         }

@@ -11,7 +11,7 @@ import OSLeaflet from 'os-leaflet';
 import GridRef from 'leaflet.gridref';
 import { OsGridRef } from 'geodesy';
 import JST from 'JST';
-import { LocHelp, StringHelp  } from 'helpers';
+import { LocHelp, StringHelp } from 'helpers';
 import CONFIG from 'config';
 import 'typeahead';
 import mapMarker from './map_view_marker';
@@ -38,6 +38,7 @@ const LocationView = Marionette.View.extend({
     'change #location-name': 'changeName',
     'typeahead:select #location-name': 'changeName',
 	  'change #location-gridref': 'changeGridRef',
+    'keyup #location-gridref': 'keyupGridRef',
     //'click #gps-button': 'geolocationStart',
   },
 
@@ -45,7 +46,58 @@ const LocationView = Marionette.View.extend({
     this.triggerMethod('location:name:change', $(e.target).val());
   },
   
+  /**
+   * after delay, if gridref is valid then apply change
+   */
+  keyupGridRef(e) {
+    switch (e.keyCode) {
+      case 13:
+      // press Enter
+      case 38:
+      // Up
+      case 40:
+        // Down
+        break;
+      default:
+        // Other
+        let gr = e.target.value.replace(/\s+/g, '').toUpperCase();
+        
+        if (gr === this._getCurrentLocation().gridref) {
+          return; // gridref hasn't changed meaningfully
+        }
+        
+        if (gr === '' || LocHelp.grid2coord(gr)) {
+          // gr syntax ok (or blank)
+          
+          this._refreshGrErrorState(false);
+          
+          // Clear previous timeout
+          this._clearGrTimeout();
+
+          const that = this;
+          // Set new timeout - don't run if user is typing
+          this.grRefreshTimeout = setTimeout(function () {
+            // let controller know
+            that.trigger('location:gridref:change', gr);
+          }, 200);
+        } else {
+          this._refreshGrErrorState(true);
+        }
+    }
+  },
+  
+  /**
+   * stop any delayed gridref refresh
+   */
+  _clearGrTimeout() {
+    if (this.grRefreshTimeout) {
+      clearTimeout(this.grRefreshTimeout);
+      this.grRefreshTimeout = null;
+    }
+  },
+  
   changeGridRef(e) {
+    this._clearGrTimeout();
     this.triggerMethod('location:gridref:change', $(e.target).val());
   },
 
@@ -366,8 +418,23 @@ const LocationView = Marionette.View.extend({
     }
   },
   
+  _refreshGrErrorState(isError) {
+    const grInputEl = document.getElementById('location-gridref');
+    if (grInputEl) {
+      if (isError) {
+        grInputEl.setAttribute('data-gr-error', 'error');
+        this._removeMapMarker();
+      } else {
+        grInputEl.removeAttribute('data-gr-error');
+      }
+    }
+  },
+  
   locationChange() {
+    this._clearGrTimeout();
     const location = this._getCurrentLocation();
+    
+    this._refreshGrErrorState(false);
     
     this.updateMapMarker(location);
     this.map.setView(this._getCenter(), this._getZoomLevel());
@@ -387,6 +454,10 @@ const LocationView = Marionette.View.extend({
     const gpsButtonEl = document.getElementById('gps-button');
     if (gpsButtonEl) {
       gpsButtonEl.setAttribute('data-source', location.source);
+      
+      if (location.source !== 'gps') {
+        this._set_gps_progress_feedback('');
+      }
     }
   },
 

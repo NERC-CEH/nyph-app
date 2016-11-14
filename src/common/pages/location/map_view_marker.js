@@ -183,6 +183,7 @@ const marker = {
   _removeMapMarker() {
     if (this.marker) {
       this.map.removeLayer(this.marker);
+      this.marker = null;
     }
   },
 };

@@ -193,6 +193,7 @@ button.btn-gps {
   margin-top: 0px;
   margin-bottom: 0px;
   height: 32px;
+  outline-style: none;
 }
 
 button.btn-gps[data-gps-progress='fixed'] {
@@ -210,6 +211,14 @@ button.btn-gps[data-gps-progress='failed'] {
   border-color: #d9534f;
 }
 
+input#location-gridref {
+  text-transform: uppercase;
+}
+
 input#location-gridref[data-source='gps'] {
   color: #5cb85c;
+}
+
+input#location-gridref[data-gr-error='error'] {
+  color: #red;
 }
