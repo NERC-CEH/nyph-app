@@ -47,12 +47,12 @@ export default Marionette.View.extend({
     switch (this.options.attr) {
       case 'date':
         templateData.date = DateHelp.toDateInputValue(this.model.get('date'));
-		const today = new Date();
-		
-		if (CONFIG.ENFORCE_DATE_CONSTRAINT) {
-			templateData.maxDate = DateHelp.toDateInputValue(today <= CONFIG.MAX_RECORDING_DATE ? today : CONFIG.MAX_RECORDING_DATE);
+		                                                                                const today = new Date();
+
+		                                                                                if (CONFIG.ENFORCE_DATE_CONSTRAINT) {
+			                    templateData.maxDate = DateHelp.toDateInputValue(today <= CONFIG.MAX_RECORDING_DATE ? today : CONFIG.MAX_RECORDING_DATE);
 		} else {
-			templateData.maxDate = DateHelp.toDateInputValue(new Date());
+			                    templateData.maxDate = DateHelp.toDateInputValue(new Date());
 		}
         break;
       case 'identifiers':

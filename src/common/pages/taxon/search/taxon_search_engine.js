@@ -61,13 +61,13 @@ const API = {
 
     let results = [];
 
-	if (!searchPhrase) {
+    if (!searchPhrase) {
       if (CONFIG.ALLOW_UNKNOWN_SPECIES) {
         results.push(Object.assign({}, CONFIG.UNKNOWN_SPECIES));
-	    callback(results);
-	  }
-	  return;
-	}
+        callback(results);
+      }
+      return;
+    }
 
     // normalize the search phrase
     const normSearchPhrase = searchPhrase.toLowerCase();

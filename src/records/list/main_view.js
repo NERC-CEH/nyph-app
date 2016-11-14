@@ -118,7 +118,7 @@ const RecordView = Marionette.View.extend({
     const location = recordModel.get('location') || {};
 
     // regardless of CONFIG.ENFORCE_DATE_CONSTRAINT flag date range problems in UI
-	const modelDate = new Date(recordModel.get('date'));
+	                                        const modelDate = new Date(recordModel.get('date'));
 
     return {
       id: recordModel.id || recordModel.cid,
@@ -132,10 +132,10 @@ const RecordView = Marionette.View.extend({
       taxon,
       comment: occ.get('comment'),
       img: img ? `<img src="${img}"/>` : '',
-	  dateRangeError: (modelDate < CONFIG.MIN_RECORDING_DATE || 
+	                                                              dateRangeError: (modelDate < CONFIG.MIN_RECORDING_DATE ||
 		modelDate > CONFIG.MAX_RECORDING_DATE ||
 		modelDate > (new Date())),
-	  taxonMissingOrNotValid: (!specie || specie.id === CONFIG.UNKNOWN_SPECIES.id) && images.length === 0
+	                                                              taxonMissingOrNotValid: (!specie || specie.id === CONFIG.UNKNOWN_SPECIES.id) && images.length === 0,
     };
   },
 

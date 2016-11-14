@@ -232,7 +232,7 @@ const API = {
                           App.regions.getRegion('dialog').hide();
                         },
                       },
-                    ]
+                    ],
                   });
                 }
               });

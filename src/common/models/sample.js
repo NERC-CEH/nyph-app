@@ -50,17 +50,17 @@ let Sample = Morel.Sample.extend({
       sample.date = 'missing';
     } else {
       const date = new Date(attrs.date);
-	  
-	  if (CONFIG.ENFORCE_DATE_CONSTRAINT) {
+
+	                                                              if (CONFIG.ENFORCE_DATE_CONSTRAINT) {
 		// use NYPH constrained dates
-		
-		if (date === 'Invalid Date' || date < CONFIG.MIN_RECORDING_DATE || date > CONFIG.MAX_RECORDING_DATE) {
-			sample.date = (date === 'Invalid Date') ? 'invalid' : 'date is not within the permitted range';
+
+		                    if (date === 'Invalid Date' || date < CONFIG.MIN_RECORDING_DATE || date > CONFIG.MAX_RECORDING_DATE) {
+			                    sample.date = (date === 'Invalid Date') ? 'invalid' : 'date is not within the permitted range';
 		}
 	  } else {
 		// enforce only presence and non-future date
-	     if (date === 'Invalid Date' || date > new Date()) {
-	       sample.date = (date === 'Invalid Date') ? 'invalid' : 'future date';
+	                         if (date === 'Invalid Date' || date > new Date()) {
+	                           sample.date = (date === 'Invalid Date') ? 'invalid' : 'future date';
 	     }
 	   }
     }
@@ -77,27 +77,27 @@ let Sample = Morel.Sample.extend({
       this.occurrences.each((occurrence) => {
         // kludge to substitute default 'Flowering Plant' if taxon is missing and have photo
 		// @todo move to occurrence module
-		if (!occurrence.attributes.taxon || occurrence.attributes.taxon.id === CONFIG.UNKNOWN_SPECIES.id) {
+		                                                                                if (!occurrence.attributes.taxon || occurrence.attributes.taxon.id === CONFIG.UNKNOWN_SPECIES.id) {
 			// either no taxon or general 'flowering plant'
-			
-			if (occurrence.images.length === 0) {
+
+			                    if (occurrence.images.length === 0) {
 				// no image so force species id error
-				occurrence.attributes.taxon = null;
+				                    occurrence.attributes.taxon = null;
 			} else {
 				// have photo so substitute in 'flowering plant'
-				occurrence.attributes.taxon = Object.assign({}, CONFIG.UNKNOWN_SPECIES);
+				                    occurrence.attributes.taxon = Object.assign({}, CONFIG.UNKNOWN_SPECIES);
 			}
 		}
-		
-        let errors = occurrence.validate();
-		
+
+        const errors = occurrence.validate();
+
 		// @todo move to occurrence module
 		// don't allow 'unknown species' if no photo
-		//if (occurrence.images.length === 0 && occurrence.attributes.taxon.id === CONFIG.UNKNOWN_SPECIES.id) {
+		// if (occurrence.images.length === 0 && occurrence.attributes.taxon.id === CONFIG.UNKNOWN_SPECIES.id) {
 		//	errors = errors || {};
 		//	errors.taxon = 'Taxon name or photo needed';
-		//}
-		
+		// }
+
         if (errors) {
           const occurrenceID = occurrence.id || occurrence.cid;
           occurrences[occurrenceID] = errors;

@@ -89,16 +89,16 @@ const API = {
 		  // interfere with app flow
 		  // if location not set then navigate to that screen
 		  // otherwise go back to list
-		  
-		  if (sample.attributes.location && sample.attributes.location.name) {
+
+		                                                                                                      if (sample.attributes.location && sample.attributes.location.name) {
 			// already have a satisfactory locked location
-		  
+
             // return to previous page
-            window.history.back();
+  window.history.back();
 		  } else {
 			// navigate to edit the location of the new record
-			
-			App.trigger('records:edit:location', sample.cid, { replace: true });
+
+			                    App.trigger('records:edit:location', sample.cid, { replace: true });
 		  }
         }
       });

@@ -139,7 +139,7 @@ const API = {
   },
 
   updateLock(attr, newVal, currentVal) {
-    let lockedValue = appModel.getAttrLock(attr);
+    const lockedValue = appModel.getAttrLock(attr);
 
     switch (attr) {
       case 'date':
