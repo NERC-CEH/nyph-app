@@ -34,7 +34,8 @@ export default {
         const stampDateOnly = `${recordStamp.getDate()}/${(recordStamp.getMonth() + 1)}/${recordStamp.getFullYear()}`;
 
         const isToday = (todayDateOnly === recordDateOnly);
-        if (gpsed && (recordDateOnly === stampDateOnly)) {
+        //if (gpsed && (recordDateOnly === stampDateOnly)) {
+        if (recordDateOnly === stampDateOnly) {
           // trust that the entry stamp time reflects the field record time
           
           return `${isToday ? 'today' : recordDateOnly}, ${recordStamp.getHours()}:${recordStamp.getMinutes()}`;
