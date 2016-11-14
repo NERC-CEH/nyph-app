@@ -56,7 +56,7 @@ export default Marionette.View.extend({
       location: locationPrint,
       location_name: location.name,
       date: DateHelp.print(recordModel.get('date')),
-      identifiers: occ.get('identifiers'),
+      recorder: recordModel.get('recorder'),
       comment: occ.get('comment'),
       images: occ.images,
     };

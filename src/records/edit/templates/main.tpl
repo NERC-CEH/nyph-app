@@ -47,11 +47,11 @@
     </a>
   </li>
   <li class="table-view-cell">
-    <a href="#records/<%- obj.id %>/edit/identifiers" id="identifiers-button"
-       class="<%- obj.locks['identifiers'] ? 'lock' : 'navigate-right' %>">
+    <a href="#records/<%- obj.id %>/edit/recorder" id="recorder-button"
+       class="<%- obj.locks['recorder'] ? 'lock' : 'navigate-right' %>">
       <span class="media-object pull-left icon icon-user-plus"></span>
-      <span class="media-object pull-right descript"><%= obj.identifiers %></span>
-      Identifiers
+      <span class="media-object pull-right descript"><%= obj.recorder %></span>
+      Recorder
     </a>
   </li>
 </ul>

@@ -12,21 +12,21 @@ module.exports = (grunt) => {
         'node_modules/geodesy/latlon-spherical.js'],
       overwrite: true,
       replacements: [
-        {
-          from: 'if (typeof module != \'undefined\' && module.exports) ' +
-          'module.exports.Vector3d = Vector3d;',
-          to: '',
-        },
-        {
-          from: 'if (typeof define == \'function\' && define.amd) ' +
-          'define([], function() { return Vector3d; });',
-          to: '',
-        },
-        {
-          from: 'if (typeof define == \'function\' && define.amd) ' +
-          'define([\'Dms\'], function() { return LatLon; });',
-          to: '',
-        },
+        // {
+        //   from: 'if (typeof module != \'undefined\' && module.exports) ' +
+        //   'module.exports.Vector3d = Vector3d;',
+        //   to: '',
+        // },
+        // {
+        //   from: 'if (typeof define == \'function\' && define.amd) ' +
+        //   'define([], function() { return Vector3d; });',
+        //   to: '',
+        // },
+        // {
+        //   from: 'if (typeof define == \'function\' && define.amd) ' +
+        //   'define([\'Dms\'], function() { return LatLon; });',
+        //   to: '',
+        // },
       ],
     },
 

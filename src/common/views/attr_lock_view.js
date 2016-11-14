@@ -27,6 +27,7 @@ export default Marionette.View.extend({
     switch (this.options.attr) {
       case 'date':
       case 'location':
+      case 'recorder':
         // sample
         value = recordModel.get(this.options.attr);
         break;

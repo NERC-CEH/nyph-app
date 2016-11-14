@@ -7,7 +7,7 @@ import Store from 'backbone.localstorage';
 import CONFIG from 'config';
 import { Validate, Analytics } from 'helpers';
 
-let UserModel = Backbone.Model.extend({
+const UserModel = Backbone.Model.extend({
   id: 'user',
 
   defaults: {
