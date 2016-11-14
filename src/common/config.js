@@ -118,6 +118,10 @@ export default {
           return DateHelp.print(date);
         },
       },
+
+      entry_time: {
+        id: 939,
+      }
     },
     occurrence: {
       training: {

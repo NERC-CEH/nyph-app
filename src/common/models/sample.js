@@ -19,6 +19,7 @@ let Sample = Morel.Sample.extend({
 
   initialize() {
     this.set('form', CONFIG.morel.manager.input_form);
+    this.set('entry_time', new Date().toString());
   },
 
   Occurrence,
