@@ -2,6 +2,7 @@
  * Some location transformation logic.
  *****************************************************************************/
 import { LatLonEllipsoidal as LatLon, OsGridRef } from 'geodesy';
+import Log from './log';
 import CONFIG from 'config';
 
 const helpers = {
@@ -98,9 +99,14 @@ const helpers = {
   },
 
   grid2coord(gridrefString) {
-    const gridref = helpers.parseGrid(gridrefString);
-    if (!isNaN(gridref.easting) && !isNaN(gridref.northing)) {
-      return OsGridRef.osGridToLatLon(gridref, LatLon.datum.WGS84);
+    try {
+      const gridref = helpers.parseGrid(gridrefString);
+      if (!isNaN(gridref.easting) && !isNaN(gridref.northing)) {
+        return OsGridRef.osGridToLatLon(gridref, LatLon.datum.WGS84);
+      }
+    } catch(e) {
+      // recent versions of the geodesy library throw exceptions for bad gridrefs
+      Log(e.message);
     }
 
     return null;
