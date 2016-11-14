@@ -60,7 +60,7 @@
       <% } else { %>
       <% if (obj.isLocating) { %>
       <div class="location warn">Locating...</div>
-      <% } else if (obj.location_name) {%>
+      <% } else if (obj.location_name) { %>
       <div class="location error">No grid reference</div>
       <% } else { %>
       <div class="location error">No location</div>
