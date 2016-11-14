@@ -7,7 +7,6 @@ import Morel from 'morel';
 import CONFIG from 'config';
 import recordManager from '../record_manager';
 import { Log } from 'helpers';
-import userModel from './user_model';
 import Occurrence from './occurrence';
 import GeolocExtension from './sample_geoloc_ext';
 
@@ -52,18 +51,18 @@ let Sample = Morel.Sample.extend({
     } else {
       const date = new Date(attrs.date);
 
-	                                                              if (CONFIG.ENFORCE_DATE_CONSTRAINT) {
-		// use NYPH constrained dates
+      if (CONFIG.ENFORCE_DATE_CONSTRAINT) {
+        // use NYPH constrained dates
 
-		                    if (date === 'Invalid Date' || date < CONFIG.MIN_RECORDING_DATE || date > CONFIG.MAX_RECORDING_DATE) {
-			                    sample.date = (date === 'Invalid Date') ? 'invalid' : 'date is not within the permitted range';
-		}
-	  } else {
-		// enforce only presence and non-future date
-	                         if (date === 'Invalid Date' || date > new Date()) {
-	                           sample.date = (date === 'Invalid Date') ? 'invalid' : 'future date';
-	     }
-	   }
+        if (date === 'Invalid Date' || date < CONFIG.MIN_RECORDING_DATE || date > CONFIG.MAX_RECORDING_DATE) {
+          sample.date = (date === 'Invalid Date') ? 'invalid' : 'date is not within the permitted range';
+        }
+      } else {
+        // enforce only presence and non-future date
+        if (date === 'Invalid Date' || date > new Date()) {
+          sample.date = (date === 'Invalid Date') ? 'invalid' : 'future date';
+        }
+      }
     }
 
     // location type
@@ -77,27 +76,27 @@ let Sample = Morel.Sample.extend({
     } else {
       this.occurrences.each((occurrence) => {
         // kludge to substitute default 'Flowering Plant' if taxon is missing and have photo
-		// @todo move to occurrence module
-		                                                                                if (!occurrence.attributes.taxon || occurrence.attributes.taxon.id === CONFIG.UNKNOWN_SPECIES.id) {
-			// either no taxon or general 'flowering plant'
+        // @todo move to occurrence module
+        if (!occurrence.attributes.taxon || occurrence.attributes.taxon.id === CONFIG.UNKNOWN_SPECIES.id) {
+          // either no taxon or general 'flowering plant'
 
-			                    if (occurrence.images.length === 0) {
-				// no image so force species id error
-				                    occurrence.attributes.taxon = null;
-			} else {
-				// have photo so substitute in 'flowering plant'
-				                    occurrence.attributes.taxon = Object.assign({}, CONFIG.UNKNOWN_SPECIES);
-			}
-		}
+          if (occurrence.images.length === 0) {
+            // no image so force species id error
+            occurrence.attributes.taxon = null;
+          } else {
+            // have photo so substitute in 'flowering plant'
+            occurrence.attributes.taxon = Object.assign({}, CONFIG.UNKNOWN_SPECIES);
+          }
+        }
 
         const errors = occurrence.validate();
 
-		// @todo move to occurrence module
-		// don't allow 'unknown species' if no photo
-		// if (occurrence.images.length === 0 && occurrence.attributes.taxon.id === CONFIG.UNKNOWN_SPECIES.id) {
-		//	errors = errors || {};
-		//	errors.taxon = 'Taxon name or photo needed';
-		// }
+        // @todo move to occurrence module
+        // don't allow 'unknown species' if no photo
+        // if (occurrence.images.length === 0 && occurrence.attributes.taxon.id === CONFIG.UNKNOWN_SPECIES.id) {
+        //	errors = errors || {};
+        //	errors.taxon = 'Taxon name or photo needed';
+        // }
 
         if (errors) {
           const occurrenceID = occurrence.id || occurrence.cid;
