@@ -27,11 +27,6 @@ export default {
   ENFORCE_DATE_CONSTRAINT: false,
   MIN_RECORDING_DATE: new Date(2017,0,1),
   MAX_RECORDING_DATE: new Date(2017,0,4,23,59),
-  
-  /**
-   * set if OsGridRef.parse returns values in metres
-   */
-  HAVE_MODERN_GEODESY_LIBRARY: true,
 
   gps_accuracy_limit: 100,
 

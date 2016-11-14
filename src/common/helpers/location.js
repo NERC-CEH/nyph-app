@@ -2,7 +2,6 @@
  * Some location transformation logic.
  *****************************************************************************/
 import { LatLonEllipsoidal as LatLon, OsGridRef } from 'geodesy';
-import CONFIG from 'config';
 
 const helpers = {
   coord2grid(location) {
@@ -15,85 +14,43 @@ const helpers = {
   },
 
   parseGrid(gridrefString) {
-	const westerlySquares = {
-		SV : true,
-		SQ : true,
-		SL : true,
-		SF : true,
-		SA : true,
-		NV : true,
-		NQ : true,
-		NL : true,
-		NF : true,
-		NA : true,
-		HV : true,
-		HQ : true,
-		HL : true,
-	};
-	  
-    function normalizeOSGBCoords(gridrefString, incorrectGridref) {
-      // normalise to 1m grid, rounding up to centre of grid square:
-      let e = incorrectGridref.easting;
-      let n = incorrectGridref.northing;
-	  
-	  let eastingLength = incorrectGridref.easting.toString().length;
-
-      // length calculation will break for squares with Eastings < 100km
-	  if (westerlySquares.hasOwnProperty(gridrefString.substr(0, 2).toUpperCase())) {
-		  eastingLength += 1;
-	  }
-
-      switch (eastingLength) {
-        case 1: e += '50000'; n += '50000'; break;
-        case 2: e += '5000'; n += '5000'; break;
-        case 3: e += '500'; n += '500'; break;
-        case 4: e += '50'; n += '50'; break;
-        case 5: e += '5'; n += '5'; break;
-        case 6: break; // 10-digit refs are already 1m
-        default: return new OsGridRef(NaN, NaN);
-      }
-      return new OsGridRef(e, n);
-    }
-	
-	/**
-	 * given co-ordinates of SW corner return new OsGridRef of mid-point
-	 * 
-	 * @param {string} gridRef (assumed to be well-formed)
-	 * @param {OsGridRef} osCoords
-	 * @returns {OsGridRef}
-	 */
+    /**
+     * given co-ordinates of SW corner return new OsGridRef of mid-point
+     *
+     * @param {string} gridRef (assumed to be well-formed)
+     * @param {OsGridRef} osCoords
+     * @returns {OsGridRef}
+     */
     function osgbMidPoint(gridRef, osCoords) {
-      const trimmedRef = gridRef.replace(' ', '');
-	  const parts = gridRef.replace(' ', '').match(/^[A-Z]{1,2}((?:\d\d)+)$/i);
-	  
-	  let e = osCoords.easting;
+      const parts = gridRef.replace(' ', '').match(/^[A-Z]{1,2}((?:\d\d)+)$/i);
+
+      let e = osCoords.easting;
       let n = osCoords.northing;
-	  
-	  if (parts) {
-		  // numeric part of gridref in parts[1]
-		  const halfLength = parts[1].length / 2;
-		  
-		  if (halfLength < 5) {
-		    const offset = Math.pow(10, 4 - halfLength) * 5;
-	      
-		    e += offset;
-		    n += offset;
-		  }
-		  return new OsGridRef(e, n);
-	  } else {
-	    return new OsGridRef(NaN, NaN);
-	  }
+
+      if (parts) {
+        // numeric part of gridref in parts[1]
+        const halfLength = parts[1].length / 2;
+
+        if (halfLength < 5) {
+          const offset = Math.pow(10, 4 - halfLength) * 5;
+
+          e += offset;
+          n += offset;
+        }
+        return new OsGridRef(e, n);
+      } else {
+        return new OsGridRef(NaN, NaN);
+      }
     }
-	
+
     /*
-	 * depending on the version of Geodesy linked to this will either be a metre
-	 * precision coordinate pair or (for the older library) a truncated value
-	 * @type OsGridRef
-	 */
+     * depending on the version of Geodesy linked to this will either be a metre
+     * precision coordinate pair or (for the older library) a truncated value
+     * @type OsGridRef
+     */
     let osCoords = OsGridRef.parse(gridrefString);
-	
-	osCoords = CONFIG.HAVE_MODERN_GEODESY_LIBRARY ? osgbMidPoint(gridrefString, osCoords) : normalizeOSGBCoords(gridrefString, osCoords);
-	
+    osCoords = osgbMidPoint(gridrefString, osCoords);
+
     return osCoords;
   },
 
