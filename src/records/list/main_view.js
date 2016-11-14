@@ -100,8 +100,8 @@ const RecordView = Marionette.View.extend({
   serializeData() {
     const recordModel = this.model;
     const occ = recordModel.occurrences.at(0);
-    const date = DateHelp.print(recordModel.get('date'));
-    const specie = occ.get('taxon');
+    const date = DateHelp.prettyPrintStamp(recordModel);
+    const species = occ.get('taxon');
     const images = occ.images;
     let img = images.length && images.at(0).get('thumbnail');
 
@@ -110,7 +110,7 @@ const RecordView = Marionette.View.extend({
       img = images.length && images.at(0).getURL();
     }
 
-    const taxon = specie ? specie[specie.found_in_name] : CONFIG.UNKNOWN_SPECIES.scientific_name;
+    const taxon = species ? species[species.found_in_name] : CONFIG.UNKNOWN_SPECIES.scientific_name;
 
     const syncStatus = this.model.getSyncStatus();
 
@@ -118,7 +118,7 @@ const RecordView = Marionette.View.extend({
     const location = recordModel.get('location') || {};
 
     // regardless of CONFIG.ENFORCE_DATE_CONSTRAINT, flag date range problems in UI
-	const modelDate = new Date(recordModel.get('date'));
+	  const modelDate = new Date(recordModel.get('date'));
 
     return {
       id: recordModel.id || recordModel.cid,
@@ -132,10 +132,10 @@ const RecordView = Marionette.View.extend({
       taxon,
       comment: occ.get('comment'),
       img: img ? `<img src="${img}"/>` : '',
-	  dateRangeError: (modelDate < CONFIG.MIN_RECORDING_DATE || 
-		modelDate > CONFIG.MAX_RECORDING_DATE ||
-		modelDate > (new Date())),
-	  taxonMissingOrNotValid: (!specie || specie.id === CONFIG.UNKNOWN_SPECIES.id) && images.length === 0
+	    dateRangeError: (modelDate < CONFIG.MIN_RECORDING_DATE ||
+        modelDate > CONFIG.MAX_RECORDING_DATE ||
+        modelDate > (new Date())),
+	    taxonMissingOrNotValid: (!species || species.id === CONFIG.UNKNOWN_SPECIES.id) && images.length === 0,
     };
   },
 
