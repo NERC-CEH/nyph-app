@@ -45,6 +45,7 @@
       <% } else { %>
       <div class="location error">No location</div>
       <% } %>
+      <% } %>
 
       <div class="attributes">
         <div class="comment"><%= obj.comment %></div>
