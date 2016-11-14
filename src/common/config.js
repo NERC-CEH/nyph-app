@@ -16,7 +16,6 @@ export default {
     scientific_name: 'Unknown flowering plant',
     found_in_name: 'scientific_name',
   },
-  ALLOW_UNKNOWN_SPECIES: true,
   /**
    * if set then the most recently submitted location is auto-locked
    */

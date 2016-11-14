@@ -62,10 +62,8 @@ const API = {
     let results = [];
 
     if (!searchPhrase) {
-      if (CONFIG.ALLOW_UNKNOWN_SPECIES) {
-        results.push(Object.assign({}, CONFIG.UNKNOWN_SPECIES));
-        callback(results);
-      }
+      results.push(Object.assign({}, CONFIG.UNKNOWN_SPECIES));
+      callback(results);
       return;
     }
 
