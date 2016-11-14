@@ -117,7 +117,7 @@ const RecordView = Marionette.View.extend({
     const locationPrint = recordModel.printLocation();
     const location = recordModel.get('location') || {};
 
-    // regardless of CONFIG.ENFORCE_DATE_CONSTRAINT flag date range problems in UI
+    // regardless of CONFIG.ENFORCE_DATE_CONSTRAINT, flag date range problems in UI
 	const modelDate = new Date(recordModel.get('date'));
 
     return {
