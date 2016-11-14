@@ -13,9 +13,6 @@ import appModel from '../../models/app_model';
 import HeaderView from '../../views/header_view';
 import LockView from '../../views/attr_lock_view';
 import MainView from './main_view';
-//import GpsView from './gps_view';
-//import MapView from './map_view';
-//import GridRefView from './grid_ref_view';
 import CONFIG from 'config';
 
 import './styles.scss';
