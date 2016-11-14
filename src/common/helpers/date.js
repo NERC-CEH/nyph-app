@@ -37,9 +37,9 @@ export default {
         if (gpsed && (recordDateOnly === stampDateOnly)) {
           // trust that the entry stamp time reflects the field record time
           
-          return (isToday ? 'today' : recordDateOnly);
-        } else {
           return `${isToday ? 'today' : recordDateOnly}, ${recordStamp.getHours()}:${recordStamp.getMinutes()}`;
+        } else {
+          return (isToday ? 'today' : recordDateOnly);
         }
       } 
     } 
