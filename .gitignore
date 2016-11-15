@@ -5,5 +5,5 @@
 dist
 node_modules
 .env*
-*.pyc
+src/common/data/scripts/*pyc
 
