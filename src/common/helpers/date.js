@@ -38,7 +38,7 @@ export default {
         if (recordDateOnly === stampDateOnly) {
           // trust that the entry stamp time reflects the field record time
           
-          return `${isToday ? 'today' : recordDateOnly}, ${recordStamp.getHours()}:${recordStamp.getMinutes()}`;
+          return `${isToday ? 'today' : recordDateOnly}, ${('00' + recordStamp.getHours()).slice(-2)}:${('00' + recordStamp.getMinutes()).slice(-2)}`;
         } else {
           return (isToday ? 'today' : recordDateOnly);
         }
