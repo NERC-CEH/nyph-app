@@ -130,8 +130,10 @@ const API = {
         // -2 because of gridref letters, 2 because this is min precision
         //@todo Irish GR issue
         //@todo tetrad issue
-        const accuracy = (gridRefString.replace(/\s/g, '').length - 2) || 2;
-        location.accuracy = accuracy;
+        //const accuracy = (gridRefString.replace(/\s/g, '').length - 2) || 2;
+        const grSquareDimension = Math.pow(10, 5 - ((gridRefString.replace(/\s/g, '').length - 2) / 2));
+  
+        location.accuracy = grSquareDimension / 2; // accauracy is radius, so for sqaures use half dimension
 
         onLocationSelect(location);
         //onPageExit();
