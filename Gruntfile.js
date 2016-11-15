@@ -1,6 +1,6 @@
-var path = require('path');
+const path = require('path');
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   require('time-grunt')(grunt);
 
   require('load-grunt-config')(grunt, {

@@ -2,6 +2,7 @@
  * Some location transformation logic.
  *****************************************************************************/
 import { LatLonEllipsoidal as LatLon, OsGridRef } from 'geodesy';
+import Log from './log';
 
 const helpers = {
   coord2grid(location) {
@@ -14,33 +15,54 @@ const helpers = {
   },
 
   parseGrid(gridrefString) {
-    function normalizeGridRef(incorrectGridref) {
-      // normalise to 1m grid, rounding up to centre of grid square:
-      let e = incorrectGridref.easting;
-      let n = incorrectGridref.northing;
+    /**
+     * given co-ordinates of SW corner return new OsGridRef of mid-point
+     *
+     * @param {string} gridRef (assumed to be well-formed)
+     * @param {OsGridRef} osCoords
+     * @returns {OsGridRef}
+     */
+    function osgbMidPoint(gridRef, osCoords) {
+      const parts = gridRef.replace(' ', '').match(/^[A-Z]{1,2}((?:\d\d)+)$/i);
 
-      switch (incorrectGridref.easting.toString().length) {
-        case 1: e += '50000'; n += '50000'; break;
-        case 2: e += '5000'; n += '5000'; break;
-        case 3: e += '500'; n += '500'; break;
-        case 4: e += '50'; n += '50'; break;
-        case 5: e += '5'; n += '5'; break;
-        case 6: break; // 10-digit refs are already 1m
-        default: return new OsGridRef(NaN, NaN);
+      let e = osCoords.easting;
+      let n = osCoords.northing;
+
+      if (parts) {
+        // numeric part of gridref in parts[1]
+        const halfLength = parts[1].length / 2;
+
+        if (halfLength < 5) {
+          const offset = Math.pow(10, 4 - halfLength) * 5;
+
+          e += offset;
+          n += offset;
+        }
+        return new OsGridRef(e, n);
+      } else {
+        return new OsGridRef(NaN, NaN);
       }
-      return new OsGridRef(e, n);
     }
 
-    let gridref = OsGridRef.parse(gridrefString);
-    gridref = normalizeGridRef(gridref);
+    /*
+     * 
+     * @type OsGridRef
+     */
+    let osCoords = OsGridRef.parse(gridrefString);
+    osCoords = osgbMidPoint(gridrefString, osCoords);
 
-    return gridref;
+    return osCoords;
   },
 
   grid2coord(gridrefString) {
-    const gridref = helpers.parseGrid(gridrefString);
-    if (!isNaN(gridref.easting) && !isNaN(gridref.northing)) {
-      return OsGridRef.osGridToLatLon(gridref, LatLon.datum.WGS84);
+    try {
+      const gridref = helpers.parseGrid(gridrefString);
+      if (!isNaN(gridref.easting) && !isNaN(gridref.northing)) {
+        return OsGridRef.osGridToLatLon(gridref, LatLon.datum.WGS84);
+      }
+    } catch(e) {
+      // recent versions of the geodesy library throw exceptions for bad gridrefs
+      Log(e.message);
     }
 
     return null;

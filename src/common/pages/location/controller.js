@@ -17,6 +17,8 @@ import LockView from '../../views/attr_lock_view';
 import GpsView from './gps_view';
 import MapView from './map_view';
 import GridRefView from './grid_ref_view';
+import CONFIG from 'config';
+
 import './styles.scss';
 
 const API = {
@@ -121,7 +123,7 @@ const API = {
             const lockedValue = appModel.getAttrLock('location');
 
             if ((location.latitude && location.longitude) || location.name) {
-              // we can lock loaction and name on their own
+              // we can lock location and name on their own
               // don't lock GPS though, because it varies more than a map or gridref
 
               // save to past locations
@@ -143,7 +145,11 @@ const API = {
                   }
                   appModel.setAttrLock(attr, location);
                 }
-              }
+              } else if (CONFIG.AUTO_LOCK_LOCATION_NAME && location.name) {
+				  // no explicit lock request by user, but rememer name anyway
+
+				                                                                                                                                                                  appModel.setAttrLock(attr, { name: location.name });
+			                                                                                                                                              }
             } else if (lockedValue === true) {
               // reset if no location or location name selected but locked is clicked
               appModel.setAttrLock(attr, null);

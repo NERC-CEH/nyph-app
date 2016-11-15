@@ -12,10 +12,20 @@ export default {
   name: APP_NAME,
 
   UNKNOWN_SPECIES: {
-    id: 125442, //Plantae kingdom
-    scientific_name: 'Unknown Flowering Plant',
+    id: 125442, // Plantae kingdom
+    scientific_name: 'Unknown flowering plant',
     found_in_name: 'scientific_name',
   },
+  /**
+   * if set then the most recently submitted location is auto-locked
+   */
+  AUTO_LOCK_LOCATION_NAME: true,
+  /**
+   * if set then limit dates to the range specified by MIN_RECORDING_DATE, MAX_RECORDING_DATE
+   */
+  ENFORCE_DATE_CONSTRAINT: false,
+  MIN_RECORDING_DATE: new Date(2017, 0, 1),
+  MAX_RECORDING_DATE: new Date(2017, 0, 4, 23, 59),
 
   gps_accuracy_limit: 100,
 
@@ -108,6 +118,14 @@ export default {
           return DateHelp.print(date);
         },
       },
+
+      entry_time: {
+        id: 939,
+      },
+
+      recorder: {
+        id: 127,
+      }
     },
     occurrence: {
       training: {
@@ -118,9 +136,6 @@ export default {
         values(taxon) {
           return taxon.warehouse_id;
         },
-      },
-      identifiers: {
-        id: 18,
       },
     },
   },

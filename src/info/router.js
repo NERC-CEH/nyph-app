@@ -19,7 +19,7 @@ App.info = {};
 const Router = Marionette.AppRouter.extend({
   routes: {
     'info(/)': InfoMenuController.show,
-    'info/intro(/)':  IntroController.show,
+    'info/intro(/)': IntroController.show,
     'info/about(/)': () => {
       CommonController.show({
         title: 'About',

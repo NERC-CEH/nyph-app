@@ -1,6 +1,8 @@
 <ul class="table-view">
   <li>
-    <p><strong>Welcome to the BSBI's 2017 New Year Plant Hunt</strong></p>
+    <p style="text-align: center;font-size: 20;">
+      <strong>Welcome to the BSBI's </br> 2017 New Year Plant Hunt</strong>
+    </p>
     <p>
       For the sixth year running you are cordially invited to join in our
       BSBI New Year Plant Hunt. The aim is to find and record as many wild

@@ -82,17 +82,8 @@ export default {
           // parse stringified date
           sample.set('date', new Date(val));
           break;
-        case 'number':
-          occurrence.set('number', val);
-          break;
-        case 'number-ranges':
-          occurrence.set('number-ranges', val);
-          break;
-        case 'stage':
-          occurrence.set('stage', val);
-          break;
-        case 'identifiers':
-          occurrence.set('identifiers', val);
+        case 'recorder':
+          sample.set('recorder', val);
           break;
         case 'comment':
           occurrence.set('comment', val);
