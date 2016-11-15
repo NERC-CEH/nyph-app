@@ -40,7 +40,7 @@ export default {
     let locked;
     switch (attr) {
       case 'location':
-        locked = lockedVal && lockedVal.source !== 'gps' && lockedVal.gridref && lockedVal.gridref === value.gridref;
+        locked = lockedVal && lockedVal.source !== 'gps' && !!lockedVal.gridref && lockedVal.gridref === value.gridref;
           /*
           // map or gridref
           (lockedVal && lockedVal.source !== 'gps' &&
