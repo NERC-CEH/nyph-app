@@ -102,12 +102,12 @@ const helpers = {
    */
   _getGRgranularity(location) {
     let locationGranularity;
-    let accuracy = location.accuracy;
+    //let accuracy = location.accuracy;
 
     // don't need to recalculate if exists
-    if (location.source === 'gridref') {
-      return accuracy;
-    }
+    //if (location.source === 'gridref') {
+    //  return accuracy;
+    //}
 
     // normalize to metres
     //if (location.source === 'map') {
@@ -115,7 +115,7 @@ const helpers = {
     //}
 
     // calculate granularity
-    const digits = Math.log(accuracy) / Math.LN10;
+    const digits = Math.log(location.accuracy * 2) / Math.LN10;
     locationGranularity = 10 - (digits * 2); // MAX GR ACC -
     locationGranularity = Number((locationGranularity).toFixed(0)); // round the float
 
