@@ -38,7 +38,7 @@
     </div>
 
     <div class="media-body">
-      <% if (!obj.taxonMissingOrNotValid) { %>
+      <% if (!obj.idIncomplete) { %>
       <div class="species"> <%= obj.taxon %></div>
       <% } else { %>
       <div class="species"> <%= obj.taxon %></div>
