@@ -93,7 +93,7 @@ export default {
       if (useGridRef || location.source === 'gridref') {
         let accuracy = location.accuracy;
 
-        // cannot be odd
+        // cannot be odd (@todo Why not odd!)
         if (accuracy % 2 !== 0) {
           // should not be less than 2
           accuracy = accuracy === 1 ? accuracy + 1 : accuracy - 1;

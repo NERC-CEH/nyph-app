@@ -110,9 +110,9 @@ const helpers = {
     }
 
     // normalize to metres
-    if (location.source === 'map') {
-      accuracy = helpers.mapZoom2meters(accuracy);
-    }
+    //if (location.source === 'map') {
+    //  accuracy = helpers.mapZoom2meters(accuracy);
+    //}
 
     // calculate granularity
     const digits = Math.log(accuracy) / Math.LN10;

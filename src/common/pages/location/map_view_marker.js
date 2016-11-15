@@ -97,11 +97,12 @@ const marker = {
     const inUK = LocHelp.isInUK(location);
 
     // normalize the accuracy across different layer types
-    let accuracy = this.map.getZoom();
-    let mapZoom = accuracy;
+    let mapZoom = this.map.getZoom();
+    let normalisedZoom;
+    
     if (this.currentLayer !== 'OS') {
-      accuracy -= OS_ZOOM_DIFF; // adjust the diff
-      accuracy = accuracy < 0 ? 0 : accuracy; // normalize
+      normalisedZoom = mapZoom - OS_ZOOM_DIFF; // adjust the diff
+      normalisedZoom = normalisedZoom < 0 ? 0 : normalisedZoom; // normalize
 
       // need to downgrade to OS maps so that there is no OS -> OSM -> OS transitions
       if (inUK && (mapZoom - OS_ZOOM_DIFF) < MAX_OS_ZOOM) {
@@ -109,11 +110,11 @@ const marker = {
       }
     } else if (!inUK) {
       // out of UK adjust the zoom because the next displayed map should be not OS
-      accuracy += OS_ZOOM_DIFF;
+      normalisedZoom += OS_ZOOM_DIFF;
       mapZoom += OS_ZOOM_DIFF; // adjust the diff
     }
 
-    location.accuracy = accuracy;
+    location.accuracy = LocHelp.mapZoom2meters(normalisedZoom);
     location.mapZoom = mapZoom;
     location.gridref = LocHelp.coord2grid(location);
 

@@ -314,9 +314,33 @@ const LocationView = Marionette.View.extend({
   _getZoomLevel() {
     const currentLocation = this._getCurrentLocation();
     let mapZoomLevel = 1;
+    
     // check if record has location
-    if (currentLocation.latitude && currentLocation.longitude) {
+    if (currentLocation.latitude) {
       // transform location accuracy to map zoom level
+      
+      /**
+        * 1 gridref digits. (10000m)  -> 4 OS map zoom lvl
+        * 2 gridref digits. (1000m)   -> 8 OS
+        * 3 gridref digits. (100m)    -> 16 OSM
+        * 4 gridref digits. (10m)     -> 18 OSM
+        * 5 gridref digits. (1m)      ->
+        */
+      if (currentLocation.accuracy) {
+        if (currentLocation.accuracy > 1000) {
+          mapZoomLevel = 4;
+        } else if (currentLocation.accuracy > 100) {
+          mapZoomLevel = 8;
+        } else if (currentLocation.accuracy > 10) {
+          mapZoomLevel = 16;
+        } else {
+          mapZoomLevel = 18;
+        }
+      } else {
+        mapZoomLevel = 1;
+      }
+      
+      /*
       switch (currentLocation.source) {
         case 'map':
           mapZoomLevel = currentLocation.mapZoom || 1;
@@ -324,13 +348,6 @@ const LocationView = Marionette.View.extend({
           // no need to show area as it would be smaller than the marker
           break;
         case 'gps':
-          /**
-           * 1 gridref digits. (10000m)  -> 4 OS map zoom lvl
-           * 2 gridref digits. (1000m)   -> 8 OS
-           * 3 gridref digits. (100m)    -> 16 OSM
-           * 4 gridref digits. (10m)     -> 18 OSM
-           * 5 gridref digits. (1m)      ->
-           */
           if (currentLocation.accuracy) {
             if (currentLocation.accuracy > 1000) {
               mapZoomLevel = 4;
@@ -357,6 +374,7 @@ const LocationView = Marionette.View.extend({
         default:
           mapZoomLevel = MAX_OS_ZOOM - 2;
       }
+      */
     }
     //return this._normalize_zoom_by_layer(mapZoomLevel);
     return mapZoomLevel;
