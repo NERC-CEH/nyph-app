@@ -3,6 +3,7 @@
  *****************************************************************************/
 import Morel from 'morel';
 import App from 'app';
+import CONFIG from 'config';
 import { Log, Analytics, ImageHelp } from 'helpers';
 import appModel from '../../common/models/app_model';
 import userModel from '../../common/models/user_model';
@@ -146,7 +147,9 @@ const API = {
         callback(err);
         return;
       }
-      const occurrence = new Occurrence();
+      const occurrence = new Occurrence({
+        taxon: Object.assign({}, CONFIG.UNKNOWN_SPECIES),
+      });
       occurrence.addImage(image);
 
       const sample = new Sample();
