@@ -40,7 +40,8 @@ export default {
     let locked;
     switch (attr) {
       case 'location':
-        locked =
+        locked = lockedVal && lockedVal.source !== 'gps' && lockedVal.gridref && lockedVal.gridref === value.gridref;
+          /*
           // map or gridref
           (lockedVal && lockedVal.source !== 'gps' &&
           ((lockedVal.name === value.name &&
@@ -50,7 +51,7 @@ export default {
             // GPS doesn't lock the location only name
           (lockedVal.name === value.name && (
           !lockedVal.latitude && !lockedVal.longitude))));
-
+          */
         return locked;
       case 'date':
         lockedVal = new Date(lockedVal);

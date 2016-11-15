@@ -174,10 +174,10 @@ const API = {
                   appModel.setAttrLock(attr, location);
                 }
               } else if (CONFIG.AUTO_LOCK_LOCATION_NAME && location.name) {
-				  // no explicit lock request by user, but rememer name anyway
+				        // no explicit lock request by user, but remember name anyway
 
-				                                                                                                                                                                  appModel.setAttrLock(attr, { name: location.name });
-			                                                                                                                                              }
+				        appModel.setAttrLock(attr, { name: location.name });
+			        }
             } else if (lockedValue === true) {
               // reset if no location or location name selected but locked is clicked
               appModel.setAttrLock(attr, null);
