@@ -452,7 +452,7 @@ const LocationView = Marionette.View.extend({
     
     this.updateMapMarker(location);
     
-    this.map.setView(this._getCenter(), this._getZoomLevel());
+    this.map.setView(this._getCenter(), location.source !== 'map' ? this._getZoomLevel() : null);
     this._refreshGridRefElement(location);
   },
 
