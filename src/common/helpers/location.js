@@ -109,7 +109,7 @@ const helpers = {
       return accuracy;
     }
 
-    // normalize to meters
+    // normalize to metres
     if (location.source === 'map') {
       accuracy = helpers.mapZoom2meters(accuracy);
     }

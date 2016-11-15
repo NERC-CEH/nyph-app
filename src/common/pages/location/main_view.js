@@ -319,8 +319,8 @@ const LocationView = Marionette.View.extend({
       // transform location accuracy to map zoom level
       switch (currentLocation.source) {
         case 'map':
-          //mapZoomLevel = currentLocation.mapZoom || 1;
-          mapZoomLevel = currentLocation.accuracy || 1;
+          mapZoomLevel = currentLocation.mapZoom || 1;
+          
           // no need to show area as it would be smaller than the marker
           break;
         case 'gps':
@@ -358,7 +358,8 @@ const LocationView = Marionette.View.extend({
           mapZoomLevel = MAX_OS_ZOOM - 2;
       }
     }
-    return this._normalize_zoom_by_layer(mapZoomLevel);
+    //return this._normalize_zoom_by_layer(mapZoomLevel);
+    return mapZoomLevel;
   },
 
   _updateCoordSystem(e) {
@@ -450,6 +451,7 @@ const LocationView = Marionette.View.extend({
     this._refreshGrErrorState(false);
     
     this.updateMapMarker(location);
+    
     this.map.setView(this._getCenter(), this._getZoomLevel());
     this._refreshGridRefElement(location);
   },
