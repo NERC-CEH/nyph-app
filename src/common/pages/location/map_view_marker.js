@@ -91,6 +91,7 @@ const marker = {
     const location = {
       latitude: parseFloat(e.latlng.lat.toFixed(7)),
       longitude: parseFloat(e.latlng.lng.toFixed(7)),
+      accuracy: 1, // placeholder absolute accuracy, needed for inUK
       source: 'map',
     };
 
@@ -98,10 +99,10 @@ const marker = {
 
     // normalize the accuracy across different layer types
     let mapZoom = this.map.getZoom();
-    let normalisedZoom;
+    let normalisedZoom = mapZoom;
     
     if (this.currentLayer !== 'OS') {
-      normalisedZoom = mapZoom - OS_ZOOM_DIFF; // adjust the diff
+      normalisedZoom -= OS_ZOOM_DIFF; // adjust the diff
       normalisedZoom = normalisedZoom < 0 ? 0 : normalisedZoom; // normalize
 
       // need to downgrade to OS maps so that there is no OS -> OSM -> OS transitions
