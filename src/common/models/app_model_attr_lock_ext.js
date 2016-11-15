@@ -42,14 +42,14 @@ export default {
       case 'location':
         locked =
           // map or gridref
-          (lockedVal &&
-          (lockedVal.name === value.name &&
+          (lockedVal && lockedVal.source !== 'gps' &&
+          ((lockedVal.name === value.name &&
           lockedVal.latitude === value.latitude &&
           lockedVal.longitude === value.longitude) ||
 
             // GPS doesn't lock the location only name
           (lockedVal.name === value.name && (
-          !lockedVal.latitude && !lockedVal.longitude)));
+          !lockedVal.latitude && !lockedVal.longitude))));
 
         return locked;
       case 'date':
