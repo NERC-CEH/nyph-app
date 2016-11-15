@@ -291,6 +291,18 @@ const LocationView = Marionette.View.extend({
     };
     gridRef.addTo(this.map);
   },
+  
+  _normalize_zoom_by_layer(zoom) {
+    if (this.currentLayer && this.currentLayer !== 'OS') {
+      zoom += OS_ZOOM_DIFF;
+      
+      if (zoom > MAX_OS_ZOOM - 1) {
+        zoom = MAX_OS_ZOOM - 1;
+      }
+    } 
+    
+    return zoom;
+  },
 
   /**
    * 1 gridref digits. (10000m)  -> < 3 map zoom lvl
@@ -345,7 +357,7 @@ const LocationView = Marionette.View.extend({
           mapZoomLevel = MAX_OS_ZOOM - 2;
       }
     }
-    return mapZoomLevel;
+    return _normalize_zoom_by_layer(mapZoomLevel);
   },
 
   _updateCoordSystem(e) {
