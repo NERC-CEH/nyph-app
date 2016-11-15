@@ -319,7 +319,8 @@ const LocationView = Marionette.View.extend({
       // transform location accuracy to map zoom level
       switch (currentLocation.source) {
         case 'map':
-          mapZoomLevel = currentLocation.mapZoom || 1;
+          //mapZoomLevel = currentLocation.mapZoom || 1;
+          mapZoomLevel = currentLocation.accuracy || 1;
           // no need to show area as it would be smaller than the marker
           break;
         case 'gps':
