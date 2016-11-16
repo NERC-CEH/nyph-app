@@ -381,6 +381,7 @@ const LocationView = Marionette.View.extend({
   },
 
   _updateCoordSystem(e) {
+    this.zoomAdjustment = 0;
     this.currentLayerControlSelected = this.controls._handlingClick;
 
     const center = this.map.getCenter();
@@ -388,11 +389,13 @@ const LocationView = Marionette.View.extend({
     this.map.options.crs = e.name === 'OS' ? OS_CRS : L.CRS.EPSG3857;
     if (e.name === 'OS') {
       zoom -= OS_ZOOM_DIFF;
+      zoom += this.zoomAdjustment;
       if (zoom > MAX_OS_ZOOM - 1) {
         zoom = MAX_OS_ZOOM - 1;
       }
     } else if (this.currentLayer === 'OS') {
       zoom += OS_ZOOM_DIFF;
+      zoom += this.zoomAdjustment;
     }
     this.currentLayer = e.name;
     this.map.setView(center, zoom, { reset: true });
