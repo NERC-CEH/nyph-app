@@ -342,6 +342,10 @@ const LocationView = Marionette.View.extend({
     //if (this.currentLayer && this.currentLayer !== 'OS' && mapZoomLevel < MAX_OS_ZOOM) {
     if (this.currentLayer && this.currentLayer !== 'OS') {
       mapZoomLevel += OS_ZOOM_DIFF;
+      
+      if (mapZoomLevel > 18) {
+        mapZoomLevel = 18;
+      }
     }
     
     return mapZoomLevel;
