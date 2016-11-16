@@ -39,11 +39,16 @@ const LocationView = Marionette.View.extend({
     'typeahead:select #location-name': 'changeName',
 	  'change #location-gridref': 'changeGridRef',
     'keyup #location-gridref': 'keyupGridRef',
-    //'click #gps-button': 'geolocationStart',
+    'blur #location-name': 'blurInput',
+    'blur #location-gridref': 'blurInput',
   },
 
   changeName(e) {
     this.triggerMethod('location:name:change', $(e.target).val());
+  },
+  
+  blurInput() {
+    this._refreshMapHeight();
   },
   
   /**
@@ -121,13 +126,19 @@ const LocationView = Marionette.View.extend({
   },
 
   onAttach() {
-    // set full remaining height
+    this.refreshMapHeight();
+    this.initMap();
+    this.addLocationNameSearch();
+  },
+  
+  /**
+   * set full remaining height
+   * 
+   */
+  _refreshMapHeight() {
     const mapHeight = $(document).height() - 47 - 47 - 44;// - 47 - 38.5;
     this.$container = this.$el.find('#map')[0];
     $(this.$container).height(mapHeight);
-
-    this.initMap();
-    this.addLocationNameSearch();
   },
 
   addLocationNameSearch() {
@@ -291,18 +302,6 @@ const LocationView = Marionette.View.extend({
     };
     gridRef.addTo(this.map);
   },
-  
-  _normalize_zoom_by_layer(zoom) {
-    if (this.currentLayer && this.currentLayer !== 'OS') {
-      zoom += OS_ZOOM_DIFF;
-      
-      //if (zoom > MAX_OS_ZOOM - 1) {
-      //  zoom = MAX_OS_ZOOM - 1;
-      //}
-    } 
-    
-    return zoom;
-  },
 
   /**
    * 1 gridref digits. (10000m)  -> < 3 map zoom lvl
@@ -339,57 +338,15 @@ const LocationView = Marionette.View.extend({
       } else {
         mapZoomLevel = 1;
       }
-      
-      /*
-      switch (currentLocation.source) {
-        case 'map':
-          mapZoomLevel = currentLocation.mapZoom || 1;
-          
-          // no need to show area as it would be smaller than the marker
-          break;
-        case 'gps':
-          if (currentLocation.accuracy) {
-            if (currentLocation.accuracy > 1000) {
-              mapZoomLevel = 4;
-            } else if (currentLocation.accuracy > 100) {
-              mapZoomLevel = 8;
-            } else if (currentLocation.accuracy > 10) {
-              mapZoomLevel = 16;
-            } else {
-              mapZoomLevel = 18;
-            }
-          } else {
-            mapZoomLevel = 1;
-          }
-          break;
-        case 'gridref':
-          if (currentLocation.accuracy < (MAX_OS_ZOOM - 1)) {
-            mapZoomLevel = currentLocation.accuracy + 1;
-          } else {
-            // normalize to OSM zoom
-            mapZoomLevel = 18;
-          }
-
-          break;
-        default:
-          mapZoomLevel = MAX_OS_ZOOM - 2;
-      }
-      */
     }
     if (this.currentLayer && this.currentLayer !== 'OS' && mapZoomLevel < MAX_OS_ZOOM) {
       mapZoomLevel += OS_ZOOM_DIFF;
-      
-      //if (zoom > MAX_OS_ZOOM - 1) {
-      //  zoom = MAX_OS_ZOOM - 1;
-      //}
     } 
     
-    //return this._normalizeZoomByLayer(mapZoomLevel);
     return mapZoomLevel;
   },
 
   _updateCoordSystem(e) {
-    //this.zoomAdjustment = 0;
     this.currentLayerControlSelected = this.controls._handlingClick;
 
     const center = this.map.getCenter();
@@ -399,13 +356,12 @@ const LocationView = Marionette.View.extend({
     if (!this.noZoomCompensation) { 
       if (e.name === 'OS') {
         zoom -= OS_ZOOM_DIFF;
-        //zoom += this.zoomAdjustment;
+        
         if (zoom > MAX_OS_ZOOM - 1) {
           zoom = MAX_OS_ZOOM - 1;
         }
       } else if (this.currentLayer === 'OS') {
         zoom += OS_ZOOM_DIFF;
-        //zoom -= this.zoomAdjustment;
       }
     }
     this.currentLayer = e.name;
