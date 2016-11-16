@@ -126,7 +126,7 @@ const LocationView = Marionette.View.extend({
   },
 
   onAttach() {
-    this.refreshMapHeight();
+    this._refreshMapHeight();
     this.initMap();
     this.addLocationNameSearch();
   },
