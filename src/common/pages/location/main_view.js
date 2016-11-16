@@ -381,21 +381,24 @@ const LocationView = Marionette.View.extend({
   },
 
   _updateCoordSystem(e) {
-    this.zoomAdjustment = 0;
+    //this.zoomAdjustment = 0;
     this.currentLayerControlSelected = this.controls._handlingClick;
 
     const center = this.map.getCenter();
-    let zoom = this.map.getZoom();
-    this.map.options.crs = e.name === 'OS' ? OS_CRS : L.CRS.EPSG3857;
-    if (e.name === 'OS') {
-      zoom -= OS_ZOOM_DIFF;
-      zoom += this.zoomAdjustment;
-      if (zoom > MAX_OS_ZOOM - 1) {
-        zoom = MAX_OS_ZOOM - 1;
+    
+    if (!this.noZoomCompensation) {
+      let zoom = this.map.getZoom();
+      this.map.options.crs = e.name === 'OS' ? OS_CRS : L.CRS.EPSG3857;
+      if (e.name === 'OS') {
+        zoom -= OS_ZOOM_DIFF;
+        //zoom += this.zoomAdjustment;
+        if (zoom > MAX_OS_ZOOM - 1) {
+          zoom = MAX_OS_ZOOM - 1;
+        }
+      } else if (this.currentLayer === 'OS') {
+        zoom += OS_ZOOM_DIFF;
+        //zoom -= this.zoomAdjustment;
       }
-    } else if (this.currentLayer === 'OS') {
-      zoom += OS_ZOOM_DIFF;
-      zoom += this.zoomAdjustment;
     }
     this.currentLayer = e.name;
     this.map.setView(center, zoom, { reset: true });
@@ -403,21 +406,19 @@ const LocationView = Marionette.View.extend({
   },
 
   onMapZoom() {
-    if (!this.ignoreZoomEvent) {
-      const zoom = this.map.getZoom();
-      const inUK = LocHelp.isInUK(this._getCurrentLocation());
+    const zoom = this.map.getZoom();
+    const inUK = LocHelp.isInUK(this._getCurrentLocation());
 
-      // -2 and not -1 because we ignore the last OS zoom level
-      if (zoom > MAX_OS_ZOOM - 1 && this.currentLayer === 'OS') {
-        this.map.removeLayer(this.layers.OS);
-        this.map.addLayer(this.layers.Satellite);
-      } else if ((zoom - OS_ZOOM_DIFF) <= MAX_OS_ZOOM - 1 && this.currentLayer === 'Satellite') {
-        // only change base layer if user is on OS and did not specificly
-        // select OSM/Satellite
-        if (!this.currentLayerControlSelected && inUK !== false) {
-          this.map.removeLayer(this.layers.Satellite);
-          this.map.addLayer(this.layers.OS);
-        }
+    // -2 and not -1 because we ignore the last OS zoom level
+    if (zoom > MAX_OS_ZOOM - 1 && this.currentLayer === 'OS') {
+      this.map.removeLayer(this.layers.OS);
+      this.map.addLayer(this.layers.Satellite);
+    } else if ((zoom - OS_ZOOM_DIFF) <= MAX_OS_ZOOM - 1 && this.currentLayer === 'Satellite') {
+      // only change base layer if user is on OS and did not specificly
+      // select OSM/Satellite
+      if (!this.currentLayerControlSelected && inUK !== false) {
+        this.map.removeLayer(this.layers.Satellite);
+        this.map.addLayer(this.layers.OS);
       }
     }
   },
@@ -477,10 +478,11 @@ const LocationView = Marionette.View.extend({
     
     //if source was 'map' then presume that current zoom is fine so don't change (send undefined)
     //this.map.setView(this._getCenter(), location.source !== 'map' ? this._getZoomLevel() : undefined);
+    this.noZoomCompensation = true;
     this.map.setView(this._getCenter(), this._getZoomLevel());
     //this.map.panTo(this._getCenter());
     //this.map.setZoom(this._getZoomLevel());
-    
+    this.noZoomCompensation = false;
     this._refreshGridRefElement(location);
   },
 
