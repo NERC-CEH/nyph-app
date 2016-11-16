@@ -339,9 +339,9 @@ const LocationView = Marionette.View.extend({
         mapZoomLevel = 1;
       }
     }
-    if (this.currentLayer && this.currentLayer !== 'OS' && mapZoomLevel < MAX_OS_ZOOM) {
-      mapZoomLevel += OS_ZOOM_DIFF;
-    } 
+    //if (this.currentLayer && this.currentLayer !== 'OS' && mapZoomLevel < MAX_OS_ZOOM) {
+    //  mapZoomLevel += OS_ZOOM_DIFF;
+    //} 
     
     return mapZoomLevel;
   },
@@ -443,7 +443,8 @@ const LocationView = Marionette.View.extend({
     //if source was 'map' then presume that current zoom is fine so don't change (send undefined)
     //this.map.setView(this._getCenter(), location.source !== 'map' ? this._getZoomLevel() : undefined);
     this.noZoomCompensation = true;
-    this.map.setView(this._getCenter(), this._getZoomLevel());
+    //this.map.setView(this._getCenter(), this._getZoomLevel());
+    this.map.setView(this._getCenter(), location.source !== 'map' ? this._getZoomLevel() : undefined);
     //this.map.panTo(this._getCenter());
     //this.map.setZoom(this._getZoomLevel());
     this.noZoomCompensation = false;
