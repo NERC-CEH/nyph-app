@@ -376,8 +376,16 @@ const LocationView = Marionette.View.extend({
       }
       */
     }
-    return this._normalizeZoomByLayer(mapZoomLevel);
-    //return mapZoomLevel;
+    if (this.currentLayer && this.currentLayer !== 'OS') {
+      mapZoomLevel += OS_ZOOM_DIFF;
+      
+      //if (zoom > MAX_OS_ZOOM - 1) {
+      //  zoom = MAX_OS_ZOOM - 1;
+      //}
+    } 
+    
+    //return this._normalizeZoomByLayer(mapZoomLevel);
+    return mapZoomLevel;
   },
 
   _updateCoordSystem(e) {
