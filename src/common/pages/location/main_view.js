@@ -66,14 +66,14 @@ const LocationView = Marionette.View.extend({
           return; // gridref hasn't changed meaningfully
         }
         
+        // Clear previous timeout
+        this._clearGrTimeout();
+        
         if (gr === '' || LocHelp.grid2coord(gr)) {
           // gr syntax ok (or blank)
           
           this._refreshGrErrorState(false);
           
-          // Clear previous timeout
-          this._clearGrTimeout();
-
           const that = this;
           // Set new timeout - don't run if user is typing
           this.grRefreshTimeout = setTimeout(function () {
@@ -468,7 +468,7 @@ const LocationView = Marionette.View.extend({
     
     this._refreshGrErrorState(false);
     
-    this.updateMapMarker(location);
+    //this.updateMapMarker(location); @todo put back marker
     
     //if source was 'map' then presume that current zoom is fine so don't change (send undefined)
     //this.map.setView(this._getCenter(), location.source !== 'map' ? this._getZoomLevel() : undefined);

@@ -138,7 +138,7 @@ const helpers = {
   },
 
   isInUK(location) {
-    if (!location.latitude || !location.longitude) return null;
+    if (!location.latitude) return null;
 
     let gridref = location.gridref;
     if (!gridref) {

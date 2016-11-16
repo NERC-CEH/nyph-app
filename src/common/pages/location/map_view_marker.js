@@ -17,7 +17,7 @@ const marker = {
    * @param currentLocation
    */
   updateMapMarker(location) {
-    if (!location.latitude || !location.longitude) return;
+    if (!location.latitude) return;
     Log('Common:Location:Map view: updating map marker');
 
     const inUK = LocHelp.isInUK(location);
