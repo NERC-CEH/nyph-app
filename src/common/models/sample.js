@@ -80,7 +80,7 @@ let Sample = Morel.Sample.extend({
         // @todo move to occurrence module
         // don't allow 'unknown species' if no photo
         if (occurrence.images.length === 0 &&
-          occurrence.get('taxon').id === CONFIG.UNKNOWN_SPECIES.id) {
+          occurrence.get('taxon').warehouse_id === CONFIG.UNKNOWN_SPECIES.warehouse_id) {
         	errors = errors || {};
         	errors.taxon = 'Taxon name or photo needed';
         }

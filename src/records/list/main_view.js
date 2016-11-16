@@ -130,7 +130,7 @@ const RecordView = Marionette.View.extend({
       dateRangeError: (modelDate < CONFIG.MIN_RECORDING_DATE ||
       modelDate > CONFIG.MAX_RECORDING_DATE ||
       modelDate > (new Date())),
-      idIncomplete: (!species || species.id === CONFIG.UNKNOWN_SPECIES.id) &&
+      idIncomplete: (!species || species.warehouse_id === CONFIG.UNKNOWN_SPECIES.warehouse_id) &&
       images.length === 0,
     };
   },

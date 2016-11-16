@@ -12,7 +12,7 @@ export default {
   name: APP_NAME,
 
   UNKNOWN_SPECIES: {
-    id: 125442, // Plantae kingdom
+    warehouse_id: 125442, // Plantae kingdom
     scientific_name: 'Unknown flowering plant',
     found_in_name: 'scientific_name',
   },
