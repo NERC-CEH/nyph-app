@@ -443,7 +443,7 @@ const LocationView = Marionette.View.extend({
     
     //if source was 'map' then presume that current zoom is fine so don't change (send undefined)
     //this.map.setView(this._getCenter(), location.source !== 'map' ? this._getZoomLevel() : undefined);
-    this.noZoomCompensation = true;
+    this.noZoomCompensation = false;
     //this.map.setView(this._getCenter(), this._getZoomLevel());
     this.map.setView(this._getCenter(), location.source !== 'map' ? this._getZoomLevel() : undefined);
     //this.map.panTo(this._getCenter());
