@@ -400,19 +400,21 @@ const LocationView = Marionette.View.extend({
   },
 
   onMapZoom() {
-    const zoom = this.map.getZoom();
-    const inUK = LocHelp.isInUK(this._getCurrentLocation());
+    if (!this.ignoreZoomEvent) {
+      const zoom = this.map.getZoom();
+      const inUK = LocHelp.isInUK(this._getCurrentLocation());
 
-    // -2 and not -1 because we ignore the last OS zoom level
-    if (zoom > MAX_OS_ZOOM - 1 && this.currentLayer === 'OS') {
-      this.map.removeLayer(this.layers.OS);
-      this.map.addLayer(this.layers.Satellite);
-    } else if ((zoom - OS_ZOOM_DIFF) <= MAX_OS_ZOOM - 1 && this.currentLayer === 'Satellite') {
-      // only change base layer if user is on OS and did not specificly
-      // select OSM/Satellite
-      if (!this.currentLayerControlSelected && inUK !== false) {
-        this.map.removeLayer(this.layers.Satellite);
-        this.map.addLayer(this.layers.OS);
+      // -2 and not -1 because we ignore the last OS zoom level
+      if (zoom > MAX_OS_ZOOM - 1 && this.currentLayer === 'OS') {
+        this.map.removeLayer(this.layers.OS);
+        this.map.addLayer(this.layers.Satellite);
+      } else if ((zoom - OS_ZOOM_DIFF) <= MAX_OS_ZOOM - 1 && this.currentLayer === 'Satellite') {
+        // only change base layer if user is on OS and did not specificly
+        // select OSM/Satellite
+        if (!this.currentLayerControlSelected && inUK !== false) {
+          this.map.removeLayer(this.layers.Satellite);
+          this.map.addLayer(this.layers.OS);
+        }
       }
     }
   },
