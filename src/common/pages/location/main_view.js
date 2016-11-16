@@ -16,6 +16,7 @@ import CONFIG from 'config';
 import 'typeahead';
 import mapMarker from './map_view_marker';
 import locationNameFinder from './location_name_search';
+import LeafletButton from './leaflet_button_ext';
 
 const DEFAULT_LAYER = 'OS';
 const DEFAULT_CENTER = [53.7326306, -2.6546124];
@@ -28,12 +29,15 @@ const GRID_STEP = 100000; // meters
 import './styles.scss';
 
 const LocationView = Marionette.View.extend({
+  id: 'location-container',
   template: JST['common/location/location'],
 
   triggers: {
-    'click #gps-button': 'gps:click',
+    'click #location-lock-btn': 'lock:click:location',
+    'click #name-lock-btn': 'lock:click:name',
+    'click a[data-rel="back"]': 'navigateBack',
   },
-  
+
   events: {
     'change #location-name': 'changeName',
     'typeahead:select #location-name': 'changeName',
@@ -46,11 +50,11 @@ const LocationView = Marionette.View.extend({
   changeName(e) {
     this.triggerMethod('location:name:change', $(e.target).val());
   },
-  
+
   blurInput() {
     this._refreshMapHeight();
   },
-  
+
   /**
    * after delay, if gridref is valid then apply change
    */
@@ -66,19 +70,19 @@ const LocationView = Marionette.View.extend({
       default:
         // Other
         let gr = e.target.value.replace(/\s+/g, '').toUpperCase();
-        
+
         if (gr === this._getCurrentLocation().gridref) {
           return; // gridref hasn't changed meaningfully
         }
-        
+
         // Clear previous timeout
         this._clearGrTimeout();
-        
+
         if (gr === '' || LocHelp.grid2coord(gr)) {
           // gr syntax ok (or blank)
-          
+
           this._refreshGrErrorState(false);
-          
+
           const that = this;
           // Set new timeout - don't run if user is typing
           this.grRefreshTimeout = setTimeout(function () {
@@ -90,7 +94,7 @@ const LocationView = Marionette.View.extend({
         }
     }
   },
-  
+
   /**
    * stop any delayed gridref refresh
    */
@@ -100,7 +104,7 @@ const LocationView = Marionette.View.extend({
       this.grRefreshTimeout = null;
     }
   },
-  
+
   changeGridRef(e) {
     this._clearGrTimeout();
     this.triggerMethod('location:gridref:change', $(e.target).val());
@@ -113,9 +117,9 @@ const LocationView = Marionette.View.extend({
     this.currentLayerControlSelected = false;
     this.currentLayer = null;
     this.markerAdded = false;
-    
+
     const recordModel = this.model.get('recordModel');
-    
+
     //this.listenTo(recordModel, 'geolocation:start geolocation:stop geolocation:error', this.render);
     this.listenTo(recordModel, 'geolocation:start', this.geolocationStart);
     this.listenTo(recordModel, 'geolocation:stop', this.geolocationStop);
@@ -123,6 +127,9 @@ const LocationView = Marionette.View.extend({
     this.listenTo(recordModel, 'geolocation:update', this.geolocationUpdate);
     this.listenTo(recordModel, 'geolocation:success', this.geolocationSuccess);
     this.listenTo(recordModel, 'change:location', this.locationChange);
+
+    const appModel = this.model.get('appModel');
+    this.listenTo(appModel, 'change:attrLocks', this.updateLocks);
   },
 
   onAttach() {
@@ -130,10 +137,10 @@ const LocationView = Marionette.View.extend({
     this.initMap();
     this.addLocationNameSearch();
   },
-  
+
   /**
    * set full remaining height
-   * 
+   *
    */
   _refreshMapHeight() {
     //const mapHeight = $(document).height() - 47 - 47 - 44;// - 47 - 38.5;
@@ -174,6 +181,9 @@ const LocationView = Marionette.View.extend({
 
     // Controls
     this.addControls();
+
+    // GPS
+    this.addGPS();
 
     // Marker
     this.addMapMarker();
@@ -261,6 +271,29 @@ const LocationView = Marionette.View.extend({
     this.map.addControl(this.controls);
   },
 
+  addGPS() {
+    const that = this;
+    const location = this._getCurrentLocation();
+
+    const GPSbutton = new LeafletButton({
+      body: `<span id="gps-btn" class="gps-btn icon icon-location"
+                data-source="${location.source}"></span>`,
+      'onClick'() {
+        that.trigger('gps:click');
+      },
+      'maxWidth': 30,  // number
+    });
+
+
+    this.map.addControl(GPSbutton);
+    const recordModel = this.model.get('recordModel');
+    if (recordModel.isGPSRunning()) {
+      this._set_gps_progress_feedback('pending');
+    } else {
+      this._set_gps_progress_feedback('');
+    }
+  },
+
   addGraticule() {
     const appModel = this.model.get('appModel');
     const useGridRef = appModel.get('useGridRef');
@@ -314,11 +347,11 @@ const LocationView = Marionette.View.extend({
   _getZoomLevel() {
     const currentLocation = this._getCurrentLocation();
     let mapZoomLevel = 1;
-    
+
     // check if record has location
     if (currentLocation.latitude) {
       // transform location accuracy to map zoom level
-      
+
       /**
         * 1 gridref digits. (10000m)  -> 4 OS map zoom lvl
         * 2 gridref digits. (1000m)   -> 8 OS
@@ -343,12 +376,12 @@ const LocationView = Marionette.View.extend({
     //if (this.currentLayer && this.currentLayer !== 'OS' && mapZoomLevel < MAX_OS_ZOOM) {
     if (this.currentLayer && this.currentLayer !== 'OS') {
       mapZoomLevel += OS_ZOOM_DIFF;
-      
+
       if (mapZoomLevel > 18) {
         mapZoomLevel = 18;
       }
     }
-    
+
     return mapZoomLevel;
   },
 
@@ -358,11 +391,11 @@ const LocationView = Marionette.View.extend({
     const center = this.map.getCenter();
     let zoom = this.map.getZoom();
     this.map.options.crs = e.name === 'OS' ? OS_CRS : L.CRS.EPSG3857;
-      
-    if (!this.noZoomCompensation) { 
+
+    if (!this.noZoomCompensation) {
       if (e.name === 'OS') {
         zoom -= OS_ZOOM_DIFF;
-        
+
         if (zoom > MAX_OS_ZOOM - 1) {
           zoom = MAX_OS_ZOOM - 1;
         }
@@ -392,11 +425,11 @@ const LocationView = Marionette.View.extend({
       }
     }
   },
-  
+
   geolocationStart() {
     this._set_gps_progress_feedback('pending');
   },
-  
+
   /**
    * Update the temporary location fix
    * @param location
@@ -410,17 +443,17 @@ const LocationView = Marionette.View.extend({
     this.locationUpdate = location;
     this._set_gps_progress_feedback('fixed');
   },
-  
+
   geolocationStop() {
     this._set_gps_progress_feedback('');
   },
-  
+
   geolocationError() {
     this._set_gps_progress_feedback('failed');
   },
-  
+
   _set_gps_progress_feedback(state) {
-    const $gpsButton = this.$el.find('#gps-button');
+    const $gpsButton = this.$el.find('#gps-btn');
     // change icon
     if (state === 'pending') {
       $gpsButton.addClass('icon-arrows-cw icon-spin');
@@ -434,7 +467,7 @@ const LocationView = Marionette.View.extend({
     // change state
     $gpsButton.attr('data-gps-progress', state);
   },
-  
+
   _refreshGrErrorState(isError) {
     const grInputEl = document.getElementById('location-gridref');
     if (grInputEl) {
@@ -446,15 +479,15 @@ const LocationView = Marionette.View.extend({
       }
     }
   },
-  
+
   locationChange() {
     this._clearGrTimeout();
     const location = this._getCurrentLocation();
-    
+
     this._refreshGrErrorState(false);
-    
+
     this.updateMapMarker(location);
-    
+
     //if source was 'map' then presume that current zoom is fine so don't change (send undefined)
     //this.map.setView(this._getCenter(), location.source !== 'map' ? this._getZoomLevel() : undefined);
     this.noZoomCompensation = false;
@@ -469,14 +502,14 @@ const LocationView = Marionette.View.extend({
   _getCurrentLocation() {
     return this.model.get('recordModel').get('location') || {};
   },
-  
+
   _refreshGridRefElement(location) {
     // rather than full refresh of the view, directly update the relavant input element
     const grEl = document.getElementById('location-gridref');
     grEl.value = location.gridref;
     grEl.setAttribute('data-source', location.source);
-    
-    const gpsButtonEl = document.getElementById('gps-button');
+
+    const gpsButtonEl = document.getElementById('gps-btn');
     if (gpsButtonEl) {
       gpsButtonEl.setAttribute('data-source', location.source);
       
@@ -486,7 +519,37 @@ const LocationView = Marionette.View.extend({
     }
   },
 
+  updateLocks() {
+    const appModel = this.model.get('appModel');
+    const recordModel = this.model.get('recordModel');
+    const location = recordModel.get('location') || {};
+
+    // location lock
+    const $locationLockBtn = this.$el.find('#location-lock-btn');
+    const locationLocked = appModel.isAttrLocked('location', location);
+    if (locationLocked) {
+      $locationLockBtn.addClass('icon-lock-closed');
+      $locationLockBtn.removeClass('icon-lock-open');
+    } else {
+      $locationLockBtn.addClass('icon-lock-open');
+      $locationLockBtn.removeClass('icon-lock-closed');
+    }
+
+    // location name lock
+    const $nameLockBtn = this.$el.find('#name-lock-btn');
+    const nameLocked = appModel.isAttrLocked('location-name', location.name);
+    if (nameLocked) {
+      $nameLockBtn.addClass('icon-lock-closed');
+      $nameLockBtn.removeClass('icon-lock-open');
+    } else {
+      $nameLockBtn.addClass('icon-lock-open');
+      $nameLockBtn.removeClass('icon-lock-closed');
+    }
+
+  },
+
   serializeData() {
+    const appModel = this.model.get('appModel');
     const location = this._getCurrentLocation();
     let gridref;
 
@@ -497,6 +560,9 @@ const LocationView = Marionette.View.extend({
       gridref = location.gridref;
     }
 
+    const locationLocked = appModel.isAttrLocked('location', location);
+    const nameLocked = appModel.isAttrLocked('location-name', location.name);
+
     return {
       name: location.name,
       gridref: gridref,
@@ -505,6 +571,8 @@ const LocationView = Marionette.View.extend({
       latitude: location.latitude,
       longitude: location.longitude,
       accuracyLimit: CONFIG.gps_accuracy_limit, // TODO: get from GPS
+      locationLocked,
+      nameLocked,
     };
   },
 });

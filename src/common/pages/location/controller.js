@@ -10,8 +10,6 @@ import App from 'app';
 
 import recordManager from '../../record_manager';
 import appModel from '../../models/app_model';
-import HeaderView from '../../views/header_view';
-import LockView from '../../views/attr_lock_view';
 import MainView from './main_view';
 import CONFIG from 'config';
 
@@ -35,14 +33,14 @@ const API = {
 
       // MAIN
       const recordLocation = recordModel.get('location') || {};
-	  
+
       //const active = {};
       //if (!recordLocation.source) {
       //  active.gps = true;
       //} else {
       //  active[recordLocation.source] = true;
       //}
-	  
+
       const mainView = new MainView({
         model: new Backbone.Model({ recordModel, appModel }),
         vent: App,
@@ -67,7 +65,7 @@ const API = {
           if (!_.isObject(oldLocation)) oldLocation = {}; // check for locked true
           location = $.extend(oldLocation, location);
         }
-        
+
         recordModel.set('location', location);
         recordModel.trigger('change:location');
       }
@@ -91,7 +89,7 @@ const API = {
         recordModel.set('location', location);
         recordModel.trigger('change:location');
       }
-	  
+
 	  function onManualGridrefChange(gridRefString) {
 		  /**
       * Validates grid ref
@@ -132,128 +130,98 @@ const API = {
         //@todo tetrad issue
         //const accuracy = (gridRefString.replace(/\s/g, '').length - 2) || 2;
         const grSquareDimension = Math.pow(10, 5 - ((gridRefString.replace(/\s/g, '').length - 2) / 2));
-  
+
         location.accuracy = grSquareDimension / 2; // accauracy is radius, so for sqaures use half dimension
 
         onLocationSelect(location);
-        //onPageExit();
+        //API.exit();
       } else {
         App.trigger('gridref:form:data:invalid', validationError);
       }
 	  }
 
-      const currentVal = recordModel.get('location') || {};
-      const locationIsLocked = appModel.isAttrLocked('location', currentVal);
-
-      function onPageExit() {
-        recordModel.save(null, {
-          success: () => {
-            const attr = 'location';
-            let location = recordModel.get('location') || {};
-            const lockedValue = appModel.getAttrLock('location');
-
-            if ((location.latitude && location.longitude) || location.name) {
-              // we can lock location and name on their own
-              // don't lock GPS though, because it varies more than a map or gridref
-
-              // save to past locations
-              const locationID = appModel.setLocation(recordModel.get('location'));
-              location.id = locationID;
-              recordModel.set('location', location);
-
-              // update locked value if attr is locked
-              if (lockedValue) {
-                // check if previously the value was locked and we are updating
-                if (locationIsLocked || lockedValue === true) {
-                  Log('Updating lock', 'd');
-
-                  if (location.source === 'gps') {
-                    // on GPS don't lock other than name
-                    location = {
-                      name: location.name,
-                    };
-                  }
-                  appModel.setAttrLock(attr, location);
-                }
-              } else if (CONFIG.AUTO_LOCK_LOCATION_NAME && location.name) {
-				        // no explicit lock request by user, but remember name anyway
-
-				        appModel.setAttrLock(attr, { name: location.name });
-			        }
-            } else if (lockedValue === true) {
-              // reset if no location or location name selected but locked is clicked
-              appModel.setAttrLock(attr, null);
-            }
-
-            window.history.back();
-          },
-          error: (error) => {
-            Log(error, 'e');
-            App.regions.getRegion('dialog').error(error);
-          },
-        });
-      }
       mainView.on('location:select:map', onLocationSelect);
       mainView.on('gps:click', onGPSClick);
       mainView.on('location:name:change', onLocationNameChange);
       mainView.on('location:gridref:change', onManualGridrefChange);
-
+      mainView.on('lock:click:location', API.onLocationLockClick);
+      mainView.on('lock:click:name', API.onNameLockClick);
+      const currentVal = recordModel.get('location') || {};
+      const locationIsLocked = appModel.isAttrLocked('location', currentVal);
+      mainView.on('navigateBack', () => {
+        API.exit(recordModel, locationIsLocked);
+      });
       App.regions.getRegion('main').show(mainView);
 
       // HEADER
-      const lockView = new LockView({
-        model: new Backbone.Model({ appModel, recordModel }),
-        attr: 'location',
-        onLockClick() {
-          // invert the lock of the attribute
-          // real value will be put on exit
-          appModel.setAttrLock('location', !appModel.getAttrLock('location'));
-        },
-      });
-
-      // header view
-      const LocationHeader = HeaderView.extend({
-        id: 'location-header',
-
-        /*
-         From Marionette docs:
-         it is suggested that you avoid re-rendering the entire View unless
-         absolutely necessary. Instead, if you are binding the View's template
-         to a model and need to update portions of the View, you should listen
-         to the model's "change" events and only update the necessary DOM elements.
-         */
-        modelEvents: {
-          'change:location': 'updateTitle',
-        },
-
-        updateTitle() {
-          const title = this.model.printLocation();
-          const $title = this.$el.find('h1');
-
-          $title.html(title || 'Location');
-        },
-
-        serializeData() {
-          return {
-            title: this.model.printLocation() || 'Location',
-          };
-        },
-      });
-
-      const headerView = new LocationHeader({
-        onExit: onPageExit,
-        rightPanel: lockView,
-        model: recordModel,
-      });
-
-      App.regions.getRegion('header').show(headerView);
-
-      // if exit on selection click
-      mainView.on('save', onPageExit);
+      App.regions.getRegion('header').hide();
     });
 
     // FOOTER
     App.regions.getRegion('footer').hide().empty();
+  },
+
+  onLocationLockClick() {
+    Log('Location:Controller:onLocationLockClick');
+    // invert the lock of the attribute
+    // real value will be put on exit
+    appModel.setAttrLock('location', !appModel.getAttrLock('location'));
+  },
+
+  onNameLockClick() {
+    Log('Location:Controller:onNameLockClick');
+    // invert the lock of the attribute
+    // real value will be put on exit
+    appModel.setAttrLock('location-name', !appModel.getAttrLock('location-name'));
+  },
+
+  exit(recordModel, locationIsLocked) {
+    recordModel.save(null, {
+      success: () => {
+        const attr = 'location';
+        let location = recordModel.get('location') || {};
+        const lockedValue = appModel.getAttrLock('location');
+
+        if ((location.latitude && location.longitude) || location.name) {
+          // we can lock location and name on their own
+          // don't lock GPS though, because it varies more than a map or gridref
+
+          // save to past locations
+          const locationID = appModel.setLocation(recordModel.get('location'));
+          location.id = locationID;
+          recordModel.set('location', location);
+
+          // update locked value if attr is locked
+          if (lockedValue) {
+            // check if previously the value was locked and we are updating
+            if (locationIsLocked || lockedValue === true) {
+              Log('Updating lock', 'd');
+
+              if (location.source === 'gps') {
+                // on GPS don't lock other than name
+                location = {
+                  name: location.name,
+                };
+              }
+              appModel.setAttrLock(attr, location);
+            }
+          } else if (CONFIG.AUTO_LOCK_LOCATION_NAME && location.name) {
+            // no explicit lock request by user, but remember name anyway
+
+            appModel.setAttrLock(attr, { name: location.name });
+          }
+        } else if (lockedValue === true) {
+          // reset if no location or location name selected but locked is clicked
+          appModel.setAttrLock(attr, null);
+        }
+
+        window.history.back();
+      },
+      error: (error) => {
+        Log(error, 'e');
+        App.regions.getRegion('dialog').error(error);
+      },
+    });
   },
 };
 

@@ -41,7 +41,7 @@
     }
 
     .leaflet-control-container .leaflet-top {
-      top: 3px;
+      top: 95px;
     }
 
     .leaflet-control-layers label {
@@ -187,7 +187,34 @@ input#grid-ref:-ms-input-placeholder { /* Internet Explorer 10+ */
   }
 }
 
-button.btn-gps {
+#location-container {
+  margin-top: -44px;
+
+  #header-controls {
+    position: absolute;
+    margin-left: -2%;
+    z-index: 1000;
+    width: 100%;
+    padding: 0 2%;
+    background-color: rgba(255, 255, 255, 0.9);
+
+    .input-group {
+      background: transparent;
+    }
+  }
+}
+
+#back-btn {
+  background-color: $color-main;
+  margin: -1 10 0 -2%;
+  height: 45px;
+  padding-top: 13px;
+  padding-left: 13px;
+  color: $color-white;
+  width: 55px;
+}
+
+button.lock-btn {
   position: absolute;
   right: 1px;
   top: 6px;
@@ -197,17 +224,17 @@ button.btn-gps {
   outline-style: none;
 }
 
-button.btn-gps[data-gps-progress='fixed'] {
+#gps-btn[data-gps-progress='fixed'] {
   background-color: $color-green;
   border-color: $color-green;
 }
 
-button.btn-gps[data-gps-progress='pending'] {
+#gps-btn[data-gps-progress='pending'] {
   background-color: $color-yellow;
   border-color: $color-yellow;
 }
 
-button.btn-gps[data-gps-progress='failed'] {
+#gps-btn[data-gps-progress='failed'] {
   background-color: $color-orange;
   border-color: $color-orange;
 }
@@ -222,4 +249,30 @@ input#location-gridref[data-source='gps'] {
 
 input#location-gridref[data-gr-error='error'] {
   color: $color-orange;
+}
+
+// Leaflet Button Ext
+.leaflet-buttons-control-button {
+  width: 44px;
+  height: 44px;
+
+  @media only screen and (max-width: 480px) {
+    margin-bottom: 34px;
+  }
+
+  box-shadow: 0 1px 5px rgba(0,0,0,.4);
+  background: #fff;
+  border-radius: 5px;
+
+  .icon {
+    margin: 12px 0 0 8px;
+  }
+
+  &.leaflet-buttons-control-toggleon {
+    background-color: $color-main-light;
+
+    .icon {
+      color: $color-white;
+    }
+  }
 }
