@@ -471,7 +471,8 @@ const LocationView = Marionette.View.extend({
     this.updateMapMarker(location);
     
     //if source was 'map' then presume that current zoom is fine so don't change (send undefined)
-    this.map.setView(this._getCenter(), location.source !== 'map' ? this._getZoomLevel() : undefined);
+    //this.map.setView(this._getCenter(), location.source !== 'map' ? this._getZoomLevel() : undefined);
+    this.map.setView(this._getCenter(), this._getZoomLevel());
     this._refreshGridRefElement(location);
   },
 
