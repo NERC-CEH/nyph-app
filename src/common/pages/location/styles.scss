@@ -198,18 +198,18 @@ button.btn-gps {
 }
 
 button.btn-gps[data-gps-progress='fixed'] {
-  background-color: #5cb85c;
-  border-color: #5cb85c;
+  background-color: $color-green;
+  border-color: $color-green;
 }
 
 button.btn-gps[data-gps-progress='pending'] {
-  background-color: #ffff4f;
-  border-color: #ffff4f;
+  background-color: $color-yellow;
+  border-color: $color-yellow;
 }
 
 button.btn-gps[data-gps-progress='failed'] {
-  background-color: #d9534f;
-  border-color: #d9534f;
+  background-color: $color-orange;
+  border-color: $color-orange;
 }
 
 input#location-gridref {
@@ -217,9 +217,9 @@ input#location-gridref {
 }
 
 input#location-gridref[data-source='gps'] {
-  color: #5cb85c;
+  color: $color-green
 }
 
 input#location-gridref[data-gr-error='error'] {
-  color: red;
+  color: $color-orange;
 }

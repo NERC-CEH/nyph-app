@@ -420,10 +420,19 @@ const LocationView = Marionette.View.extend({
   },
   
   _set_gps_progress_feedback(state) {
-    const gpsButtonEl = document.getElementById('gps-button');
-    if (gpsButtonEl) {
-      gpsButtonEl.setAttribute('data-gps-progress', state);
+    const $gpsButton = this.$el.find('#gps-button');
+    // change icon
+    if (state === 'pending') {
+      $gpsButton.addClass('icon-arrows-cw icon-spin');
+      $gpsButton.removeClass('icon-location');
+
+    } else {
+      $gpsButton.removeClass('icon-arrows-cw icon-spin');
+      $gpsButton.addClass('icon-location');
     }
+
+    // change state
+    $gpsButton.attr('data-gps-progress', state);
   },
   
   _refreshGrErrorState(isError) {
