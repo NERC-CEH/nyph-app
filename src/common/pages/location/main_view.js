@@ -385,10 +385,10 @@ const LocationView = Marionette.View.extend({
     this.currentLayerControlSelected = this.controls._handlingClick;
 
     const center = this.map.getCenter();
-    
-    if (!this.noZoomCompensation) {
-      let zoom = this.map.getZoom();
-      this.map.options.crs = e.name === 'OS' ? OS_CRS : L.CRS.EPSG3857;
+    let zoom = this.map.getZoom();
+    this.map.options.crs = e.name === 'OS' ? OS_CRS : L.CRS.EPSG3857;
+      
+    if (!this.noZoomCompensation) { 
       if (e.name === 'OS') {
         zoom -= OS_ZOOM_DIFF;
         //zoom += this.zoomAdjustment;
