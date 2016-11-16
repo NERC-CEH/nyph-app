@@ -79,7 +79,7 @@ const LocationView = Marionette.View.extend({
           this.grRefreshTimeout = setTimeout(function () {
             // let controller know
             that.trigger('location:gridref:change', gr);
-          }, 400);
+          }, 200);
         } else {
           this._refreshGrErrorState(true);
         }
@@ -468,12 +468,13 @@ const LocationView = Marionette.View.extend({
     
     this._refreshGrErrorState(false);
     
+    this.updateMapMarker(location);
+    
     //if source was 'map' then presume that current zoom is fine so don't change (send undefined)
     //this.map.setView(this._getCenter(), location.source !== 'map' ? this._getZoomLevel() : undefined);
-    this.map.setView(this._getCenter(), this._getZoomLevel(), { reset: true });
+    this.map.setView(this._getCenter(), this._getZoomLevel());
     //this.map.panTo(this._getCenter());
     //this.map.setZoom(this._getZoomLevel());
-    this.updateMapMarker(location);
     
     this._refreshGridRefElement(location);
   },
