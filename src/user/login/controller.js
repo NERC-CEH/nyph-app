@@ -50,7 +50,7 @@ const API = {
             if (err.xhr.responseText && (err.xhr.responseText === 'Missing name parameter'
               || err.xhr.responseText.indexOf('Bad') >= 0)) {
               response = 'Bad Username or Password';
-            } else if (err.thrownError && err.thrownError.indexOf('Unauthorised')) {
+            } else if (err.thrownError && err.thrownError.indexOf('Unauthorised') >= 0) {
               response = 'Invalid password';
             } else if (err.thrownError && typeof err.thrownError === 'string') {
               response = err.thrownError;

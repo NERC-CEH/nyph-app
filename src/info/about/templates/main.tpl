@@ -26,7 +26,7 @@
     <p><strong>About the App</strong></p>
     <p>
       We hope that most Plant Hunters will use our new app this year - it’s the easiest way for you to send records and will help us to process your results much more quickly.
-      If you encounter any problems then please email us: nyplanthunt@bsbi.org
+      If you encounter any problems then please email us:  <a href='mailto:nyplanthunt@bsbi.org'>nyplanthunt@bsbi.org</a>
     </p>
   </li>
   <li>

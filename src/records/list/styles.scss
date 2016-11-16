@@ -161,6 +161,13 @@
           width: 100%;
           object-fit: cover;
         }
+
+        .taxonphotomessage {
+          font-size: 12px;
+          text-align: center;
+          margin-top: 20%;
+          color: $color-orange;
+        }
       }
 
       a {
@@ -268,7 +275,6 @@
           }
 
           .date,
-          .taxonphotomessage,
           .location {
             float: left;
             font-size: 12px;
