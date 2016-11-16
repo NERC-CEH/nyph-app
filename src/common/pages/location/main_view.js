@@ -136,9 +136,10 @@ const LocationView = Marionette.View.extend({
    * 
    */
   _refreshMapHeight() {
-    const mapHeight = $(document).height() - 47 - 47 - 44;// - 47 - 38.5;
-    this.$container = this.$el.find('#map')[0];
-    $(this.$container).height(mapHeight);
+    //const mapHeight = $(document).height() - 47 - 47 - 44;// - 47 - 38.5;
+    //this.$container = this.$el.find('#map')[0];
+    //$(this.$container).height(mapHeight);
+    $(this.$container).style = "height: 100vh;";
   },
 
   addLocationNameSearch() {
