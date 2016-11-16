@@ -23,9 +23,10 @@
   //make it full width
   margin-left: -2%;
   margin-right: -2%;
+  height: 100vh;
 
   #map {
-    height: 76vh;
+    height: 100vh; /* was 76vh */
     width: 100%;
 
     //workaround the visible lines between tiles
