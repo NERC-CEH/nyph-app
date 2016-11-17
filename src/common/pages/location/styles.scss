@@ -216,13 +216,14 @@ input#grid-ref:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 button.lock-btn {
+  height: 100%;
+  width: 40px;
   position: absolute;
-  right: 1px;
-  top: 6px;
+  right: -5px;
   margin-top: 0px;
   margin-bottom: 0px;
-  height: 32px;
   outline-style: none;
+  border-left: 1px solid #ddd;
 }
 
 .leaflet-control-button.leaflet-control {
