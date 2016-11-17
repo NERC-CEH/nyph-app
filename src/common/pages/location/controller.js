@@ -37,7 +37,7 @@ const API = {
 
       // listen to events
       mainView.on('location:select:map', (loc, createNew) => {
-        API.onLocationSelect(recordModel, loc, createNew)
+        API.onLocationSelect(recordModel, loc, createNew);
       });
       mainView.on('gps:click', () => {
         API.onGPSClick(recordModel);
@@ -70,7 +70,7 @@ const API = {
     recordModel.save(null, {
       success: () => {
         let location = recordModel.get('location') || {};
-        let location_name = recordModel.get('location_name');
+        const location_name = recordModel.get('location_name');
         const lockedValue = appModel.getAttrLock('location');
 
         if ((location.latitude && location.longitude) || location_name) {
@@ -148,9 +148,9 @@ const API = {
       const latLon = LocHelp.grid2coord(gridRefString);
 
       const location = recordModel.get('location') || {};
-      //location.name = StringHelp.escape(name);
-      //recordModel.set('location', location);
-      //recordModel.trigger('change:location');
+      // location.name = StringHelp.escape(name);
+      // recordModel.set('location', location);
+      // recordModel.trigger('change:location');
 
       location.source = 'gridref';
       location.gridref = gridRefString;
@@ -158,15 +158,15 @@ const API = {
       location.longitude = parseFloat(latLon.lon.toFixed(8));
 
       // -2 because of gridref letters, 2 because this is min precision
-      //@todo Irish GR issue
-      //@todo tetrad issue
-      //const accuracy = (gridRefString.replace(/\s/g, '').length - 2) || 2;
+      // @todo Irish GR issue
+      // @todo tetrad issue
+      // const accuracy = (gridRefString.replace(/\s/g, '').length - 2) || 2;
       const grSquareDimension = Math.pow(10, 5 - ((gridRefString.replace(/\s/g, '').length - 2) / 2));
 
       location.accuracy = grSquareDimension / 2; // accauracy is radius, so for sqaures use half dimension
 
       API.onLocationSelect(recordModel, location);
-      //API.exit();
+      // API.exit();
     } else {
       App.trigger('gridref:form:data:invalid', validationError);
     }
@@ -182,7 +182,7 @@ const API = {
     let location = loc;
     // we don't need the GPS running and overwriting the selected location
     if (recordModel.isGPSRunning()) {
-      recordModel.stopGPS({silent: true});
+      recordModel.stopGPS({ silent: true });
     }
 
     if (!createNew) {

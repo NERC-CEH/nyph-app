@@ -1,7 +1,7 @@
 import { LocHelp, Log } from 'helpers';
 import L from 'leaflet';
 import { OsGridRef } from 'geodesy';
-import './map_view_singleclick';
+import './leaflet_singleclick_ext';
 
 const OS_ZOOM_DIFF = 6;
 const MAX_OS_ZOOM = L.OSOpenSpace.RESOLUTIONS.length - 1;
@@ -100,7 +100,7 @@ const marker = {
     // normalize the accuracy across different layer types
     let mapZoom = this.map.getZoom();
     let normalisedZoom = mapZoom;
-    
+
     if (this.currentLayer !== 'OS') {
       normalisedZoom -= OS_ZOOM_DIFF; // adjust the diff
       normalisedZoom = normalisedZoom < 0 ? 0 : normalisedZoom; // normalize
