@@ -12,8 +12,10 @@ export default {
    *
    * @param location
    */
-  setLocation(origLocation = {}) {
+  setLocation(origLocation = {}, location_name) {
     const location = _.cloneDeep(origLocation);
+    location.name = location_name; // past locations incorporate location names
+
     const locations = this.get('locations');
 
     if (!location.latitude || !location.longitude) {

@@ -528,6 +528,7 @@ const LocationView = Marionette.View.extend({
     const appModel = this.model.get('appModel');
     const recordModel = this.model.get('recordModel');
     const location = recordModel.get('location') || {};
+    const location_name = recordModel.get('location_name');
 
     // location lock
     const $locationLockBtn = this.$el.find('#location-lock-btn');
@@ -542,7 +543,7 @@ const LocationView = Marionette.View.extend({
 
     // location name lock
     const $nameLockBtn = this.$el.find('#name-lock-btn');
-    const nameLocked = appModel.isAttrLocked('location-name', location.name);
+    const nameLocked = appModel.isAttrLocked('location_name', location_name);
     if (nameLocked) {
       $nameLockBtn.addClass('icon-lock-closed');
       $nameLockBtn.removeClass('icon-lock-open');
@@ -556,6 +557,7 @@ const LocationView = Marionette.View.extend({
   serializeData() {
     const appModel = this.model.get('appModel');
     const location = this._getCurrentLocation();
+    const location_name = this.model.get('recordModel').get('location_name')
     let gridref;
 
     // avoid testing location.longitude as this can validly be zero within the UK
@@ -566,10 +568,10 @@ const LocationView = Marionette.View.extend({
     }
 
     const locationLocked = appModel.isAttrLocked('location', location);
-    const nameLocked = appModel.isAttrLocked('location-name', location.name);
+    const nameLocked = appModel.isAttrLocked('location_name', location_name);
 
     return {
-      name: location.name,
+      name: location_name,
       gridref: gridref,
       locationSource: location.source,
       accuracy: location.accuracy,

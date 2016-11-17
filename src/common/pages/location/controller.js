@@ -84,10 +84,8 @@ const API = {
           return;
         }
 
-        const location = recordModel.get('location') || {};
-        location.name = StringHelp.escape(name);
-        recordModel.set('location', location);
-        recordModel.trigger('change:location');
+        const escaped_name = StringHelp.escape(name);
+        recordModel.set('location_name', escaped_name);
       }
 
 	  function onManualGridrefChange(gridRefString) {
@@ -178,11 +176,11 @@ const API = {
   exit(recordModel, locationIsLocked) {
     recordModel.save(null, {
       success: () => {
-        const attr = 'location';
         let location = recordModel.get('location') || {};
+        let location_name = recordModel.get('location_name');
         const lockedValue = appModel.getAttrLock('location');
 
-        if ((location.latitude && location.longitude) || location.name) {
+        if ((location.latitude && location.longitude) || location_name) {
           // we can lock location and name on their own
           // don't lock GPS though, because it varies more than a map or gridref
 
@@ -198,21 +196,19 @@ const API = {
               Log('Updating lock', 'd');
 
               if (location.source === 'gps') {
-                // on GPS don't lock other than name
-                location = {
-                  name: location.name,
-                };
+                // on GPS don't lock
+                location = null;
               }
-              appModel.setAttrLock(attr, location);
+              appModel.setAttrLock('location', location);
             }
-          } else if (CONFIG.AUTO_LOCK_LOCATION_NAME && location.name) {
+          } else if (CONFIG.AUTO_LOCK_LOCATION_NAME && location_name) {
             // no explicit lock request by user, but remember name anyway
 
-            appModel.setAttrLock(attr, { name: location.name });
+            appModel.setAttrLock('location_name', { name: location_name });
           }
         } else if (lockedValue === true) {
           // reset if no location or location name selected but locked is clicked
-          appModel.setAttrLock(attr, null);
+          appModel.setAttrLock('location', null);
         }
 
         window.history.back();

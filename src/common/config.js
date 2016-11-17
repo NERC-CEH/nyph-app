@@ -83,7 +83,6 @@ export default {
           //}
 
           const attributes = {
-            location_name: location.name,
             location_source: location.source,
             location_gridref: location.gridref,
             location_altitude: location.altitude,

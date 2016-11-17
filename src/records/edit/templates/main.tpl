@@ -13,7 +13,7 @@
       <span class="media-object pull-left icon icon-location"></span>
 
       <% if (obj.location_name) { %>
-      <span class="media-object pull-right descript"><%= obj.location_name %></span>
+      <span class="media-object pull-right descript <%- obj.locks['location_name'] ? 'lock' : '' %>"><%= obj.location_name %></span>
       <% } else { %>
       <span class="media-object pull-right descript error">Name missing</span>
       <% } %>
