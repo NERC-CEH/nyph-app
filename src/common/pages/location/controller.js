@@ -7,12 +7,10 @@ import Backbone from 'backbone';
 import Morel from 'morel';
 import { Log, Validate, StringHelp, LocHelp } from 'helpers';
 import App from 'app';
-
 import recordManager from '../../record_manager';
 import appModel from '../../models/app_model';
 import MainView from './main_view';
 import CONFIG from 'config';
-
 import './styles.scss';
 
 const API = {
@@ -32,116 +30,24 @@ const API = {
       }
 
       // MAIN
-      const recordLocation = recordModel.get('location') || {};
-
-      //const active = {};
-      //if (!recordLocation.source) {
-      //  active.gps = true;
-      //} else {
-      //  active[recordLocation.source] = true;
-      //}
-
       const mainView = new MainView({
         model: new Backbone.Model({ recordModel, appModel }),
         vent: App,
       });
 
-      function onLocationSelect(loc, createNew) {
-        if (typeof loc !== 'object') {
-          // jQuery event object bug fix
-          Log('Location:Controller:onLocationSelect: loc is not an object', 'e');
-          return;
-        }
-
-        let location = loc;
-        // we don't need the GPS running and overwriting the selected location
-        if (recordModel.isGPSRunning()) {
-          recordModel.stopGPS({silent: true});
-        }
-
-        if (!createNew) {
-          // extend old location to preserve its previous attributes like name or id
-          let oldLocation = recordModel.get('location');
-          if (!_.isObject(oldLocation)) oldLocation = {}; // check for locked true
-          location = $.extend(oldLocation, location);
-        }
-
-        recordModel.set('location', location);
-        recordModel.trigger('change:location');
-      }
-
-      function onGPSClick() {
-        // turn off if running
-        if (recordModel.isGPSRunning()) {
-          recordModel.stopGPS();
-        } else {
-          recordModel.startGPS();
-        }
-      }
-
-      function onLocationNameChange(name) {
-        if (!name || typeof name !== 'string') {
-          return;
-        }
-
-        const escaped_name = StringHelp.escape(name);
-        recordModel.set('location_name', escaped_name);
-      }
-
-	  function onManualGridrefChange(gridRefString) {
-		  /**
-      * Validates grid ref
-      * @param {string} gridRefString
-      * @returns {{}}
-      */
-      function validate(gridRefString) {
-        const errors = {};
-        gridRefString = gridRefString.replace(/\s/g, '').toUpperCase();
-        if (!LocHelp.grid2coord(gridRefString)) {
-          errors.gridref = 'invalid';
-        }
-
-        if (!_.isEmpty(errors)) {
-          return errors;
-        }
-
-        return null;
-      }
-
-      const validationError = validate(gridRefString);
-      if (!validationError) {
-        App.trigger('gridref:form:data:invalid', {}); // update form
-        const latLon = LocHelp.grid2coord(gridRefString);
-
-        const location = recordModel.get('location') || {};
-        //location.name = StringHelp.escape(name);
-        //recordModel.set('location', location);
-        //recordModel.trigger('change:location');
-
-        location.source = 'gridref';
-        location.gridref = gridRefString;
-        location.latitude = parseFloat(latLon.lat.toFixed(8));
-        location.longitude = parseFloat(latLon.lon.toFixed(8));
-
-        // -2 because of gridref letters, 2 because this is min precision
-        //@todo Irish GR issue
-        //@todo tetrad issue
-        //const accuracy = (gridRefString.replace(/\s/g, '').length - 2) || 2;
-        const grSquareDimension = Math.pow(10, 5 - ((gridRefString.replace(/\s/g, '').length - 2) / 2));
-
-        location.accuracy = grSquareDimension / 2; // accauracy is radius, so for sqaures use half dimension
-
-        onLocationSelect(location);
-        //API.exit();
-      } else {
-        App.trigger('gridref:form:data:invalid', validationError);
-      }
-	  }
-
-      mainView.on('location:select:map', onLocationSelect);
-      mainView.on('gps:click', onGPSClick);
-      mainView.on('location:name:change', onLocationNameChange);
-      mainView.on('location:gridref:change', onManualGridrefChange);
+      // listen to events
+      mainView.on('location:select:map', (loc, createNew) => {
+        API.onLocationSelect(recordModel, loc, createNew)
+      });
+      mainView.on('gps:click', () => {
+        API.onGPSClick(recordModel);
+      });
+      mainView.on('location:name:change', name => {
+        API.onLocationNameChange(recordModel, name);
+      });
+      mainView.on('location:gridref:change', gridRefString => {
+        API.onManualGridrefChange(recordModel, gridRefString);
+      });
       mainView.on('lock:click:location', API.onLocationLockClick);
       mainView.on('lock:click:name', API.onNameLockClick);
       const currentVal = recordModel.get('location') || {};
@@ -149,6 +55,7 @@ const API = {
       mainView.on('navigateBack', () => {
         API.exit(recordModel, locationIsLocked);
       });
+
       App.regions.getRegion('main').show(mainView);
 
       // HEADER
@@ -157,20 +64,6 @@ const API = {
 
     // FOOTER
     App.regions.getRegion('footer').hide().empty();
-  },
-
-  onLocationLockClick() {
-    Log('Location:Controller:onLocationLockClick');
-    // invert the lock of the attribute
-    // real value will be put on exit
-    appModel.setAttrLock('location', !appModel.getAttrLock('location'));
-  },
-
-  onNameLockClick() {
-    Log('Location:Controller:onNameLockClick');
-    // invert the lock of the attribute
-    // real value will be put on exit
-    appModel.setAttrLock('location-name', !appModel.getAttrLock('location-name'));
   },
 
   exit(recordModel, locationIsLocked) {
@@ -218,6 +111,112 @@ const API = {
         App.regions.getRegion('dialog').error(error);
       },
     });
+  },
+
+  onLocationNameChange(recordModel, name) {
+    if (!name || typeof name !== 'string') {
+      return;
+    }
+
+    const escaped_name = StringHelp.escape(name);
+    recordModel.set('location_name', escaped_name);
+  },
+
+  onManualGridrefChange(recordModel, gridRefString) {
+    /**
+     * Validates grid ref
+     * @param {string} gridRefString
+     * @returns {{}}
+     */
+    function validate(gridRefString) {
+      const errors = {};
+      gridRefString = gridRefString.replace(/\s/g, '').toUpperCase();
+      if (!LocHelp.grid2coord(gridRefString)) {
+        errors.gridref = 'invalid';
+      }
+
+      if (!_.isEmpty(errors)) {
+        return errors;
+      }
+
+      return null;
+    }
+
+    const validationError = validate(gridRefString);
+    if (!validationError) {
+      App.trigger('gridref:form:data:invalid', {}); // update form
+      const latLon = LocHelp.grid2coord(gridRefString);
+
+      const location = recordModel.get('location') || {};
+      //location.name = StringHelp.escape(name);
+      //recordModel.set('location', location);
+      //recordModel.trigger('change:location');
+
+      location.source = 'gridref';
+      location.gridref = gridRefString;
+      location.latitude = parseFloat(latLon.lat.toFixed(8));
+      location.longitude = parseFloat(latLon.lon.toFixed(8));
+
+      // -2 because of gridref letters, 2 because this is min precision
+      //@todo Irish GR issue
+      //@todo tetrad issue
+      //const accuracy = (gridRefString.replace(/\s/g, '').length - 2) || 2;
+      const grSquareDimension = Math.pow(10, 5 - ((gridRefString.replace(/\s/g, '').length - 2) / 2));
+
+      location.accuracy = grSquareDimension / 2; // accauracy is radius, so for sqaures use half dimension
+
+      API.onLocationSelect(recordModel, location);
+      //API.exit();
+    } else {
+      App.trigger('gridref:form:data:invalid', validationError);
+    }
+  },
+
+  onLocationSelect(recordModel, loc, createNew) {
+    if (typeof loc !== 'object') {
+      // jQuery event object bug fix
+      Log('Location:Controller:onLocationSelect: loc is not an object', 'e');
+      return;
+    }
+
+    let location = loc;
+    // we don't need the GPS running and overwriting the selected location
+    if (recordModel.isGPSRunning()) {
+      recordModel.stopGPS({silent: true});
+    }
+
+    if (!createNew) {
+      // extend old location to preserve its previous attributes like name or id
+      let oldLocation = recordModel.get('location');
+      if (!_.isObject(oldLocation)) oldLocation = {}; // check for locked true
+      location = $.extend(oldLocation, location);
+    }
+
+    recordModel.set('location', location);
+    recordModel.trigger('change:location');
+  },
+
+  onGPSClick(recordModel) {
+    // turn off if running
+    if (recordModel.isGPSRunning()) {
+      recordModel.stopGPS();
+    } else {
+      recordModel.startGPS();
+    }
+  },
+
+  onLocationLockClick() {
+    Log('Location:Controller:onLocationLockClick');
+    // invert the lock of the attribute
+    // real value will be put on exit
+    appModel.setAttrLock('location', !appModel.getAttrLock('location'));
+  },
+
+  onNameLockClick() {
+    Log('Location:Controller:onNameLockClick');
+    // invert the lock of the attribute
+    // real value will be put on exit
+    appModel.setAttrLock('location-name', !appModel.getAttrLock('location-name'));
   },
 };
 
