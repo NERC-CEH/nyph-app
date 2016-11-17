@@ -276,7 +276,9 @@ const LocationView = Marionette.View.extend({
     const location = this._getCurrentLocation();
 
     const GPSbutton = new LeafletButton({
-      body: `<span id="gps-btn" class="gps-btn icon icon-location"
+      position: 'topright',
+      className: 'gps-btn',
+      body: `<span class="icon icon-location"
                 data-source="${location.source}"></span>`,
       'onClick'() {
         that.trigger('gps:click');
@@ -453,19 +455,22 @@ const LocationView = Marionette.View.extend({
   },
 
   _set_gps_progress_feedback(state) {
-    const $gpsButton = this.$el.find('#gps-btn');
-    // change icon
-    if (state === 'pending') {
-      $gpsButton.addClass('icon-arrows-cw icon-spin');
-      $gpsButton.removeClass('icon-location');
-
-    } else {
-      $gpsButton.removeClass('icon-arrows-cw icon-spin');
-      $gpsButton.addClass('icon-location');
-    }
-
+    const $gpsButton = this.$el.find('.gps-btn');
     // change state
     $gpsButton.attr('data-gps-progress', state);
+
+
+    // change icon
+    const $gpsButtonSpan = $gpsButton.find('span');
+    if (state === 'pending') {
+      $gpsButtonSpan.addClass('icon-plus icon-spin');
+      $gpsButtonSpan.removeClass('icon-location');
+
+    } else {
+      $gpsButtonSpan.removeClass('icon-plus icon-spin');
+      $gpsButtonSpan.addClass('icon-location');
+    }
+
   },
 
   _refreshGrErrorState(isError) {
@@ -505,13 +510,13 @@ const LocationView = Marionette.View.extend({
 
   _refreshGridRefElement(location) {
     // rather than full refresh of the view, directly update the relavant input element
-    const grEl = document.getElementById('location-gridref');
-    grEl.value = location.gridref;
-    grEl.setAttribute('data-source', location.source);
+    const $GR = this.$el.find('#location-gridref');
+    $GR.val(location.gridref);
+    $GR.attr('data-source', location.source);
 
-    const gpsButtonEl = document.getElementById('gps-btn');
-    if (gpsButtonEl) {
-      gpsButtonEl.setAttribute('data-source', location.source);
+    const $gpsBtn = this.$el.find('.gps-btn');
+    if ($gpsBtn) {
+      $gpsBtn.attr('data-source', location.source);
       
       if (location.source !== 'gps') {
         this._set_gps_progress_feedback('');

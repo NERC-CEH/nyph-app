@@ -1,3 +1,4 @@
+import $ from 'jquery';
 /**
  * https://gist.github.com/ejh/2935327
  */
@@ -8,11 +9,13 @@ export default L.Control.extend({
   initialize: function (options) {
     this._button = {};
     this.setButton(options);
+    this.options = $.extend(this.options, options);
   },
 
   onAdd: function (map) {
     this._map = map;
-    var container = L.DomUtil.create('div', 'leaflet-control-button');
+    const containerClassName = 'leaflet-control-button ' + (this.options.containerClassName || '');
+    var container = L.DomUtil.create('div', containerClassName);
 
     this._container = container;
 
@@ -73,7 +76,8 @@ export default L.Control.extend({
   },
 
   _makeButton: function (button) {
-    var newButton = L.DomUtil.create('div', 'leaflet-buttons-control-button', this._container);
+    const className = 'leaflet-buttons-control-button ' + (this.options.className || '');
+    var newButton = L.DomUtil.create('div', className, this._container);
     if(button.toggleStatus)
       L.DomUtil.addClass(newButton,'leaflet-buttons-control-toggleon');
 

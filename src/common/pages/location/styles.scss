@@ -1,4 +1,5 @@
 @import "../../styles/_variables.scss";
+@import "./leaflet_btn.scss";
 
 #map-location-name {
   position: absolute;
@@ -224,21 +225,24 @@ button.lock-btn {
   outline-style: none;
 }
 
-#gps-btn[data-gps-progress='fixed'] {
-  background-color: $color-green;
-  border-color: $color-green;
-}
+.leaflet-control-button.leaflet-control {
+  .leaflet-buttons-control-button {
+    &.gps-btn[data-gps-progress='fixed'] {
+      background-color: $color-green;
+      border-color: $color-green;
+    }
 
-#gps-btn[data-gps-progress='pending'] {
-  background-color: $color-yellow;
-  border-color: $color-yellow;
-}
+    &.gps-btn[data-gps-progress='pending'] {
+      background-color: $color-yellow;
+      border-color: $color-yellow;
+    }
 
-#gps-btn[data-gps-progress='failed'] {
-  background-color: $color-orange;
-  border-color: $color-orange;
+    &.gps-btn[data-gps-progress='failed'] {
+      background-color: $color-orange;
+      border-color: $color-orange;
+    }
+  }
 }
-
 input#location-gridref {
   text-transform: uppercase;
 }
@@ -249,30 +253,4 @@ input#location-gridref[data-source='gps'] {
 
 input#location-gridref[data-gr-error='error'] {
   color: $color-orange;
-}
-
-// Leaflet Button Ext
-.leaflet-buttons-control-button {
-  width: 44px;
-  height: 44px;
-
-  @media only screen and (max-width: 480px) {
-    margin-bottom: 34px;
-  }
-
-  box-shadow: 0 1px 5px rgba(0,0,0,.4);
-  background: #fff;
-  border-radius: 5px;
-
-  .icon {
-    margin: 12px 0 0 8px;
-  }
-
-  &.leaflet-buttons-control-toggleon {
-    background-color: $color-main-light;
-
-    .icon {
-      color: $color-white;
-    }
-  }
 }
