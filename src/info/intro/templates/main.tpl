@@ -7,7 +7,7 @@
       Please follow these rules, so that the records collected are comparable.
     </p>
     <ul>
-        <li>Pick a day over the New Year weekend between Sunday 1<sup>st</sup> and Wednesday 4<sup>th</sup> January 2017, when the
+        <li>Pick a day over the New Year between Sunday 1<sup>st</sup> and Wednesday 4<sup>th</sup> January 2017, when the
         weather is decent enough to record in.</li>
       <li>Plan to walk for up to three hours (but you can take breaks), recording as many wild or 
       naturalised plants in flower as you can, but ignore planted species in gardens or parks.
