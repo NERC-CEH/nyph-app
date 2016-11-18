@@ -1,3 +1,6 @@
+<div class="info-message">
+  <p>Edit details by clicking on the row. To add a photo use the camera icon.</p>
+</div>
 <ul class="table-view core inputs no-top <%- obj.isSynchronising ? 'disabled' : '' %>">
   <li class="table-view-cell">
     <a href="#records/<%- obj.id %>/edit/taxon" id="species-button" class="navigate-right">
