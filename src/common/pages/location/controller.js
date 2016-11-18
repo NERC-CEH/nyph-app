@@ -13,6 +13,7 @@ import MainView from './main_view';
 import CONFIG from 'config';
 import './styles.scss';
 
+/*eslint-disable camelcase*/
 const API = {
   show(recordID) {
     recordManager.get(recordID, (err, recordModel) => {
@@ -50,8 +51,10 @@ const API = {
       });
       mainView.on('lock:click:location', API.onLocationLockClick);
       mainView.on('lock:click:name', API.onNameLockClick);
-      const currentVal = recordModel.get('location') || {};
-      const locationIsLocked = appModel.isAttrLocked('location', currentVal);
+      const location = recordModel.get('location') || {};
+      // const name = recordModel.get('location_name');
+      const locationIsLocked = appModel.isAttrLocked('location', location);
+      // const nameIsLocked = appModel.isAttrLocked('location_name', currentVal);
       mainView.on('navigateBack', () => {
         API.exit(recordModel, locationIsLocked);
       });
@@ -69,40 +72,16 @@ const API = {
   exit(recordModel, locationIsLocked) {
     recordModel.save(null, {
       success: () => {
-        let location = recordModel.get('location') || {};
-        const location_name = recordModel.get('location_name');
-        const lockedValue = appModel.getAttrLock('location');
-
-        if ((location.latitude && location.longitude) || location_name) {
-          // we can lock location and name on their own
-          // don't lock GPS though, because it varies more than a map or gridref
-
-          // save to past locations
-          const locationID = appModel.setLocation(recordModel.get('location'));
+        // save to past locations and update location ID on record
+        const location = recordModel.get('location') || {};
+        if ((location.latitude && location.longitude)) {
+          const location_name = recordModel.get('location_name');
+          const locationID = appModel.setLocation(location, location_name);
           location.id = locationID;
           recordModel.set('location', location);
-
-          // update locked value if attr is locked
-          if (lockedValue) {
-            // check if previously the value was locked and we are updating
-            if (locationIsLocked || lockedValue === true) {
-              Log('Updating lock', 'd');
-
-              if (location.source === 'gps') {
-                // on GPS don't lock
-                location = null;
-              }
-              appModel.setAttrLock('location', location);
-            }
-          } else if (CONFIG.AUTO_LOCK_LOCATION_NAME && location_name) {
-            // no explicit lock request by user, but remember name anyway
-
-            appModel.setAttrLock('location_name', { name: location_name });
-          }
-        } else if (lockedValue === true) {
-          // reset if no location or location name selected but locked is clicked
-          appModel.setAttrLock('location', null);
         }
+
+        API.updateLocks(recordModel, locationIsLocked);
 
         window.history.back();
       },
@@ -111,6 +90,44 @@ const API = {
         App.regions.getRegion('dialog').error(error);
       },
     });
+  },
+
+  updateLocks(recordModel, locationIsLocked) {
+    let location = recordModel.get('location') || {};
+    const location_name = recordModel.get('location_name');
+    const lockedLocation = appModel.getAttrLock('location');
+    const lockedName = appModel.getAttrLock('location_name');
+
+    // reset
+    if (lockedLocation === true && (!location.latitude || !location.longitude)) {
+      appModel.setAttrLock('location', null);
+    }
+    if (lockedName === true && !location_name) {
+      appModel.setAttrLock('location_name', null);
+    }
+
+    // location
+    if (lockedLocation) {
+      // check if previously the value was locked and we are updating
+      if (locationIsLocked || lockedLocation === true) {
+        Log('Updating lock', 'd');
+
+        if (location.source === 'gps') {
+          // on GPS don't lock
+          location = null;
+        }
+        appModel.setAttrLock('location', location);
+      }
+    }
+
+    // name
+    if (lockedName && (lockedName === true || lockedName === location_name)) {
+      appModel.setAttrLock('location_name', location_name);
+    }
+    if (CONFIG.AUTO_LOCK_LOCATION_NAME && location_name) {
+      // no explicit lock request by user, but remember name anyway
+      appModel.setAttrLock('location_name', location_name);
+    }
   },
 
   onLocationNameChange(recordModel, name) {
@@ -216,7 +233,7 @@ const API = {
     Log('Location:Controller:onNameLockClick');
     // invert the lock of the attribute
     // real value will be put on exit
-    appModel.setAttrLock('location-name', !appModel.getAttrLock('location-name'));
+    appModel.setAttrLock('location_name', !appModel.getAttrLock('location_name'));
   },
 };
 

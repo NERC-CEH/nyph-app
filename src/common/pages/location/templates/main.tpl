@@ -8,7 +8,7 @@
       <label class="media-object pull-left icon icon-location" for="location-gridref" />
       <input type="text" id="location-gridref" placeholder="Grid Reference" value="<%- obj.gridref %>" data-source="<%- obj.locationSource %>" />
     </div>
-    <div class="input-row tt">
+    <div class="input-row">
       <button id="name-lock-btn" class="lock-btn icon icon-lock-<%- obj.nameLocked ? 'closed' : 'open' %>"></button>
       <label class="media-object pull-left icon icon-address" for="location-name" />
       <input class="typeahead" type="text" id="location-name" placeholder="Nearest named place" value="<%= obj.name %>"/>

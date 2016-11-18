@@ -9,7 +9,7 @@
   </li>
   <li class="table-view-cell">
     <a href="#records/<%- obj.id %>/edit/location" id="location-button"
-       class="<%- obj.locks['location'] ? 'lock' : 'navigate-right' %>">
+       class="<%- obj.locks['location'] || obj.locks['location_name'] ? '' : 'navigate-right' %>">
       <span class="media-object pull-left icon icon-location"></span>
 
       <% if (obj.location_name) { %>
@@ -19,7 +19,7 @@
       <% } %>
 
       <% if (obj.location) { %>
-      <span class="media-object pull-right descript"><%- obj.location %></span>
+      <span class="location media-object pull-right descript <%- obj.locks['location'] ? 'lock' : '' %>"><%- obj.location %></span>
       <% } else { %>
       <% if (obj.isLocating) { %>
       <span class="media-object pull-right descript warn">Locating...</span>

@@ -79,6 +79,9 @@ export default {
         case 'location':
           sample.set('location', val);
           break;
+        case 'location_name':
+          sample.set('location_name', val);
+          break;
         case 'date':
           // parse stringified date
           sample.set('date', new Date(val));
