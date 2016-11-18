@@ -5,15 +5,15 @@
   border: 2px solid rgba(0, 0, 0, 0);
 
   .leaflet-buttons-control-button {
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
 
     box-shadow: 0 1px 5px rgba(0, 0, 0, .4);
     background: #fff;
     border-radius: 5px;
 
     .icon {
-      margin: 12px 0 0 8px;
+      margin: 8px 0 0 5px;
     }
 
     &.leaflet-buttons-control-toggleon {
@@ -23,5 +23,14 @@
         color: $color-white;
       }
     }
+  }
+}
+
+.leaflet-touch .leaflet-control-button.leaflet-control .leaflet-buttons-control-button {
+  width: 44px;
+  height: 44px;
+
+  .icon {
+    margin: 12px 0 0 8px;
   }
 }
