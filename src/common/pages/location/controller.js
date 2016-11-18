@@ -114,7 +114,7 @@ const API = {
 
         if (location.source === 'gps') {
           // on GPS don't lock
-          location = null;
+          location.source = 'gridref';
         }
         appModel.setAttrLock('location', location);
       }
