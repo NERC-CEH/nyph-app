@@ -7,7 +7,7 @@ import 'leaflet/dist/images/layers-2x.png';
 import 'leaflet/dist/images/layers.png';
 import L from 'leaflet';
 import CONFIG from 'config';
-import { LocHelp } from 'helpers';
+import { Log, LocHelp } from 'helpers';
 import OSLeaflet from 'os-leaflet';
 import GridRef from 'leaflet.gridref';
 import { OsGridRef } from 'geodesy';
@@ -24,6 +24,8 @@ const GRID_STEP = 100000; // meters
 
 const mapFunctions = {
   initMap() {
+    Log('Location:MainView:Map: initializing.');
+
     this.map = L.map(this.$container);
 
     // default layer
@@ -58,6 +60,7 @@ const mapFunctions = {
    *
    */
   _refreshMapHeight() {
+    Log('Location:MainView:Map: refreshing map height.');
     // const mapHeight = $(document).height() - 47 - 47 - 44;// - 47 - 38.5;
     this.$container = this.$el.find('#map')[0];
     // $(this.$container).height(mapHeight);
@@ -135,6 +138,8 @@ const mapFunctions = {
   },
 
   addControls() {
+    Log('Location:MainView:Map: adding layer controls.');
+
     this.controls = L.control.layers({
       OS: this.layers.OS,
       OSM: this.layers.OSM,
@@ -144,6 +149,8 @@ const mapFunctions = {
   },
 
   addGPS() {
+    Log('Location:MainView:Map: adding gps button.');
+
     const that = this;
     const location = this._getCurrentLocation();
 
@@ -169,6 +176,8 @@ const mapFunctions = {
   },
 
   addGraticule() {
+    Log('Location:MainView:Map: adding graticule.');
+
     const appModel = this.model.get('appModel');
     const useGridRef = appModel.get('useGridRef');
     const useGridMap = appModel.get('useGridMap');
@@ -218,6 +227,8 @@ const mapFunctions = {
    * 5 gridref digits. (1m)      ->
    */
   _getZoomLevel() {
+    Log('Location:MainView:Map: getting zoom level.');
+
     const currentLocation = this._getCurrentLocation();
     let mapZoomLevel = 1;
 
@@ -259,6 +270,8 @@ const mapFunctions = {
   },
 
   _updateCoordSystem(e) {
+    Log('Location:MainView:Map: updating coord system.');
+
     this.currentLayerControlSelected = this.controls._handlingClick;
 
     const center = this.map.getCenter();
@@ -282,6 +295,8 @@ const mapFunctions = {
   },
 
   onMapZoom() {
+    Log('Location:MainView:Map: executing onMapZoom.');
+
     const zoom = this.map.getZoom();
     const inUK = LocHelp.isInUK(this._getCurrentLocation());
 
@@ -326,6 +341,7 @@ const mapFunctions = {
   },
 
   _set_gps_progress_feedback(state) {
+    Log('Location:MainView:Map: updating gps button state.');
     const $gpsButton = this.$el.find('.gps-btn');
     // change state
     $gpsButton.attr('data-gps-progress', state);

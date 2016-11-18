@@ -3,7 +3,7 @@
  *****************************************************************************/
 import Marionette from 'backbone.marionette';
 import JST from 'JST';
-import { LocHelp } from 'helpers';
+import { Log, LocHelp } from 'helpers';
 import CONFIG from 'config';
 import 'typeahead'; //typeahead.js
 import headerFunctions from './main_view_header';
@@ -30,6 +30,8 @@ const LocationView = Marionette.View.extend({
   },
 
   initialize() {
+    Log('Location:Controller:MainView: initializing.');
+
     this.map = null;
     this.layers = this._getLayers();
 
@@ -53,12 +55,16 @@ const LocationView = Marionette.View.extend({
   },
 
   onAttach() {
+    Log('Location:Controller:MainView: attaching.');
+
     this._refreshMapHeight();
     this.initMap();
     this.addLocationNameSearch();
   },
 
   serializeData() {
+    Log('Location:Controller:MainView: serializing.');
+
     const appModel = this.model.get('appModel');
     const location = this._getCurrentLocation();
     const name = this.model.get('recordModel').get('location_name');
@@ -85,6 +91,10 @@ const LocationView = Marionette.View.extend({
       locationLocked,
       nameLocked,
     };
+  },
+
+  _getCurrentLocation() {
+    return this.model.get('recordModel').get('location') || {};
   },
 });
 

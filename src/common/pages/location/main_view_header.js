@@ -2,7 +2,7 @@
  * Location main view header functions.
  *****************************************************************************/
 import $ from 'jquery';
-import { LocHelp } from 'helpers';
+import { Log, LocHelp } from 'helpers';
 import locationNameFinder from './location_name_search';
 
 const headerFunctions = {
@@ -58,6 +58,8 @@ const headerFunctions = {
    * stop any delayed gridref refresh
    */
   _clearGrTimeout() {
+    Log('Location:Controller:Header: executing _clearGrTimeout.');
+
     if (this.grRefreshTimeout) {
       clearTimeout(this.grRefreshTimeout);
       this.grRefreshTimeout = null;
@@ -65,6 +67,8 @@ const headerFunctions = {
   },
 
   changeGridRef(e) {
+    Log('Location:Controller:Header: executing changeGridRef.');
+
     this._clearGrTimeout();
     this.triggerMethod('location:gridref:change', $(e.target).val());
   },
@@ -96,6 +100,8 @@ const headerFunctions = {
   },
 
   locationChange() {
+    Log('Location:Controller:Header: executing locationChange.');
+
     this._clearGrTimeout();
     const location = this._getCurrentLocation();
 
@@ -116,11 +122,9 @@ const headerFunctions = {
     this._refreshGridRefElement(location);
   },
 
-  _getCurrentLocation() {
-    return this.model.get('recordModel').get('location') || {};
-  },
-
   _refreshGridRefElement(location) {
+    Log('Location:Controller:Header: executing _refreshGridRefElement.');
+
     // rather than full refresh of the view, directly update the relavant input element
     const $GR = this.$el.find('#location-gridref');
     $GR.val(location.gridref);
@@ -137,6 +141,8 @@ const headerFunctions = {
   },
 
   updateLocks() {
+    Log('Location:Controller:Header: updating the locks.');
+
     const appModel = this.model.get('appModel');
     const recordModel = this.model.get('recordModel');
     const location = recordModel.get('location') || {};

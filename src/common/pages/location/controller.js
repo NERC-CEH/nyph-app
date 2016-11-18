@@ -16,6 +16,8 @@ import './styles.scss';
 /*eslint-disable camelcase*/
 const API = {
   show(recordID) {
+    Log('Location:Controller: showing.');
+
     recordManager.get(recordID, (err, recordModel) => {
       // Not found
       if (!recordModel) {
@@ -70,6 +72,8 @@ const API = {
   },
 
   exit(recordModel, locationIsLocked) {
+    Log('Location:Controller: exiting.');
+
     recordModel.save(null, {
       success: () => {
         // save to past locations and update location ID on record
@@ -93,6 +97,8 @@ const API = {
   },
 
   updateLocks(recordModel, locationIsLocked) {
+    Log('Location:Controller: updating locks.');
+
     let location = recordModel.get('location') || {};
     const location_name = recordModel.get('location_name');
     const lockedLocation = appModel.getAttrLock('location');
@@ -131,6 +137,8 @@ const API = {
   },
 
   onLocationNameChange(recordModel, name) {
+    Log('Location:Controller: executing onLocationNameChange.');
+
     if (!name || typeof name !== 'string') {
       return;
     }
@@ -140,6 +148,8 @@ const API = {
   },
 
   onManualGridrefChange(recordModel, gridRefString) {
+    Log('Location:Controller: executing onManualGridrefChange.');
+
     /**
      * Validates grid ref
      * @param {string} gridRefString
@@ -190,6 +200,8 @@ const API = {
   },
 
   onLocationSelect(recordModel, loc, createNew) {
+    Log('Location:Controller: executing onLocationSelect.');
+
     if (typeof loc !== 'object') {
       // jQuery event object bug fix
       Log('Location:Controller:onLocationSelect: loc is not an object', 'e');
@@ -214,6 +226,8 @@ const API = {
   },
 
   onGPSClick(recordModel) {
+    Log('Location:Controller: executing onGPSClick.');
+
     // turn off if running
     if (recordModel.isGPSRunning()) {
       recordModel.stopGPS();
@@ -223,14 +237,14 @@ const API = {
   },
 
   onLocationLockClick() {
-    Log('Location:Controller:onLocationLockClick');
+    Log('Location:Controller: executing onLocationLockClick.');
     // invert the lock of the attribute
     // real value will be put on exit
     appModel.setAttrLock('location', !appModel.getAttrLock('location'));
   },
 
   onNameLockClick() {
-    Log('Location:Controller:onNameLockClick');
+    Log('Location:Controller: executing onNameLockClick.');
     // invert the lock of the attribute
     // real value will be put on exit
     appModel.setAttrLock('location_name', !appModel.getAttrLock('location_name'));
