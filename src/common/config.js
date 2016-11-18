@@ -94,8 +94,14 @@ export default {
           // add other location related attributes
           options.flattener(attributes, options);
 
-          return location.latitude + ', ' + location.longitude;
+          //return location.latitude + ', ' + location.longitude;
+          return location.gridref;
         },
+      },
+      location_type: {
+          values(location) {
+            return 'OSGB';
+          },
       },
       location_accuracy: { id: 282 },
       location_altitude: { id: 283 },
