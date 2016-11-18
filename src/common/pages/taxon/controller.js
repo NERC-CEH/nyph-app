@@ -89,7 +89,7 @@ const API = {
           // interfere with app flow
           // if location not set then navigate to that screen
           // otherwise go back to list
-          if (sample.get('location') && sample.get('location_name')) {
+          if (sample.get('location_name')) {
             // already have a satisfactory locked location
             // return to previous page
             window.history.back();
