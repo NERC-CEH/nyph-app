@@ -43,7 +43,7 @@ let Sample = Morel.Sample.extend({
       sample.location = 'missing';
     }
     // location name
-    if (!location.name) {
+    if (!attrs.location_name) {
       sample['location name'] = 'missing';
     }
 

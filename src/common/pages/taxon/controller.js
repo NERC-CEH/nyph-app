@@ -86,20 +86,17 @@ const API = {
           const updatedSampleID = sample.id || sample.cid;
           App.trigger('records:edit', updatedSampleID, { replace: true });
         } else {
-		  // interfere with app flow
-		  // if location not set then navigate to that screen
-		  // otherwise go back to list
-
-		                                                                                                      if (sample.attributes.location && sample.attributes.location.name) {
-			// already have a satisfactory locked location
-
+          // interfere with app flow
+          // if location not set then navigate to that screen
+          // otherwise go back to list
+          if (sample.get('location_name')) {
+            // already have a satisfactory locked location
             // return to previous page
-  window.history.back();
-		  } else {
-			// navigate to edit the location of the new record
-
-			                    App.trigger('records:edit:location', sample.cid, { replace: true });
-		  }
+            window.history.back();
+          } else {
+            // navigate to edit the location of the new record
+            App.trigger('records:edit:location', sample.cid, { replace: true });
+          }
         }
       });
     }, that);
@@ -138,7 +135,7 @@ const API = {
         if (!locks.location) {
           // no previous location
           sample.startGPS();
-        } else if (!locks.location.latitude || !locks.location.longitude) {
+        } else if (!locks.location.latitude) {
           // previously locked location was through GPS
           // so try again
           sample.startGPS();

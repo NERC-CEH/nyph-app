@@ -102,20 +102,20 @@ const helpers = {
    */
   _getGRgranularity(location) {
     let locationGranularity;
-    let accuracy = location.accuracy;
+    //let accuracy = location.accuracy;
 
     // don't need to recalculate if exists
-    if (location.source === 'gridref') {
-      return accuracy;
-    }
+    //if (location.source === 'gridref') {
+    //  return accuracy;
+    //}
 
-    // normalize to meters
-    if (location.source === 'map') {
-      accuracy = helpers.mapZoom2meters(accuracy);
-    }
+    // normalize to metres
+    //if (location.source === 'map') {
+    //  accuracy = helpers.mapZoom2meters(accuracy);
+    //}
 
     // calculate granularity
-    const digits = Math.log(accuracy) / Math.LN10;
+    const digits = Math.log(location.accuracy * 2) / Math.LN10;
     locationGranularity = 10 - (digits * 2); // MAX GR ACC -
     locationGranularity = Number((locationGranularity).toFixed(0)); // round the float
 
@@ -138,7 +138,7 @@ const helpers = {
   },
 
   isInUK(location) {
-    if (!location.latitude || !location.longitude) return null;
+    if (!location.latitude) return null;
 
     let gridref = location.gridref;
     if (!gridref) {

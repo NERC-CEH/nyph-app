@@ -1,7 +1,7 @@
 import { LocHelp, Log } from 'helpers';
 import L from 'leaflet';
 import { OsGridRef } from 'geodesy';
-import './map_view_singleclick';
+import './leaflet_singleclick_ext';
 
 const OS_ZOOM_DIFF = 6;
 const MAX_OS_ZOOM = L.OSOpenSpace.RESOLUTIONS.length - 1;
@@ -17,7 +17,7 @@ const marker = {
    * @param currentLocation
    */
   updateMapMarker(location) {
-    if (!location.latitude || !location.longitude) return;
+    if (!location.latitude) return;
     Log('Common:Location:Map view: updating map marker');
 
     const inUK = LocHelp.isInUK(location);
@@ -91,17 +91,19 @@ const marker = {
     const location = {
       latitude: parseFloat(e.latlng.lat.toFixed(7)),
       longitude: parseFloat(e.latlng.lng.toFixed(7)),
+      accuracy: 1, // placeholder absolute accuracy, needed for inUK
       source: 'map',
     };
 
     const inUK = LocHelp.isInUK(location);
 
     // normalize the accuracy across different layer types
-    let accuracy = this.map.getZoom();
-    let mapZoom = accuracy;
+    let mapZoom = this.map.getZoom();
+    let normalisedZoom = mapZoom;
+
     if (this.currentLayer !== 'OS') {
-      accuracy -= OS_ZOOM_DIFF; // adjust the diff
-      accuracy = accuracy < 0 ? 0 : accuracy; // normalize
+      normalisedZoom -= OS_ZOOM_DIFF; // adjust the diff
+      normalisedZoom = normalisedZoom < 0 ? 0 : normalisedZoom; // normalize
 
       // need to downgrade to OS maps so that there is no OS -> OSM -> OS transitions
       if (inUK && (mapZoom - OS_ZOOM_DIFF) < MAX_OS_ZOOM) {
@@ -109,11 +111,11 @@ const marker = {
       }
     } else if (!inUK) {
       // out of UK adjust the zoom because the next displayed map should be not OS
-      accuracy += OS_ZOOM_DIFF;
+      normalisedZoom += OS_ZOOM_DIFF;
       mapZoom += OS_ZOOM_DIFF; // adjust the diff
     }
 
-    location.accuracy = accuracy;
+    location.accuracy = LocHelp.mapZoom2meters(normalisedZoom);
     location.mapZoom = mapZoom;
     location.gridref = LocHelp.coord2grid(location);
 
@@ -183,6 +185,7 @@ const marker = {
   _removeMapMarker() {
     if (this.marker) {
       this.map.removeLayer(this.marker);
+      this.marker = null;
     }
   },
 };
