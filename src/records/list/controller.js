@@ -154,6 +154,7 @@ const API = {
 
       const sample = new Sample();
       sample.addOccurrence(occurrence);
+      sample.set_entry_time();
 
       // append locked attributes
       appModel.appendAttrLocks(sample);

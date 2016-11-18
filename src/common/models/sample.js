@@ -18,6 +18,8 @@ let Sample = Morel.Sample.extend({
 
   initialize() {
     this.set('form', CONFIG.morel.manager.input_form);
+  },
+  set_entry_time() {
     this.set('entry_time', new Date().toString());
   },
 
