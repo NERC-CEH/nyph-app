@@ -128,11 +128,11 @@ export default function (species, commonNamePointersArray, searchPhrase, results
       // need to qualify both the last pushed name and this entry with the scientific name
       // helps to disambiguate Silene pusilla and Silene suecica with have been (wrongly) assigned the same vernacular name
       let previousQualified = Object.assign({}, previous);
-      previousQualified.common_name = `{previous.common_name} ({previous.scientific_name})`;
+      previousQualified.common_name = `${previous.common_name} (${previous.scientific_name})`;
       results[results.length - 1] = previousQualified; // replace last result with qualified copy
       
       let currentQualified = Object.assign({}, taxon);
-      currentQualified.common_name = `{taxon.common_name} ({taxon.scientific_name})`;
+      currentQualified.common_name = `${taxon.common_name} (${taxon.scientific_name})`;
       results[results.length] = currentQualified;
     }
   });
