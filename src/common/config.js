@@ -95,13 +95,13 @@ export default {
           options.flattener(attributes, options);
 
           // for NYPH base unit should always be grid-reference rather that lat/lng
-          return location.gridref;
+          return location.gridref ? location.gridref : location.latitude + ', ' + location.longitude;
         },
       },
       location_type: {
           values(location) {
             // this should eventually also accomodate Irish gridrefs
-            return 'OSGB';
+            return location.gridref ? 'OSGB' : 4326;
           },
       },
       location_accuracy: { id: 282 },
