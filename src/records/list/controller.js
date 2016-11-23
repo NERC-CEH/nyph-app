@@ -211,7 +211,7 @@ const API = {
   showThanksDialog() {
     App.regions.getRegion('dialog').show({
       title: 'Thank you!',
-      body: 'Check out progress <a href="https://nyph.bsbi.org" target="_blank">nyph.bsbi.org</a>',
+      body: 'Follow progress at <a href="https://nyph.bsbi.org" target="_blank">nyph.bsbi.org</a>',
       buttons: [
         {
           title: 'OK',
