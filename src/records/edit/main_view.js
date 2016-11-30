@@ -5,6 +5,7 @@ import Marionette from 'backbone.marionette';
 import Morel from 'morel';
 import JST from 'JST';
 import { DateHelp, StringHelp } from 'helpers';
+import CONFIG from 'config';
 
 import './styles.scss';
 
@@ -28,13 +29,18 @@ export default Marionette.View.extend({
 
     const locationPrint = recordModel.printLocation();
     const location = recordModel.get('location') || {};
+    const location_name = recordModel.get('location_name');
 
     const attrLocks = {
       date: appModel.isAttrLocked('date', recordModel.get('date')),
       location: appModel.isAttrLocked('location', recordModel.get('location')),
-      identifiers: appModel.isAttrLocked('identifiers', occ.get('identifiers')),
+      location_name: appModel.isAttrLocked('location_name', recordModel.get('location_name')),
+      recorder: appModel.isAttrLocked('recorder', recordModel.get('recorder')),
       comment: appModel.isAttrLocked('comment', occ.get('comment')),
     };
+
+    // regardless of CONFIG.ENFORCE_DATE_CONSTRAINT flag date range problems in UI
+    const modelDate = new Date(recordModel.get('date'));
 
     return {
       id: recordModel.id || recordModel.cid,
@@ -43,11 +49,14 @@ export default Marionette.View.extend({
       isLocating: recordModel.isGPSRunning(),
       isSynchronising: recordModel.getSyncStatus() === Morel.SYNCHRONISING,
       location: locationPrint,
-      location_name: location.name,
+      location_name: location_name,
       date: DateHelp.print(recordModel.get('date')),
-      identifiers: occ.get('identifiers') && StringHelp.limit(occ.get('identifiers')),
+      recorder: recordModel.get('recorder') && StringHelp.limit(recordModel.get('recorder')),
       comment: occ.get('comment') && StringHelp.limit(occ.get('comment')),
       locks: attrLocks,
+      dateRangeError: (modelDate < CONFIG.MIN_RECORDING_DATE ||
+      modelDate > CONFIG.MAX_RECORDING_DATE ||
+      modelDate > (new Date())),
     };
   },
 });

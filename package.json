@@ -4,7 +4,7 @@
   "title": "NYPH",
   "description": "New Year Plant Hunt mobile application.",
   "version": "1.0.0",
-  "build": "1",
+  "build": "3",
   "homepage": "https://bsbi.org.uk",
   "author": {
     "name": "Karolis Kazlauskis",
@@ -62,7 +62,7 @@
     "jquery": "^3.1.0",
     "jquery-touchswipe": "^1.6.15",
     "json-loader": "^0.5.4",
-    "latlon": "github:chrisveness/geodesy#d50580b5054b562f0d1c94441f74a9d0bf8ba710",
+    "geodesy": "^1.1.1",
     "leaflet": "^0.7.7",
     "leaflet.gridref": "github:kazlauskis/Leaflet.GridRef",
     "load-grunt-config": "^0.19.2",

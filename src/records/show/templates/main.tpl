@@ -28,11 +28,11 @@
       <span class="comment descript"><%- obj.comment %></span>
     </li>
   <% } %>
-  <% if (obj.identifiers) { %>
+  <% if (obj.recorder) { %>
   <li class="table-view-cell">
     <span class="media-object pull-left icon icon-user-plus"></span>
-    Identifiers
-    <span class="comment descript"><%- obj.identifiers %></span>
+    Recorder
+    <span class="comment descript"><%- obj.recorder %></span>
   </li>
   <% } %>
   <% if (obj.images.length) { %>

@@ -40,17 +40,18 @@ export default {
     let locked;
     switch (attr) {
       case 'location':
-        locked =
+        locked = lockedVal && lockedVal.source !== 'gps' && !!lockedVal.gridref && lockedVal.gridref === value.gridref;
+          /*
           // map or gridref
-          (lockedVal &&
-          (lockedVal.name === value.name &&
+          (lockedVal && lockedVal.source !== 'gps' &&
+          ((lockedVal.name === value.name &&
           lockedVal.latitude === value.latitude &&
           lockedVal.longitude === value.longitude) ||
 
             // GPS doesn't lock the location only name
           (lockedVal.name === value.name && (
-          !lockedVal.latitude && !lockedVal.longitude)));
-
+          !lockedVal.latitude && !lockedVal.longitude))));
+          */
         return locked;
       case 'date':
         lockedVal = new Date(lockedVal);
@@ -78,21 +79,15 @@ export default {
         case 'location':
           sample.set('location', val);
           break;
+        case 'location_name':
+          sample.set('location_name', val);
+          break;
         case 'date':
           // parse stringified date
           sample.set('date', new Date(val));
           break;
-        case 'number':
-          occurrence.set('number', val);
-          break;
-        case 'number-ranges':
-          occurrence.set('number-ranges', val);
-          break;
-        case 'stage':
-          occurrence.set('stage', val);
-          break;
-        case 'identifiers':
-          occurrence.set('identifiers', val);
+        case 'recorder':
+          sample.set('recorder', val);
           break;
         case 'comment':
           occurrence.set('comment', val);

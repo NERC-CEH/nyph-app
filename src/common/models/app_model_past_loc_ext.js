@@ -12,8 +12,10 @@ export default {
    *
    * @param location
    */
-  setLocation(origLocation = {}) {
+  setLocation(origLocation = {}, location_name) {
     const location = _.cloneDeep(origLocation);
+    location.name = location_name; // past locations incorporate location names
+
     const locations = this.get('locations');
 
     if (!location.latitude || !location.longitude) {
@@ -93,7 +95,7 @@ export default {
       if (useGridRef || location.source === 'gridref') {
         let accuracy = location.accuracy;
 
-        // cannot be odd
+        // cannot be odd (@todo Why not odd!)
         if (accuracy % 2 !== 0) {
           // should not be less than 2
           accuracy = accuracy === 1 ? accuracy + 1 : accuracy - 1;

@@ -105,13 +105,13 @@ const API = {
           recordModel.set('date', newVal);
         }
         break;
-      case 'identifiers':
-        currentVal = occ.get('identifiers');
+      case 'recorder':
+        currentVal = recordModel.get('recorder');
 
         // todo:validate before setting up
         // don't save default values
-        newVal = values.identifiers;
-        occ.set('identifiers', newVal);
+        newVal = values.recorder;
+        recordModel.set('recorder', newVal);
         break;
       case 'comment':
         currentVal = occ.get('comment');
@@ -139,7 +139,7 @@ const API = {
   },
 
   updateLock(attr, newVal, currentVal) {
-    let lockedValue = appModel.getAttrLock(attr);
+    const lockedValue = appModel.getAttrLock(attr);
 
     switch (attr) {
       case 'date':

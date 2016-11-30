@@ -5,6 +5,7 @@ import $ from 'jquery';
 import Marionette from 'backbone.marionette';
 import { Device, DateHelp, StringHelp, Log } from 'helpers';
 import JST from 'JST';
+import CONFIG from 'config';
 
 export default Marionette.View.extend({
   initialize(options) {
@@ -15,7 +16,6 @@ export default Marionette.View.extend({
     const values = {};
     let value;
     const attr = this.options.attr;
-    let $inputs;
     switch (attr) {
       case 'date': {
         value = this.$el.find('input').val();
@@ -25,7 +25,7 @@ export default Marionette.View.extend({
         }
         break;
       }
-      case 'identifiers':
+      case 'recorder':
         value = this.$el.find('input').val();
         values[attr] = StringHelp.escape(value);
         break;
@@ -46,10 +46,16 @@ export default Marionette.View.extend({
     switch (this.options.attr) {
       case 'date':
         templateData.date = DateHelp.toDateInputValue(this.model.get('date'));
-        templateData.maxDate = DateHelp.toDateInputValue(new Date());
+        const today = new Date();
+
+        if (CONFIG.ENFORCE_DATE_CONSTRAINT) {
+          templateData.maxDate = DateHelp.toDateInputValue(today <= CONFIG.MAX_RECORDING_DATE ? today : CONFIG.MAX_RECORDING_DATE);
+        } else {
+          templateData.maxDate = DateHelp.toDateInputValue(new Date());
+        }
         break;
-      case 'identifiers':
-        templateData.identifiers = occ.get('identifiers');
+      case 'recorder':
+        templateData.recorder = this.model.get('recorder');
         break;
       case 'comment':
         templateData.comment = occ.get('comment');
@@ -122,7 +128,7 @@ export default Marionette.View.extend({
           });
         }
         break;
-      case 'identifiers':
+      case 'recorder':
         $input = this.$el.find('input').focus();
         if (window.cordova && Device.isAndroid()) {
           window.Keyboard.show();

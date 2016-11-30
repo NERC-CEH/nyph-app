@@ -161,6 +161,13 @@
           width: 100%;
           object-fit: cover;
         }
+
+        .taxonphotomessage {
+          font-size: 12px;
+          text-align: center;
+          margin-top: 20%;
+          color: $color-orange;
+        }
       }
 
       a {
@@ -283,7 +290,7 @@
           }
 
           .location {
-            width: 60%;
+            width: 50%;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;

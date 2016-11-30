@@ -21,7 +21,7 @@
     <p><strong>Other information collected by the application</strong></p>
 
     <p>All records submitted will be stored permanently on a secure server at the Biological Record
-      Centre. Records will be made accessible to Local Environmental Record Centres, conservation
+      Centre. Records will be made accessible to the Botanical Society of Britain and Ireland, Local Environmental Record Centres, conservation
       organisations, scientific researchers, the NBN Gateway and the public.</p>
   </li>
   <li>
@@ -33,8 +33,7 @@
   <li>
     <p><strong>Who will have access to my personal data?</strong></p>
 
-    <p>Only those directly involved in developing this app and running this recording scheme
-      or verifying records as experts or involved in the management of Asian Hornets, will have access to your email address.
+    <p>Only those directly involved in developing this app or running the New Year Plant Hunt will have access to your email address.
       Unless required by law, data will not be made available to any third parties unless we have
       obtained your permission to do so.</p>
   </li>

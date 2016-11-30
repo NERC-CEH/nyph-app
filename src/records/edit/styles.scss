@@ -84,6 +84,12 @@ ul.table-view.inputs {
   content: '\e80c';
 }
 
+// location below location name
+.location.lock:after {
+  bottom: 12px;
+  top: auto;
+}
+
 
 $footer-height: 80px;
 
@@ -160,4 +166,8 @@ footer #edit-footer {
   margin: 0 -5px;
   background-color: $color-white;
   border-top: 1px solid $color-gray;
+}
+
+.date-warn {
+  color: #FFC019;
 }

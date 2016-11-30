@@ -7,7 +7,6 @@ import Morel from 'morel';
 import CONFIG from 'config';
 import recordManager from '../record_manager';
 import { Log } from 'helpers';
-import userModel from './user_model';
 import Occurrence from './occurrence';
 import GeolocExtension from './sample_geoloc_ext';
 
@@ -19,6 +18,9 @@ let Sample = Morel.Sample.extend({
 
   initialize() {
     this.set('form', CONFIG.morel.manager.input_form);
+  },
+  set_entry_time() {
+    this.set('entry_time', new Date().toString());
   },
 
   Occurrence,
@@ -41,7 +43,7 @@ let Sample = Morel.Sample.extend({
       sample.location = 'missing';
     }
     // location name
-    if (!location.name) {
+    if (!attrs.location_name) {
       sample['location name'] = 'missing';
     }
 
@@ -50,8 +52,18 @@ let Sample = Morel.Sample.extend({
       sample.date = 'missing';
     } else {
       const date = new Date(attrs.date);
-      if (date === 'Invalid Date' || date > new Date()) {
-        sample.date = (new Date(date) > new Date()) ? 'future date' : 'invalid';
+
+      if (CONFIG.ENFORCE_DATE_CONSTRAINT) {
+        // use NYPH constrained dates
+
+        if (date === 'Invalid Date' || date < CONFIG.MIN_RECORDING_DATE || date > CONFIG.MAX_RECORDING_DATE) {
+          sample.date = (date === 'Invalid Date') ? 'invalid' : 'date is not within the permitted range';
+        }
+      } else {
+        // enforce only presence and non-future date
+        if (date === 'Invalid Date' || date > new Date()) {
+          sample.date = (date === 'Invalid Date') ? 'invalid' : 'future date';
+        }
       }
     }
 
@@ -65,12 +77,16 @@ let Sample = Morel.Sample.extend({
       sample.occurrences = 'no species selected';
     } else {
       this.occurrences.each((occurrence) => {
-        // kludge to substitute default 'Flowering Plant' if taxon is missing
-		    if (('attributes' in occurrence) && !occurrence.attributes.taxon) {
-			    occurrence.attributes.taxon = Object.assign({}, CONFIG.UNKNOWN_SPECIES);
+        let errors = occurrence.validate();
+
+        // @todo move to occurrence module
+        // don't allow 'unknown species' if no photo
+        if (occurrence.images.length === 0 &&
+          occurrence.get('taxon').warehouse_id === CONFIG.UNKNOWN_SPECIES.warehouse_id) {
+        	errors = errors || {};
+        	errors.taxon = 'Taxon name or photo needed';
         }
-        
-        const errors = occurrence.validate();
+
         if (errors) {
           const occurrenceID = occurrence.id || occurrence.cid;
           occurrences[occurrenceID] = errors;

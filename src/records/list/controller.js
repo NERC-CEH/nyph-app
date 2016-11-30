@@ -3,8 +3,10 @@
  *****************************************************************************/
 import Morel from 'morel';
 import App from 'app';
+import CONFIG from 'config';
 import { Log, Analytics, ImageHelp } from 'helpers';
 import appModel from '../../common/models/app_model';
+import userModel from '../../common/models/user_model';
 import recordManager from '../../common/record_manager';
 import Sample from '../../common/models/sample';
 import Occurrence from '../../common/models/occurrence';
@@ -45,7 +47,7 @@ const API = {
 
     // HEADER
     const headerView = new HeaderView({ model: appModel });
-    headerView.on('records:submit:all', API.sendAllRecords);
+    headerView.on('records:submit:all', API.showSendAllDialog);
 
     headerView.on('photo:upload', (e) => {
       const photo = e.target.files[0];
@@ -145,11 +147,14 @@ const API = {
         callback(err);
         return;
       }
-      const occurrence = new Occurrence();
+      const occurrence = new Occurrence({
+        taxon: Object.assign({}, CONFIG.UNKNOWN_SPECIES),
+      });
       occurrence.addImage(image);
 
       const sample = new Sample();
       sample.addOccurrence(occurrence);
+      sample.set_entry_time();
 
       // append locked attributes
       appModel.appendAttrLocks(sample);
@@ -175,7 +180,7 @@ const API = {
     });
   },
 
-  sendAllRecords() {
+  showSendAllDialog() {
     App.regions.getRegion('dialog').show({
       title: 'Submit All',
       body: 'Are you sure you want to set all valid records for submission?',
@@ -189,57 +194,76 @@ const API = {
         {
           title: 'OK',
           class: 'btn-positive',
+          onClick: API.sendAllRecords,
+        },
+      ],
+    });
+  },
+
+  showIncompleteDialog() {
+    App.regions.getRegion('dialog').show({
+      title: 'Sorry',
+      body: 'Some records could not be submitted at the moment. ' +
+      'Try again later',
+    });
+  },
+
+  showThanksDialog() {
+    App.regions.getRegion('dialog').show({
+      title: 'Thank you!',
+      body: 'Follow progress at <a href="https://nyph.bsbi.org" target="_blank">nyph.bsbi.org</a>',
+      buttons: [
+        {
+          title: 'OK',
+          class: 'btn-positive',
           onClick() {
-            Log('Settings:Menu:Controller: sending all records');
-
-            // delete all
-            recordManager.setAllToSend((err) => {
-              if (err) {
-                App.regions.getRegion('dialog').error(err);
-                return;
-              }
-              App.regions.getRegion('dialog').hide();
-            }).then(() => {
-              let incomplete = false;
-              recordManager.getAll((err, records) => {
-                if (err) {
-                  Log(err, 'e');
-                  return;
-                }
-                records.each((record) => {
-                  const status = record.getSyncStatus();
-                  if (record.metadata.saved && status !== Morel.SYNCED) {
-                    incomplete = true;
-                  }
-                });
-
-                // give feedback
-                if (incomplete) {
-                  App.regions.getRegion('dialog').show({
-                    title: 'Sorry',
-                    body: 'Some records could not be submitted at the moment. ' +
-                    'Try again later',
-                  });
-                } else {
-                  App.regions.getRegion('dialog').show({
-                    title: 'Thank you!',
-                    body: 'Check out progress <a href="https://nyph.bsbi.org" target="_blank">here</a>',
-                    buttons: [
-                      {
-                        title: 'OK',
-                        class: 'btn-positive',
-                        onClick() {
-                          App.regions.getRegion('dialog').hide();
-                        },
-                      },
-                    ]
-                  });
-                }
-              });
-            });
+            App.regions.getRegion('dialog').hide();
           },
         },
       ],
+    });
+  },
+
+  sendAllRecords() {
+    Log('Settings:Menu:Controller: sending all records');
+
+    recordManager.setAllToSend((err) => {
+      if (err) {
+        App.regions.getRegion('dialog').error(err);
+        return;
+      }
+      App.regions.getRegion('dialog').hide();
+
+      // check if logged in
+      if (!userModel.hasLogIn()) {
+        App.trigger('user:login');
+      }
+    }).then(() => {
+      // check if there are any unsent
+
+      //only if logged in
+      if (!userModel.hasLogIn()) return;
+
+      let incomplete = false;
+      recordManager.getAll((err, records) => {
+        if (err) {
+          Log(err, 'e');
+          return;
+        }
+        records.each((record) => {
+          const status = record.getSyncStatus();
+          if (record.metadata.saved && status !== Morel.SYNCED) {
+            incomplete = true;
+          }
+        });
+
+        // give feedback
+        if (incomplete) {
+          API.showIncompleteDialog();
+        } else {
+          API.showThanksDialog();
+        }
+      });
     });
   },
 };

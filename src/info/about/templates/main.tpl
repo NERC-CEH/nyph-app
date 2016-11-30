@@ -12,7 +12,7 @@
       areas and over different years:
     </p>
     <ol>
-      <li>Pick one day over the New Year weekend between Sunday 1st and Wednesday 4th January 2017, when the
+      <li>Pick a day over the New Year between Sunday 1st and Wednesday 4th January 2017, when the
         weather is decent enough to record in.</li>
       <li>Record wild and naturalised plants in flower (but not planted
         species in gardens or parks). Please check that plants are actually flowering: that catkins are open, that grasses have open florets, stigmas or anthers on show etc.</li>
@@ -26,7 +26,7 @@
     <p><strong>About the App</strong></p>
     <p>
       We hope that most Plant Hunters will use our new app this year - it’s the easiest way for you to send records and will help us to process your results much more quickly.
-      If you encounter any problems then please email us: nyplanthunt@bsbi.org
+      If you encounter any problems then please email us:  <a href='mailto:nyplanthunt@bsbi.org'>nyplanthunt@bsbi.org</a>
     </p>
   </li>
   <li>

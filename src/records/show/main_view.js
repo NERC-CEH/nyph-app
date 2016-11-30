@@ -46,6 +46,7 @@ export default Marionette.View.extend({
 
     const locationPrint = recordModel.printLocation();
     const location = recordModel.get('location') || {};
+    const location_name = recordModel.get('location_name');
 
     return {
       id: occ.cid,
@@ -54,9 +55,9 @@ export default Marionette.View.extend({
       scientific_name: scientificName,
       commonName,
       location: locationPrint,
-      location_name: location.name,
+      location_name: location_name,
       date: DateHelp.print(recordModel.get('date')),
-      identifiers: occ.get('identifiers'),
+      recorder: recordModel.get('recorder'),
       comment: occ.get('comment'),
       images: occ.images,
     };

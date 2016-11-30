@@ -3,7 +3,14 @@
   <% } else { %>
   <a href="#records/<%- obj.id %>/edit/taxon" class="mobile">
     <% } %>
-    <div class="media-object pull-left photo"><%= obj.img %></div>
+    <div class="media-object pull-left photo">
+      <% if (obj.idIncomplete) { %>
+      <div class="taxonphotomessage">photo required</div>
+      <% } else { %>
+      <%= obj.img %>
+      <% } %>
+    </div>
+
     <div class="pull-right">
       <% if (obj.saved) { %>
       <% if (obj.isSynchronising) { %>
@@ -18,14 +25,10 @@
     </div>
 
     <div class="media-body">
-      <% if (obj.taxon) { %>
       <div class="species"> <%= obj.taxon %></div>
-      <% } else { %>
-      <div class="species error">Species missing</div>
-      <% } %>
 
       <% if (obj.date) { %>
-      <div class="date"><%= obj.date %></div>
+      <div class="date<%- obj.dateRangeError ? ' warn' : '' %>"><%= obj.date %></div>
       <% } else { %>
       <div class="date error">Date</div>
       <% } %>
@@ -39,11 +42,12 @@
       <% } else { %>
       <% if (obj.isLocating) { %>
       <div class="location warn">Locating...</div>
-      <% } else {%>
+      <% } else if (obj.location_name) { %>
+      <div class="location error">No grid reference</div>
+      <% } else { %>
       <div class="location error">No location</div>
       <% } %>
       <% } %>
-
 
       <div class="attributes">
         <div class="comment"><%= obj.comment %></div>

@@ -238,6 +238,19 @@ export default Marionette.View.extend({
             // let controller know
             that.trigger('taxon:searched', text.toLowerCase());
           }, 100);
+        } else if (text.replace(/\.|\s/g, '').length === 0) {
+          // no search text, but pass through search, so that 'Unknown sp' can be shown
+
+          // Clear previous timeout
+          if (this.timeout !== -1) {
+            clearTimeout(this.timeout);
+          }
+
+          // Set new timeout - don't run if user is typing
+          this.timeout = setTimeout(function () {
+            // let controller know
+            that.trigger('taxon:searched', '');
+          }, 100);
         }
     }
     return null;
