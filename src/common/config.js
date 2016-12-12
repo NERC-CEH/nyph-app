@@ -93,8 +93,15 @@ export default {
           // add other location related attributes
           options.flattener(attributes, options);
 
-          return location.latitude + ', ' + location.longitude;
+          // for NYPH base unit should always be grid-reference rather that lat/lng
+          return location.gridref ? location.gridref : location.latitude + ', ' + location.longitude;
         },
+      },
+      location_type: {
+          values(location) {
+            // this should eventually also accomodate Irish gridrefs
+            return location.gridref ? 'OSGB' : 4326;
+          },
       },
       location_accuracy: { id: 282 },
       location_altitude: { id: 283 },
