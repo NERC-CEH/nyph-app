@@ -1,5 +1,5 @@
 
-@media only screen and (min-width: $app-max-width) {
+@media only screen {
   #app {
     max-width: $app-max-width;
 
@@ -9,9 +9,10 @@
 
 
   footer, header {
+    /* max-width: $app-max-width;
     width: $app-max-width;
     margin-left: -$app-max-width/2 !important;
-    left: 50% !important;
+    left: 50% !important; */
   }
 
 
