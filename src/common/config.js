@@ -98,7 +98,7 @@ export default {
         },
       },
       location_type: {
-          values(location) {
+          values: function(location) {
             // this should eventually also accomodate Irish gridrefs
             return location.gridref ? 'OSGB' : 4326;
           },
