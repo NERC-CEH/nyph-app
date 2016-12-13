@@ -99,12 +99,12 @@ export default {
         },
       },
       location_type: {
-          values: function(source, fullObject) {
+        values: function(source, fullObject) {
             //let location = fullObject.keys;
              
             // this should eventually also accomodate Irish gridrefs
             return source;
-          ,
+        },
       },
       location_accuracy: { id: 282 },
       location_altitude: { id: 283 },
