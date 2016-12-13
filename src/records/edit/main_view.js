@@ -29,10 +29,12 @@ export default Marionette.View.extend({
 
     const locationPrint = recordModel.printLocation();
     const location = recordModel.get('location') || {};
+    const location_name = recordModel.get('location_name');
 
     const attrLocks = {
       date: appModel.isAttrLocked('date', recordModel.get('date')),
       location: appModel.isAttrLocked('location', recordModel.get('location')),
+      location_name: appModel.isAttrLocked('location_name', recordModel.get('location_name')),
       recorder: appModel.isAttrLocked('recorder', recordModel.get('recorder')),
       comment: appModel.isAttrLocked('comment', occ.get('comment')),
     };
@@ -47,7 +49,7 @@ export default Marionette.View.extend({
       isLocating: recordModel.isGPSRunning(),
       isSynchronising: recordModel.getSyncStatus() === Morel.SYNCHRONISING,
       location: locationPrint,
-      location_name: location.name,
+      location_name: location_name,
       date: DateHelp.print(recordModel.get('date')),
       recorder: recordModel.get('recorder') && StringHelp.limit(recordModel.get('recorder')),
       comment: occ.get('comment') && StringHelp.limit(occ.get('comment')),

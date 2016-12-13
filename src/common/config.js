@@ -74,16 +74,15 @@ export default {
         values(location, options) {
           // convert accuracy for map and gridref sources
           let accuracy = location.accuracy;
-          if (location.source !== 'gps') {
-            if (location.source === 'map') {
-              accuracy = LocHelp.mapZoom2meters(location.accuracy);
-            } else {
-              accuracy = null;
-            }
-          }
+          //if (location.source !== 'gps') {
+          //  if (location.source === 'map') {
+          //    accuracy = LocHelp.mapZoom2meters(location.accuracy);
+          //  } else {
+          //    accuracy = null;
+          //  }
+          //}
 
           const attributes = {
-            location_name: location.name,
             location_source: location.source,
             location_gridref: location.gridref,
             location_altitude: location.altitude,

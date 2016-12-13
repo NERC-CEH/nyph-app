@@ -154,6 +154,7 @@ const API = {
 
       const sample = new Sample();
       sample.addOccurrence(occurrence);
+      sample.set_entry_time();
 
       // append locked attributes
       appModel.appendAttrLocks(sample);
@@ -210,7 +211,7 @@ const API = {
   showThanksDialog() {
     App.regions.getRegion('dialog').show({
       title: 'Thank you!',
-      body: 'Check out progress <a href="https://nyph.bsbi.org" target="_blank">here</a>',
+      body: 'Follow progress at <a href="https://nyph.bsbi.org" target="_blank">nyph.bsbi.org</a>',
       buttons: [
         {
           title: 'OK',
