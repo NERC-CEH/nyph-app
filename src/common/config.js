@@ -88,6 +88,7 @@ export default {
             location_altitude: location.altitude,
             location_altitude_accuracy: location.altitudeAccuracy,
             location_accuracy: accuracy,
+            location_type: location.gridref ? 'OSGB' : 4326, // this should eventually also accomodate Irish gridrefs
           };
 
           // add other location related attributes
@@ -98,10 +99,12 @@ export default {
         },
       },
       location_type: {
-          values: function(location) {
-            // this should eventually also accomodate Irish gridrefs
-            return location.gridref ? 'OSGB' : 4326;
-          },
+          //values: function(source, fullObject) {
+          //  let location = fullObject.keys.  
+          //    
+          //  // this should eventually also accomodate Irish gridrefs
+          //  return location.gridref ? 'OSGB' : 4326;
+          //,
       },
       location_accuracy: { id: 282 },
       location_altitude: { id: 283 },
