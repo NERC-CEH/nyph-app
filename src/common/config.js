@@ -67,7 +67,7 @@ export default {
       appsecret: API_SECRET,
       website_id: 23,
       survey_id: 427,
-      input_form: 'enter-app-record',
+      input_form: 'enter-NYPH-2017' // was 'enter-app-record',
     },
     sample: {
       location: {
