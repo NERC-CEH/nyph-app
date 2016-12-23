@@ -157,6 +157,7 @@ const mapFunctions = {
     const GPSbutton = new LeafletButton({
       position: 'topright',
       className: 'gps-btn',
+      title: 'seek gps fix',
       body: `<span class="icon icon-location"
                 data-source="${location.source}"></span>`,
       onClick: function () {

@@ -22,9 +22,9 @@
       <div class="edit">
         <% if (!obj.onDatabase && !obj.isSynchronising) { %>
           <% if (obj.taxon) { %>
-          <div data-attr="date" class="js-attr icon icon-calendar"></div>
-          <div data-attr="location" class="js-attr icon icon-location"></div>
-          <div data-attr="comment" class="js-attr icon icon-comment"></div>
+          <div data-attr="date" title="edit date" class="js-attr icon icon-calendar"></div>
+          <div data-attr="location" title="edit location" class="js-attr icon icon-location"></div>
+          <div data-attr="comment" title="edit comment" class="js-attr icon icon-comment"></div>
           <% } %>
         <% } %>
         <div id="delete" class="delete icon icon-cancel"></div>
