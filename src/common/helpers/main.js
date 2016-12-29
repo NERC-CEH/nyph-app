@@ -5,6 +5,7 @@ import Error from './error';
 import GPS from './gps';
 import ImageHelp from './image';
 import LocHelp from './location';
+import GridRefUtils from './gridrefutils';
 import Log from './log';
 import StringHelp from './string';
 import Update from './update';
@@ -19,6 +20,7 @@ export {
   GPS,
   ImageHelp,
   LocHelp,
+  GridRefUtils,
   Log,
   StringHelp,
   Update,
