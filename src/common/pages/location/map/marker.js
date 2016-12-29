@@ -29,7 +29,7 @@ const marker = {
     const latLng = L.latLng(markerCoords);
     
     //if (inGB === false) {
-    if (!location.gridref)
+    if (!location.gridref) {
       if (this.marker instanceof L.CircleMarker) {
         this.marker.setLocation(location);
       } else {
