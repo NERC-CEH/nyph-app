@@ -19,7 +19,7 @@ const helpers = {
 
     //return grid.toString(locationGranularity).replace(/\s/g, '');
     
-    var normalisedPrecision = GridRefUtils.GridRefParser.get_normalized_precision(location.accuracy);
+    var normalisedPrecision = GridRefUtils.GridRefParser.get_normalized_precision(location.accuracy * 2); // accuracy is radius
     var nationaGridCoords = GridRefUtils.latlng_to_grid_coords(location.latitude, location.longitude);
     return nationaGridCoords.to_gridref(normalisedPrecision);
   },
@@ -120,7 +120,6 @@ const helpers = {
       //  return OsGridRef.osGridToLatLon(gridref, LatLon.datum.WGS84);
       //}
     } catch(e) {
-      // recent versions of the geodesy library throw exceptions for bad gridrefs
       Log(e.message);
     }
 
@@ -141,6 +140,7 @@ const helpers = {
     if (zoom <= 4) {
       scale = 0;
     } else if (zoom <= 5) {
+      Log('tetrad map scale');
       return 1000; // tetrad (radius is 1000m)
     } else if (zoom <= 7) {
       scale = 1;
@@ -153,6 +153,9 @@ const helpers = {
     }
 
     scale = 5000 / Math.pow(10, scale); // meters
+    
+    Log('map scale (radius): ' + scale);
+    
     return scale < 1 ? 1 : scale;
   },
 
@@ -165,32 +168,37 @@ const helpers = {
    * 
    * @deprecated
    */
-  _getGRgranularity(location) {
-    let locationGranularity;
+  //_getGRgranularity(location) {
+  //  let locationGranularity;
 
     // calculate granularity
-    const digits = Math.log(location.accuracy * 2) / Math.LN10;
-    locationGranularity = 10 - (digits * 2); // MAX GR ACC -
-    locationGranularity = Number((locationGranularity).toFixed(0)); // round the float
+  //  const digits = Math.log(location.accuracy * 2) / Math.LN10;
+  //  locationGranularity = 10 - (digits * 2); // MAX GR ACC -
+  //  locationGranularity = Number((locationGranularity).toFixed(0)); // round the float
 
     // normalize granularity
     // cannot be odd
-    if (locationGranularity % 2 !== 0) {
+  //  if (locationGranularity % 2 !== 0) {
       // should not be less than 2
-      locationGranularity =
-        locationGranularity === 1 ? locationGranularity + 1 : locationGranularity - 1;
-    }
+  //    locationGranularity =
+  //      locationGranularity === 1 ? locationGranularity + 1 : locationGranularity - 1;
+  //  }
 
-    if (locationGranularity > 10) {
+  //  if (locationGranularity > 10) {
       // no more than 10 digits
-      locationGranularity = 10;
-    } else if (locationGranularity < 2) {
+  //    locationGranularity = 10;
+  //  } else if (locationGranularity < 2) {
       // no less than 2
-      locationGranularity = 2;
-    }
-    return locationGranularity;
-  },
+  //    locationGranularity = 2;
+  //  }
+  //  return locationGranularity;
+  //},
 
+  /**
+   * 
+   * @param {type} location
+   * @returns {Boolean}
+   */
   isInGB(location) {
     if (location.latitude) {
 

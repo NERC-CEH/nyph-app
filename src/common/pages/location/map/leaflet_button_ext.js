@@ -18,6 +18,11 @@ export default L.Control.extend({
     this._map = map;
     const containerClassName = 'leaflet-control-button ' + (this.options.containerClassName || '');
     const container = L.DomUtil.create('div', containerClassName);
+    
+    if (this.options.title) {
+      container.title = this.options.title;
+    }
+    //console.log(container);
 
     this._container = container;
 
@@ -38,6 +43,7 @@ export default L.Control.extend({
       'maxWidth': options.maxWidth || 70,     // number
       'doToggle': options.doToggle,			// bool
       'toggleStatus': options.toggleStatus,					// bool
+      'title': options.title ? options.title : '', // string
     };
 
     this._button = button;

@@ -12,7 +12,7 @@ export default {
   },
 
   gridRef(gridref) {
-    const re = /^[A-Za-z]{1,2}\d{2}(?:(?:\d{2}){0,4})?$/;
+    const re = /^[A-Za-z]{1,2}\d{2}(?:(?:\d{2}){1,4}|[A-Za-z])?$/;
     return re.test(gridref);
   },
 

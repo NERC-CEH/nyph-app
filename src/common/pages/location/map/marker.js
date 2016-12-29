@@ -143,8 +143,8 @@ const marker = {
    * @param {type} location
    * @returns {Array} array of latlng objects SW, SE, NE, NW
    */
-  _getSquareDimensions(latLng, location) {
-    if (latLng) {
+  //_getSquareDimensions(latLng, location) {
+  //  if (latLng) {
       // get granularity
       //const locationGranularity = LocHelp._getGRgranularity(location) / 2;
 
@@ -160,17 +160,17 @@ const marker = {
       //const northEast = new OsGridRef(grid.easting + radius, grid.northing + radius);
       //const northWest = new OsGridRef(grid.easting - radius, grid.northing + radius);
 
-      const dimensions = [
-        OsGridRef.osGridToLatLon(southWest),
-        OsGridRef.osGridToLatLon(southEast),
-        OsGridRef.osGridToLatLon(northEast),
-        OsGridRef.osGridToLatLon(northWest),
-      ];
-      return dimensions;
-    } else {
-      return null;
-    }
-  },
+   //   const dimensions = [
+   //     OsGridRef.osGridToLatLon(southWest),
+   //     OsGridRef.osGridToLatLon(southEast),
+   //    OsGridRef.osGridToLatLon(northEast),
+   //     OsGridRef.osGridToLatLon(northWest),
+   //   ];
+   //   return dimensions;
+   // } else {
+   //   return null;
+   // }
+  //},
 
   _setCircleLocation(loc) {
     let newMarkerCoords = [];

@@ -14,7 +14,7 @@ import { OsGridRef } from 'geodesy';
 import LeafletButton from './leaflet_button_ext';
 import mapMarker from './marker';
 
-const DEFAULT_LAYER = 'OS';
+const DEFAULT_LAYER = 'OSM'; // use Open Street Map as need to support Ireland
 const DEFAULT_CENTER = [53.7326306, -2.6546124];
 const MAX_OS_ZOOM = L.OSOpenSpace.RESOLUTIONS.length - 1;
 const OS_ZOOM_DIFF = 6;
