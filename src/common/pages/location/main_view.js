@@ -72,7 +72,7 @@ const LocationView = Marionette.View.extend({
 
     // avoid testing location.longitude as this can validly be zero within the UK
     if (location.source !== 'gridref' && location.latitude) {
-      gridref = LocHelp.coord2grid(location);
+      gridref = LocHelp.locationLatLngToGridString(location);
     } else {
       gridref = location.gridref;
     }

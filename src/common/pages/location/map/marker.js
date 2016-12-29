@@ -184,7 +184,7 @@ const marker = {
    */
   _setSquareLocation(location) {
     // normalize GR square center
-    //const grid = LocHelp.coord2grid(location);
+    //const grid = LocHelp.locationLatLngToGridString(location);
     //const normalizedLocation = LocHelp.grid2coord(grid);
     
     const gridRefString = LocHelp.locationLatLngToGridString(location);
