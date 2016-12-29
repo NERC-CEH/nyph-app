@@ -20,14 +20,16 @@ const marker = {
     if (!location.latitude) return;
     Log('Common:Location:Map view: updating map marker');
 
-    const inGB = LocHelp.isInGB(location);
+    //const inGB = LocHelp.isInGB(location);
 
     // prepare marker coordinates
     const markerCoords = [location.latitude, location.longitude];
 
     // add the marker
     const latLng = L.latLng(markerCoords);
-    if (inGB === false) {
+    
+    //if (inGB === false) {
+    if (!location.gridref)
       if (this.marker instanceof L.CircleMarker) {
         this.marker.setLocation(location);
       } else {
@@ -94,7 +96,7 @@ const marker = {
     const location = {
       latitude: parseFloat(e.latlng.lat.toFixed(7)),
       longitude: parseFloat(e.latlng.lng.toFixed(7)),
-      accuracy: 1, // placeholder absolute accuracy, needed for inUK
+      accuracy: 1, // placeholder absolute accuracy, needed for inGB
       source: 'map',
     };
 
@@ -118,7 +120,7 @@ const marker = {
       mapZoom += OS_ZOOM_DIFF; // adjust the diff
     }
 
-    location.accuracy = LocHelp.mapZoom2meters(normalisedZoom);
+    location.accuracy = LocHelp.mapZoomToMetreRadius(normalisedZoom);
     location.mapZoom = mapZoom;
     
     location.gridref = LocHelp.locationLatLngToGridString(location);
@@ -188,7 +190,7 @@ const marker = {
   _setSquareLocation(location) {
     // normalize GR square center
     //const grid = LocHelp.locationLatLngToGridString(location);
-    //const normalizedLocation = LocHelp.grid2coord(grid);
+    //const normalizedLocation = LocHelp.gridrefStringToLatLng(grid);
     
     //parsedRef = GridRefUtils.GridRefParser.factory();
 

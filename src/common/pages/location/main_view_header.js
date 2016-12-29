@@ -37,7 +37,7 @@ const headerFunctions = {
         // Clear previous timeout
         this._clearGrTimeout();
 
-        if (gr === '' || LocHelp.grid2coord(gr)) {
+        if (gr === '' || LocHelp.gridrefStringToLatLng(gr)) {
           // gr syntax ok (or blank)
 
           this._refreshGrErrorState(false);

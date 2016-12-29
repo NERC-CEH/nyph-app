@@ -5,7 +5,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 import Backbone from 'backbone';
 import Morel from 'morel';
-import { Log, Validate, StringHelp, LocHelp } from 'helpers';
+import { Log, Validate, StringHelp, LocHelp, GridRefUtils } from 'helpers';
 import App from 'app';
 import recordManager from '../../record_manager';
 import appModel from '../../models/app_model';
@@ -155,48 +155,81 @@ const API = {
      * @param {string} gridRefString
      * @returns {{}}
      */
-    function validate(gridRefString) {
-      const errors = {};
-      gridRefString = gridRefString.replace(/\s/g, '').toUpperCase();
-      if (!LocHelp.grid2coord(gridRefString)) {
-        errors.gridref = 'invalid';
+    //function validate(gridRefString) {
+    //  const errors = {};
+    //  gridRefString = gridRefString.replace(/\s/g, '').toUpperCase();
+    //  if (!LocHelp.gridrefStringToLatLng(gridRefString)) {
+    //    errors.gridref = 'invalid';
+    //  }
+    //
+    //  if (!_.isEmpty(errors)) {
+    //    return errors;
+    //  }
+    //
+    //  return null;
+    //}
+
+    //const validationError = validate(gridRefString);
+    
+    gridRefString = gridRefString.replace(/\s/g, '').toUpperCase();
+    
+    if (gridRefString !== '') {
+      var parsedGridRef = GridRefUtils.GridRefParser.factory(gridRefString);
+      
+      if (parsedGridRef) {
+        const location = recordModel.get('location') || {};
+        const latLng = parsedGridRef.osRef.to_latLng();
+        
+        location.source = 'gridref';
+        location.gridref = parsedGridRef.preciseGridRef;
+        location.latitude = latLng.lat;
+        location.longitude = latLng.lng;
+        location.accuracy = parsedGridRef.length / 2; // radius rather than square dimension
+        
+        API.onLocationSelect(recordModel, location);
+      } else {
+        App.trigger('gridref:form:data:invalid', {
+          gridref: 'invalid'
+        });
       }
-
-      if (!_.isEmpty(errors)) {
-        return errors;
-      }
-
-      return null;
-    }
-
-    const validationError = validate(gridRefString);
-    if (!validationError) {
-      App.trigger('gridref:form:data:invalid', {}); // update form
-      const latLon = LocHelp.grid2coord(gridRefString);
-
-      const location = recordModel.get('location') || {};
-      // location.name = StringHelp.escape(name);
-      // recordModel.set('location', location);
-      // recordModel.trigger('change:location');
-
-      location.source = 'gridref';
-      location.gridref = gridRefString;
-      location.latitude = parseFloat(latLon.lat.toFixed(8));
-      location.longitude = parseFloat(latLon.lon.toFixed(8));
-
-      // -2 because of gridref letters, 2 because this is min precision
-      // @todo Irish GR issue
-      // @todo tetrad issue
-      // const accuracy = (gridRefString.replace(/\s/g, '').length - 2) || 2;
-      const grSquareDimension = Math.pow(10, 5 - ((gridRefString.replace(/\s/g, '').length - 2) / 2));
-
-      location.accuracy = grSquareDimension / 2; // accauracy is radius, so for sqaures use half dimension
-
-      API.onLocationSelect(recordModel, location);
-      // API.exit();
     } else {
-      App.trigger('gridref:form:data:invalid', validationError);
+      const location = recordModel.get('location') || {};
+      location.source = null; // unsure what this should be
+      location.gridref = '';
+      location.latitude = null;
+      location.longitude = null;
+      location.accuracy = null;
+      
+      API.onLocationSelect(recordModel, location);
     }
+    
+    //if (!validationError) {
+    //  App.trigger('gridref:form:data:invalid', {}); // update form
+    //  const latLon = LocHelp.gridrefStringToLatLng(gridRefString);
+    //
+    //  const location = recordModel.get('location') || {};
+    //  // location.name = StringHelp.escape(name);
+    //  // recordModel.set('location', location);
+    //  // recordModel.trigger('change:location');
+    //
+    //  location.source = 'gridref';
+    //  location.gridref = gridRefString;
+    //  location.latitude = parseFloat(latLon.lat.toFixed(8));
+    //  location.longitude = parseFloat(latLon.lng.toFixed(8));
+    //
+    //  // -2 because of gridref letters, 2 because this is min precision
+    //  // @todo Irish GR issue
+    //  // @todo tetrad issue
+    //  // const accuracy = (gridRefString.replace(/\s/g, '').length - 2) || 2;
+    //  const grSquareDimension = Math.pow(10, 5 - ((gridRefString.replace(/\s/g, '').length - 2) / 2));
+    //
+    //  location.accuracy = grSquareDimension / 2; // accauracy is radius, so for sqaures use half dimension
+    //
+    //  API.onLocationSelect(recordModel, location);
+    //  // API.exit();
+    //} else {
+    //  App.trigger('gridref:form:data:invalid', validationError);
+    //}
   },
 
   onLocationSelect(recordModel, loc, createNew) {

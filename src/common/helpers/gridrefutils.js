@@ -2195,7 +2195,7 @@ BsbiDb.GridRefParserCI.gridref_string_to_e_n_l = function(gridRef) {
  * @param {number} lng
  * @returns {NationalGridCoords}
  */
-BsbiDb.latlng_to_gridref = function(lat, lng) {
+BsbiDb.latlng_to_grid_coords = function(lat, lng) {
 	// test if GB
 	if (lng >= -8.74 && lat > 49.88) {
 		// lng extreme must accomodate St Kilda

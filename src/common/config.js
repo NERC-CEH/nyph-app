@@ -76,7 +76,7 @@ export default {
           let accuracy = location.accuracy;
           //if (location.source !== 'gps') {
           //  if (location.source === 'map') {
-          //    accuracy = LocHelp.mapZoom2meters(location.accuracy);
+          //    accuracy = LocHelp.mapZoomToMetreRadius(location.accuracy);
           //  } else {
           //    accuracy = null;
           //  }
@@ -88,8 +88,17 @@ export default {
             location_altitude: location.altitude,
             location_altitude_accuracy: location.altitudeAccuracy,
             location_accuracy: accuracy,
-            location_type: location.gridref ? 'OSGB' : 4326, // this should eventually also accomodate Irish gridrefs
+            //location_type: location.gridref ? 'OSGB' : 4326, // this should eventually also accomodate Irish gridrefs
           };
+          
+          if (location.gridref) {
+              // send GB and Channel Island refs as 'OSGB'; Irish as 'OSIE'
+              
+              attributes.location_type = (/^.\d/.test(location.gridref)) ?
+                'OSIE' : 'OSGB';
+          } else {
+              attributes.location_type = 4326;
+          }
 
           // add other location related attributes
           options.flattener(attributes, options);

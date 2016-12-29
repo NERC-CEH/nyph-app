@@ -20,13 +20,13 @@ const helpers = {
     //return grid.toString(locationGranularity).replace(/\s/g, '');
     
     var normalisedPrecision = GridRefUtils.GridRefParser.get_normalized_precision(location.accuracy);
-    var nationaGridCoords = GridRefUtils.latlng_to_gridref(location.latitude, location.longitude);
+    var nationaGridCoords = GridRefUtils.latlng_to_grid_coords(location.latitude, location.longitude);
     return nationaGridCoords.to_gridref(normalisedPrecision);
   },
   
   /**
    * 
-   * @param {type} location
+   * @param {object} location
    * @returns {Array} latlng pairs (SW, SE, NE, NW)
    */
   getSquareBounds(location) {
@@ -100,12 +100,25 @@ const helpers = {
     
   },
 
-  grid2coord(gridrefString) {
+/**
+ * 
+ * @param {string} gridrefString
+ * @returns {unresolved}
+ */
+  gridrefStringToLatLng(gridrefString) {
     try {
-      const gridref = helpers.parseGrid(gridrefString);
-      if (!isNaN(gridref.easting) && !isNaN(gridref.northing)) {
-        return OsGridRef.osGridToLatLon(gridref, LatLon.datum.WGS84);
+      const parsedRef = GridRefUtils.GridRefParser.factory(gridrefString);
+      
+      if (parsedRef) {
+        return parsedRef.osRef.to_latLng();
+      } else {
+        return null;
       }
+      
+      //const gridref = helpers.parseGrid(gridrefString);
+      //if (!isNaN(gridref.easting) && !isNaN(gridref.northing)) {
+      //  return OsGridRef.osGridToLatLon(gridref, LatLon.datum.WGS84);
+      //}
     } catch(e) {
       // recent versions of the geodesy library throw exceptions for bad gridrefs
       Log(e.message);
@@ -120,23 +133,27 @@ const helpers = {
    * 3 gridref digits. (100m)    -> 10
    * 4 gridref digits. (10m)     -> 12
    * 5 gridref digits. (1m)      ->
+   * 
+   * @return {int} radius in metres
    */
-  mapZoom2meters(accuracy) {
-    let updated = accuracy;
-    if (updated <= 4) {
-      updated = 0;
-    } else if (updated <= 7) {
-      updated = 1;
-    } else if (updated <= 10) {
-      updated = 2;
-    } else if (updated <= 12) {
-      updated = 3;
+  mapZoomToMetreRadius(zoom) {
+    var scale;
+    if (zoom <= 4) {
+      scale = 0;
+    } else if (zoom <= 5) {
+      return 1000; // tetrad (radius is 1000m)
+    } else if (zoom <= 7) {
+      scale = 1;
+    } else if (zoom <= 10) {
+      scale = 2;
+    } else if (zoom <= 12) {
+      scale = 3;
     } else {
-      updated = 4;
+      scale = 4;
     }
 
-    updated = 5000 / Math.pow(10, updated); // meters
-    return updated < 1 ? 1 : updated;
+    scale = 5000 / Math.pow(10, scale); // meters
+    return scale < 1 ? 1 : scale;
   },
 
   /**
@@ -145,6 +162,8 @@ const helpers = {
    * 3 gridref digits. (100m)
    * 4 gridref digits. (10m)
    * 5 gridref digits. (1m)
+   * 
+   * @deprecated
    */
   _getGRgranularity(location) {
     let locationGranularity;
@@ -175,7 +194,7 @@ const helpers = {
   isInGB(location) {
     if (location.latitude) {
 
-      var nationaGridCoords = GridRefUtils.latlng_to_gridref(location.latitude, location.longitude); 
+      var nationaGridCoords = GridRefUtils.latlng_to_grid_coords(location.latitude, location.longitude); 
       return nationaGridCoords && nationaGridCoords.country === 'GB';
     } else {
       return false;
