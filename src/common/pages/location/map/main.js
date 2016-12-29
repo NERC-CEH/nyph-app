@@ -117,10 +117,10 @@ const mapFunctions = {
     let layer = DEFAULT_LAYER;
     const zoom = this._getZoomLevel();
     const currentLocation = this._getCurrentLocation();
-    const inUK = LocHelp.isInUK(currentLocation);
+    const inGB = LocHelp.isInGB(currentLocation);
     if (zoom > MAX_OS_ZOOM - 1) {
       layer = 'Satellite';
-    } else if (inUK === false) {
+    } else if (inGB === false) {
       this.currentLayerControlSelected = true;
       layer = 'Satellite';
     }
@@ -299,7 +299,7 @@ const mapFunctions = {
     Log('Location:MainView:Map: executing onMapZoom.');
 
     const zoom = this.map.getZoom();
-    const inUK = LocHelp.isInUK(this._getCurrentLocation());
+    const inGB = LocHelp.isInGB(this._getCurrentLocation());
 
     // -2 and not -1 because we ignore the last OS zoom level
     if (zoom > MAX_OS_ZOOM - 1 && this.currentLayer === 'OS') {
@@ -308,7 +308,7 @@ const mapFunctions = {
     } else if ((zoom - OS_ZOOM_DIFF) <= MAX_OS_ZOOM - 1 && this.currentLayer === 'Satellite') {
       // only change base layer if user is on OS and did not specificly
       // select OSM/Satellite
-      if (!this.currentLayerControlSelected && inUK !== false) {
+      if (!this.currentLayerControlSelected && inGB !== false) {
         this.map.removeLayer(this.layers.Satellite);
         this.map.addLayer(this.layers.OS);
       }

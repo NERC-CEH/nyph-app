@@ -3,18 +3,36 @@
  *****************************************************************************/
 import { LatLonEllipsoidal as LatLon, OsGridRef } from 'geodesy';
 import Log from './log';
+import GridRefUtils from './gridrefutils';
 
 const helpers = {
-  coord2grid(location) {
-    const locationGranularity = helpers._getGRgranularity(location);
+  /**
+   * 
+   * @param {type} location
+   * @returns {string}
+   */
+  locationLatLngToGridString(location) {
+    //const locationGranularity = helpers._getGRgranularity(location);
 
-    const p = new LatLon(location.latitude, location.longitude, LatLon.datum.WGS84);
-    const grid = OsGridRef.latLonToOsGrid(p);
+    //const p = new LatLon(location.latitude, location.longitude, LatLon.datum.WGS84);
+    //const grid = OsGridRef.latLonToOsGrid(p);
 
-    return grid.toString(locationGranularity).replace(/\s/g, '');
+    //return grid.toString(locationGranularity).replace(/\s/g, '');
+    
+    var normalisedPrecision = GridRefUtils.GridRefParser.get_normalized_precision(location.accuracy);
+    var nationaGridCoords = GridRefUtils.latlng_to_gridref(location.latitude, location.longitude);
+    return nationaGridCoords.to_gridref(normalisedPrecision);
   },
 
+  /**
+   * 
+   * @param {string} gridrefString
+   * @returns {GridRefUtils.OSRef|null} SW corner of grid square
+   */
   parseGrid(gridrefString) {
+    var parser = GridRefUtils.GridRefParser.factory(gridrefString);
+    return parser ? parser.osRef : null;
+    
     /**
      * given co-ordinates of SW corner return new OsGridRef of mid-point
      *
@@ -22,6 +40,7 @@ const helpers = {
      * @param {OsGridRef} osCoords
      * @returns {OsGridRef}
      */
+    /*
     function osgbMidPoint(gridRef, osCoords) {
       const parts = gridRef.replace(' ', '').match(/^[A-Z]{1,2}((?:\d\d)+)$/i);
 
@@ -43,15 +62,16 @@ const helpers = {
         return new OsGridRef(NaN, NaN);
       }
     }
-
+   
     /*
      * 
      * @type OsGridRef
      */
-    let osCoords = OsGridRef.parse(gridrefString);
-    osCoords = osgbMidPoint(gridrefString, osCoords);
+    //let osCoords = OsGridRef.parse(gridrefString);
+    //osCoords = osgbMidPoint(gridrefString, osCoords);
 
-    return osCoords;
+    //return osCoords;
+    
   },
 
   grid2coord(gridrefString) {
@@ -102,17 +122,6 @@ const helpers = {
    */
   _getGRgranularity(location) {
     let locationGranularity;
-    //let accuracy = location.accuracy;
-
-    // don't need to recalculate if exists
-    //if (location.source === 'gridref') {
-    //  return accuracy;
-    //}
-
-    // normalize to metres
-    //if (location.source === 'map') {
-    //  accuracy = helpers.mapZoom2meters(accuracy);
-    //}
 
     // calculate granularity
     const digits = Math.log(location.accuracy * 2) / Math.LN10;
@@ -137,17 +146,14 @@ const helpers = {
     return locationGranularity;
   },
 
-  isInUK(location) {
-    if (!location.latitude) return null;
+  isInGB(location) {
+    if (location.latitude) {
 
-    let gridref = location.gridref;
-    if (!gridref) {
-      gridref = helpers.coord2grid(location);
+      var nationaGridCoords = GridRefUtils.latlng_to_gridref(location.latitude, location.longitude); 
+      return nationaGridCoords && nationaGridCoords.country === 'GB';
+    } else {
+      return false;
     }
-
-    if (gridref) return true;
-
-    return false;
   },
 };
 

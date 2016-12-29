@@ -1,4 +1,4 @@
-import { LocHelp, Log } from 'helpers';
+import { LocHelp, Log, GridRefUtils } from 'helpers';
 import L from 'leaflet';
 import { OsGridRef } from 'geodesy';
 import './leaflet_singleclick_ext';
@@ -20,14 +20,14 @@ const marker = {
     if (!location.latitude) return;
     Log('Common:Location:Map view: updating map marker');
 
-    const inUK = LocHelp.isInUK(location);
+    const inGB = LocHelp.isInGB(location);
 
     // prepare marker coordinates
     const markerCoords = [location.latitude, location.longitude];
 
     // add the marker
     const latLng = L.latLng(markerCoords);
-    if (inUK === false) {
+    if (inGB === false) {
       if (this.marker instanceof L.CircleMarker) {
         this.marker.setLocation(location);
       } else {
@@ -95,7 +95,7 @@ const marker = {
       source: 'map',
     };
 
-    const inUK = LocHelp.isInUK(location);
+    const inGB = LocHelp.isInGB(location);
 
     // normalize the accuracy across different layer types
     let mapZoom = this.map.getZoom();
@@ -106,10 +106,10 @@ const marker = {
       normalisedZoom = normalisedZoom < 0 ? 0 : normalisedZoom; // normalize
 
       // need to downgrade to OS maps so that there is no OS -> OSM -> OS transitions
-      if (inUK && (mapZoom - OS_ZOOM_DIFF) < MAX_OS_ZOOM) {
+      if (inGB && (mapZoom - OS_ZOOM_DIFF) < MAX_OS_ZOOM) {
         mapZoom -= OS_ZOOM_DIFF; // adjust the diff
       }
-    } else if (!inUK) {
+    } else if (!inGB) {
       // out of UK adjust the zoom because the next displayed map should be not OS
       normalisedZoom += OS_ZOOM_DIFF;
       mapZoom += OS_ZOOM_DIFF; // adjust the diff
@@ -117,7 +117,8 @@ const marker = {
 
     location.accuracy = LocHelp.mapZoom2meters(normalisedZoom);
     location.mapZoom = mapZoom;
-    location.gridref = LocHelp.coord2grid(location);
+    
+    location.gridref = LocHelp.locationLatLngToGridString(location);
 
     // trigger won't work to bubble up
     this.triggerMethod('location:select:map', location);
@@ -129,31 +130,41 @@ const marker = {
     // this.onMapZoom();
   },
 
+  /**
+   * @todo revise this to use new gridref library
+   * @deprecated
+   * 
+   * @param {type} latLng
+   * @param {type} location
+   * @returns {Array} array of latlng objects SW, SE, NE, NW
+   */
   _getSquareDimensions(latLng, location) {
-    if (!latLng) return null;
+    if (latLng) {
+      // get granularity
+      //const locationGranularity = LocHelp._getGRgranularity(location) / 2;
 
-    // get granularity
-    const locationGranularity = LocHelp._getGRgranularity(location) / 2;
+      // calc radius
+      //const radius = 100000 / Math.pow(10, locationGranularity) / 2;
 
-    // calc radius
-    const radius = 100000 / Math.pow(10, locationGranularity) / 2;
+      // get center in eastings and northings
+      //const grid = LocHelp.parseGrid(location.gridref);
 
-    // get center in eastings and northings
-    const grid = LocHelp.parseGrid(location.gridref);
+      // calculate corners
+      //const southWest = new OsGridRef(grid.easting - radius, grid.northing - radius);
+      //const southEast = new OsGridRef(grid.easting + radius, grid.northing - radius);
+      //const northEast = new OsGridRef(grid.easting + radius, grid.northing + radius);
+      //const northWest = new OsGridRef(grid.easting - radius, grid.northing + radius);
 
-    // calculate corners
-    const southWest = new OsGridRef(grid.easting - radius, grid.northing - radius);
-    const southEast = new OsGridRef(grid.easting + radius, grid.northing - radius);
-    const northEast = new OsGridRef(grid.easting + radius, grid.northing + radius);
-    const northWest = new OsGridRef(grid.easting - radius, grid.northing + radius);
-
-    const dimensions = [
-      OsGridRef.osGridToLatLon(southWest),
-      OsGridRef.osGridToLatLon(southEast),
-      OsGridRef.osGridToLatLon(northEast),
-      OsGridRef.osGridToLatLon(northWest),
-    ];
-    return dimensions;
+      const dimensions = [
+        OsGridRef.osGridToLatLon(southWest),
+        OsGridRef.osGridToLatLon(southEast),
+        OsGridRef.osGridToLatLon(northEast),
+        OsGridRef.osGridToLatLon(northWest),
+      ];
+      return dimensions;
+    } else {
+      return null;
+    }
   },
 
   _setCircleLocation(loc) {
@@ -165,21 +176,41 @@ const marker = {
     return this.setLatLng(newLatLng);
   },
 
+  /**
+   * updates marker square position, given Location
+   * 
+   * @param {type} location
+   * @returns {undefined}
+   */
   _setSquareLocation(location) {
     // normalize GR square center
-    const grid = LocHelp.coord2grid(location);
-    const normalizedLocation = LocHelp.grid2coord(grid);
+    //const grid = LocHelp.coord2grid(location);
+    //const normalizedLocation = LocHelp.grid2coord(grid);
+    
+    const gridRefString = LocHelp.locationLatLngToGridString(location);
+    const parsedRef = GridRefUtils.GridRefParser.factory(gridRefString);
+    
+    const nationalGridRefSW = parsedRef.osRef;
+    
+    var squareBounds = [
+      nationalGridRefSW.to_latLng(),
+      (new nationalGridRefSW.constructor(nationalGridRefSW.x + parsedRef.length, nationalGridRefSW.y)).to_latLng(),
+      (new nationalGridRefSW.constructor(nationalGridRefSW.x + parsedRef.length, nationalGridRefSW.y + parsedRef.length)).to_latLng(),
+      (new nationalGridRefSW.constructor(nationalGridRefSW.x, nationalGridRefSW.y + parsedRef.length)).to_latLng()
+    ];
+    
+    //parsedRef = GridRefUtils.GridRefParser.factory();
 
     // get bounds
-    let newMarkerCoords = [];
-    if (normalizedLocation.lat && normalizedLocation.lon) {
-      newMarkerCoords = [normalizedLocation.lat, normalizedLocation.lon];
-    }
-    const newLatLng = L.latLng(newMarkerCoords);
-    const newDimensions = this._getSquareDimensions(newLatLng, location);
+    //let newMarkerCoords = [];
+    //if (normalizedLocation.lat && normalizedLocation.lon) {
+    //  newMarkerCoords = [normalizedLocation.lat, normalizedLocation.lon];
+    //}
+    //const newLatLng = L.latLng(newMarkerCoords);
+    //const newDimensions = this._getSquareDimensions(newLatLng, location);
 
     // update location
-    this.marker.setLatLngs(newDimensions);
+    this.marker.setLatLngs(squareBounds);
   },
 
   _removeMapMarker() {
@@ -187,7 +218,7 @@ const marker = {
       this.map.removeLayer(this.marker);
       this.marker = null;
     }
-  },
+  }
 };
 
 export default marker;
