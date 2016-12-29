@@ -1326,14 +1326,14 @@ BsbiDb.GridRefParser.prototype.preciseGridRef = '';
  * @deprecated
  * @var real
  */
-BsbiDb.GridRefParser.prototype.easting;
+//BsbiDb.GridRefParser.prototype.easting;
 
 /**
  * Northing in m
  * @deprecated
  * @var real
  */
-BsbiDb.GridRefParser.prototype.northing;
+//BsbiDb.GridRefParser.prototype.northing;
 
 /**
  * length in m (0 marks an invalid value)
@@ -1473,6 +1473,7 @@ BsbiDb.GridRefParserGB = function() {};
 BsbiDb.GridRefParserGB.prototype = new BsbiDb.GridRefParser();
 BsbiDb.GridRefParserGB.prototype.constructor = BsbiDb.GridRefParserGB;
 BsbiDb.GridRefParserGB.prototype.country = 'GB';
+BsbiDb.GridRefParserGB.prototype.NationalRef = BsbiDb.OSRef;
 
 /**
  * gridref known to have correct syntax
@@ -1848,7 +1849,8 @@ BsbiDb.GridRefParserIE = function() {};
 
 BsbiDb.GridRefParserIE.prototype = new BsbiDb.GridRefParser();
 BsbiDb.GridRefParserIE.prototype.constructor = BsbiDb.GridRefParserIE;
-BsbiDb.GridRefParserGB.prototype.country = 'IE';
+BsbiDb.GridRefParserIE.prototype.country = 'IE';
+BsbiDb.GridRefParserIE.prototype.NationalRef = BsbiDb.OSIRef;
 
 BsbiDb.GridRefParserIE.gridLetter = {
 	A: [0,4],
@@ -2051,7 +2053,8 @@ BsbiDb.GridRefParserCI = function() {};
 
 BsbiDb.GridRefParserCI.prototype = new BsbiDb.GridRefParser();
 BsbiDb.GridRefParserCI.prototype.constructor = BsbiDb.GridRefParserCI;
-BsbiDb.GridRefParserGB.prototype.country = 'CI';
+BsbiDb.GridRefParserCI.prototype.country = 'CI';
+BsbiDb.GridRefParserCI.prototype.NationalRef = BsbiDb.OSCIRef;
 
 /**
  * 

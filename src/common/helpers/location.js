@@ -31,17 +31,16 @@ const helpers = {
    */
   getSquareBounds(location) {
     if (location.latitude) {
-      const gridRefString = locationLatLngToGridString(location);
+      const gridRefString = helpers.locationLatLngToGridString(location);
       const parsedRef = GridRefUtils.GridRefParser.factory(gridRefString);
 
       if (parsedRef) {
         const nationalGridRefSW = parsedRef.osRef;
-
         return [
           nationalGridRefSW.to_latLng(),
-          (new nationalGridRefSW.constructor(nationalGridRefSW.x + parsedRef.length, nationalGridRefSW.y)).to_latLng(),
-          (new nationalGridRefSW.constructor(nationalGridRefSW.x + parsedRef.length, nationalGridRefSW.y + parsedRef.length)).to_latLng(),
-          (new nationalGridRefSW.constructor(nationalGridRefSW.x, nationalGridRefSW.y + parsedRef.length)).to_latLng()
+          (new parsedRef.NationalRef(nationalGridRefSW.x + parsedRef.length, nationalGridRefSW.y)).to_latLng(),
+          (new parsedRef.NationalRef(nationalGridRefSW.x + parsedRef.length, nationalGridRefSW.y + parsedRef.length)).to_latLng(),
+          (new parsedRef.NationalRef(nationalGridRefSW.x, nationalGridRefSW.y + parsedRef.length)).to_latLng()
         ];
       } else {
         return null;
