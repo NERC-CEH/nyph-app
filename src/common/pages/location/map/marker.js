@@ -67,7 +67,10 @@ const marker = {
         // remove previous marker
         this._removeMapMarker();
 
-        const dimensions = this._getSquareDimensions(latLng, location) ||
+        //const dimensions = this._getSquareDimensions(latLng, location) ||
+        //  [[0, 0], [0, 0]];
+      
+        const dimensions = LocHelp.getSquareBounds(location) ||
           [[0, 0], [0, 0]];
 
         // create an orange rectangle
@@ -187,18 +190,6 @@ const marker = {
     //const grid = LocHelp.locationLatLngToGridString(location);
     //const normalizedLocation = LocHelp.grid2coord(grid);
     
-    const gridRefString = LocHelp.locationLatLngToGridString(location);
-    const parsedRef = GridRefUtils.GridRefParser.factory(gridRefString);
-    
-    const nationalGridRefSW = parsedRef.osRef;
-    
-    var squareBounds = [
-      nationalGridRefSW.to_latLng(),
-      (new nationalGridRefSW.constructor(nationalGridRefSW.x + parsedRef.length, nationalGridRefSW.y)).to_latLng(),
-      (new nationalGridRefSW.constructor(nationalGridRefSW.x + parsedRef.length, nationalGridRefSW.y + parsedRef.length)).to_latLng(),
-      (new nationalGridRefSW.constructor(nationalGridRefSW.x, nationalGridRefSW.y + parsedRef.length)).to_latLng()
-    ];
-    
     //parsedRef = GridRefUtils.GridRefParser.factory();
 
     // get bounds
@@ -210,7 +201,7 @@ const marker = {
     //const newDimensions = this._getSquareDimensions(newLatLng, location);
 
     // update location
-    this.marker.setLatLngs(squareBounds);
+    this.marker.setLatLngs(LocHelp.getSquareBounds(location));
   },
 
   _removeMapMarker() {
