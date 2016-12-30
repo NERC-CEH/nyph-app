@@ -1,7 +1,10 @@
+<div class="info-message">
+  <p>Records from the New Year Plant Hunt are stored on iRecord. Please create an iRecord user account by entering your details below. Once you have registered, you will need to activate your account by clicking on the link in the email message that will have been sent to you.</p>
+</div>
 <div class="input-group form">
   <div class="input-row">
     <label class="media-object pull-left icon icon-mail"></label>
-    <input id="user-email" type="text" placeholder="Email" name="email" >
+    <input id="user-email" type="text" placeholder="Email address" name="email" >
   </div>
   <div class="input-row">
     <label class="media-object pull-left icon icon-user"></label>

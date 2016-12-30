@@ -1,9 +1,10 @@
 <div class="info-message">
-  <p>Edit details by clicking on the row. To add a photo use the camera icon.</p>
+  <p>Edit the record by clicking on the rows below. To add photos use the camera icon (bottom-left). Click the back icon (<) when you have finished.</p>
 </div>
 <ul class="table-view core inputs no-top <%- obj.isSynchronising ? 'disabled' : '' %>">
   <li class="table-view-cell">
-    <a href="#records/<%- obj.id %>/edit/taxon" id="species-button" class="navigate-right">
+    <span class="media-object pull-left icon">Species</span>
+    <a href="#records/<%- obj.id %>/edit/taxon" title="click to change the species name" id="species-button" class="navigate-right">
       <% if (obj.commonName) { %>
       <span class="media-object pull-right descript"><%- obj.commonName %></span>
       <% } %>
@@ -13,7 +14,7 @@
   <li class="table-view-cell">
     <a href="#records/<%- obj.id %>/edit/location" id="location-button"
        class="<%- obj.locks['location'] || obj.locks['location_name'] ? '' : 'navigate-right' %>">
-      <span class="media-object pull-left icon icon-location"></span>
+      <span class="media-object pull-left icon icon-location" title="click to set the place name or grid-reference"></span>
 
       <% if (obj.location_name) { %>
       <span class="media-object pull-right descript <%- obj.locks['location_name'] ? 'lock' : '' %>"><%= obj.location_name %></span>

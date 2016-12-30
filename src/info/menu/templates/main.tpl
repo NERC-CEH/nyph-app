@@ -1,3 +1,26 @@
+<li class="table-view-divider">Account</li>
+<% if (obj.surname) { %>
+<li class="table-view-cell">
+  <a id="logout-button" class="navigate-right">
+    <span class="media-object pull-left icon icon-logout"></span>
+    Logout: <%- obj.name %> <%- obj.surname %>
+  </a>
+</li>
+<% } else { %>
+<li class="table-view-cell">
+  <a href="#user/login" class="navigate-right">
+    <span class="media-object pull-left icon icon-user"></span>
+    Login to iRecord
+  </a>
+</li>
+<li class="table-view-cell">
+  <a href="#user/register" class="navigate-right">
+    <span class="media-object pull-left icon icon-user-plus"></span>
+    Register
+  </a>
+</li>
+<% } %>
+<li class="table-view-divider">Info</li>
 <li class="table-view-cell">
   <a href="#info/about" class="navigate-right">
     <span class="media-object pull-left icon icon-info"></span>
@@ -36,27 +59,3 @@
     App
   </a>
 </li>
-
-<li class="table-view-divider">Account</li>
-
-<% if (obj.surname) { %>
-<li class="table-view-cell">
-  <a id="logout-button" class="navigate-right">
-    <span class="media-object pull-left icon icon-logout"></span>
-    Logout: <%- obj.name %> <%- obj.surname %>
-  </a>
-</li>
-<% } else { %>
-<li class="table-view-cell">
-  <a href="#user/login" class="navigate-right">
-    <span class="media-object pull-left icon icon-user"></span>
-    Login
-  </a>
-</li>
-<li class="table-view-cell">
-  <a href="#user/register" class="navigate-right">
-    <span class="media-object pull-left icon icon-user-plus"></span>
-    Register
-  </a>
-</li>
-<% } %>

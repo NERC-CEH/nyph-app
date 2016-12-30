@@ -14,7 +14,7 @@ const API = {
 
     const headerView = new HeaderView({
       model: new Backbone.Model({
-        title: 'Info',
+        title: 'Menu',
       }),
     });
     App.regions.getRegion('header').show(headerView);

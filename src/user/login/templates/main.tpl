@@ -4,7 +4,7 @@
 <div class="input-group">
   <div class="input-row">
     <label class="media-object pull-left icon icon-mail"></label>
-    <input id="user-email" name="email" type="email" placeholder="Email">
+    <input id="user-email" name="email" type="email" placeholder="Email address">
   </div>
   <div class="input-row">
     <label class="media-object pull-left icon icon-key"></label>
