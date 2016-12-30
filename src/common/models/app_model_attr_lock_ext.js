@@ -59,9 +59,9 @@ export default {
         
         return locked;
       case 'recorder':
-        console.log('Testing recorder name lock for lock val:');
-        console.log(lockedVal);
-        console.log(value);
+        //console.log('Testing recorder name lock for lock val:');
+        //console.log(lockedVal);
+        //console.log(value);
         
         locked = (!value) || (value === lockedVal)
         return locked;
