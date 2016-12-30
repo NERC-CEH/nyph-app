@@ -36,6 +36,19 @@ module.exports = grunt => {
       'run',
       'webpack:dev',
     ],
+    
+    // Admin update
+    admin: [
+      'init',
+      'run',
+      'webpack:admin',
+    ],
+    
+    // Admin update
+    'admin:update': [
+      'run',
+      'webpack:admin',
+    ],
 
     // Development run
     'dev:update': [
