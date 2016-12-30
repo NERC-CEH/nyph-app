@@ -17,7 +17,7 @@
          <div class="online-status icon icon-plus spin"></div>
       <% } else { %>
          <div class="online-status icon icon-send <%- obj.onDatabase ? 'cloud' : 'local' %>">
-             <% if (obj.onDatabase) { %><div style="font-size: 50%;">not yet sent</div><% } %>
+             <% if (!obj.onDatabase) { %><div style="font-size: 50%;">not yet sent</div><% } %>
          </div>
       <% } %>
 
