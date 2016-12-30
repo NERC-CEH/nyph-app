@@ -16,7 +16,8 @@ export default Marionette.View.extend({
   },
   
   onTermsReadToggled(e) {
-    $(e.currentTarget).toggleClass('active', active);
+    let active = $(e.currentTarget).hasClass('active');
+    $(e.currentTarget).toggleClass('active', !active);
     /*
     const setting = $(e.currentTarget).data('setting');
     let active = $(e.currentTarget).hasClass('active');
