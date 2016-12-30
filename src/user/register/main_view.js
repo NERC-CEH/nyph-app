@@ -11,6 +11,25 @@ export default Marionette.View.extend({
 
   events: {
     'click #register-button': 'register',
+    'toggle #user-terms-agree': 'onTermsReadToggled',
+    'click #user-terms-agree': 'onTermsReadToggled',
+  },
+  
+  onTermsReadToggled(e) {
+    $(e.currentTarget).toggleClass('active', active);
+    /*
+    const setting = $(e.currentTarget).data('setting');
+    let active = $(e.currentTarget).hasClass('active');
+
+    if (e.type !== 'toggle' && !Device.isMobile()) {
+      // Device.isMobile() android generates both swipe and click
+
+      active = !active; // invert because it takes time to get the class
+      $(e.currentTarget).toggleClass('active', active);
+    }
+
+    this.trigger('setting:toggled', setting, active);
+    */
   },
 
   register() {
