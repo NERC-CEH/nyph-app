@@ -83,13 +83,20 @@ export default {
           //}
 
           const attributes = {
-            location_source: location.source,
+            // location_source: location.source,
             location_gridref: location.gridref,
             location_altitude: location.altitude,
             location_altitude_accuracy: location.altitudeAccuracy,
             location_accuracy: accuracy,
             //location_type: location.gridref ? 'OSGB' : 4326, // this should eventually also accomodate Irish gridrefs
           };
+          
+          if (window.nyphAdminMode) {
+              // mark that record has been entered using the website admin version of the app
+              attributes.location_source = 'transcript';
+          } else {
+              attributes.location_source = location.source;
+          }
           
           if (location.gridref) {
               // send GB and Channel Island refs as 'OSGB'; Irish as 'OSIE'

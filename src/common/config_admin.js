@@ -4,6 +4,8 @@
 import $ from 'jquery';
 import config from './config';
 
+window.nyphAdminMode = true;
+
 const newConfig = $.extend(true, config, {
   // google analytics
   ga: {
@@ -14,6 +16,8 @@ const newConfig = $.extend(true, config, {
     username: ADMIN_USERNAME,
     password: ADMIN_PASSWORD,
   },
+  
+  adminMethod: 'transcript',
 
   //log: {
   //  // use prod logging if testing otherwise full log
