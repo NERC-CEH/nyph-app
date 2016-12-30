@@ -3,9 +3,10 @@
 </div>
 <ul class="table-view core inputs no-top <%- obj.isSynchronising ? 'disabled' : '' %>">
   <li class="table-view-cell">
-    <span class="media-object pull-left icon">Species</span>
+    
     <a href="#records/<%- obj.id %>/edit/taxon" title="click to change the species name" id="species-button" class="navigate-right">
-      <% if (obj.commonName) { %>
+      <span class="media-object pull-left icon"></span><span style="margin-left: 52px">Plant name</span>
+        <% if (obj.commonName) { %>
       <span class="media-object pull-right descript"><%- obj.commonName %></span>
       <% } %>
       <span class="media-object pull-right descript"><i><%- obj.scientificName %></i></span>

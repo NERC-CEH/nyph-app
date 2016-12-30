@@ -40,10 +40,10 @@ export default {
     let locked;
     switch (attr) {
       case 'location':
-        //locked = lockedVal && lockedVal.source !== 'gps' && !!lockedVal.gridref && lockedVal.gridref === value.gridref;
+        locked = lockedVal && lockedVal.source !== 'gps' && !!lockedVal.gridref && lockedVal.gridref === value.gridref;
         
           // lock non-gps grid-refs by default
-          locked = lockedVal && lockedVal.source !== 'gps' && lockedVal.gridref === value.gridref;
+          //locked = lockedVal && lockedVal.source !== 'gps' && lockedVal.gridref === value.gridref;
         
           /*
           // map or gridref
@@ -63,8 +63,8 @@ export default {
         console.log(lockedVal);
         console.log(value);
         
-        //locked = 
-        return true;
+        locked = (!value) || (value === lockedVal)
+        return locked;
       case 'date':
         lockedVal = new Date(lockedVal);
         if (lockedVal === 'Invalid Date') return false;

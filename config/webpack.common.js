@@ -75,6 +75,8 @@ module.exports = {
       APP_VERSION: JSON.stringify(pkg.version),
       API_SECRET: JSON.stringify(process.env.API_SECRET || ''),
       API_KEY: JSON.stringify(process.env.API_KEY || ''),
+      ADMIN_USERNAME: JSON.stringify(process.env.ADMIN_USERNAME || ''),
+      ADMIN_PASSWORD: JSON.stringify(process.env.ADMIN_PASSWORD || ''),
     }),
     new CircularDependencyPlugin(),
   ],

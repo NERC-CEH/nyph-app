@@ -199,7 +199,7 @@ export default Marionette.Region.extend({
   error: function error(err = {}) {
     let options = {
       class: 'error',
-      title: 'Yikes!',
+      title: 'There\'s a problem',
       body: err.message || err,
       buttons: [{
         id: 'ok',

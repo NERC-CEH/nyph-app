@@ -8,15 +8,15 @@
 </li>
 <% } else { %>
 <li class="table-view-cell">
-  <a href="#user/login" class="navigate-right">
-    <span class="media-object pull-left icon icon-user"></span>
-    Login to iRecord
-  </a>
-</li>
-<li class="table-view-cell">
   <a href="#user/register" class="navigate-right">
     <span class="media-object pull-left icon icon-user-plus"></span>
     Register
+  </a>
+</li>
+<li class="table-view-cell">
+  <a href="#user/login" class="navigate-right">
+    <span class="media-object pull-left icon icon-user"></span>
+    Login to iRecord
   </a>
 </li>
 <% } %>

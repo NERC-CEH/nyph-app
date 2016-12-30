@@ -151,6 +151,15 @@ const API = {
           appModel.setAttrLock(attr, newVal);
         }
         break;
+        
+      case 'recorder':
+        if ((lockedValue && (lockedValue === true || lockedValue === currentVal)) ||
+            (!lockedValue && newVal)
+            ){
+          console.log('updating locked recorder to: ' + newVal);
+          appModel.setAttrLock(attr, newVal);
+        }
+        break;
       default:
         if (lockedValue && (lockedValue === true || lockedValue === currentVal)) {
           appModel.setAttrLock(attr, newVal);
