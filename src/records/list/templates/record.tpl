@@ -27,7 +27,7 @@
           <div data-attr="comment" title="edit comment" class="js-attr icon icon-comment"></div>
           <% } %>
         <% } %>
-        <div id="delete" class="delete icon icon-cancel"></div>
+        <div id="delete" title="delete record" class="delete icon icon-cancel"></div>
       </div>
 
     <% } else { %>
