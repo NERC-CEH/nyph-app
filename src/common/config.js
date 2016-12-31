@@ -38,7 +38,7 @@ export default {
   // google analytics
   ga: {
     status: true,
-    ID: 'UA-58378803-9',
+    ID: 'UA-46443495-3',
   },
 
   login: {

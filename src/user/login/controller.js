@@ -39,8 +39,16 @@ const API = {
         return;
       }
 
-      const validationError = userModel.validateLogin(data);
-      if (!validationError) {
+      if (window.nyphAdminMode) {
+        data = {
+          email: CONFIG.nyphAdmin.USERNAME,
+          password: CONFIG.nyphAdmin.PASSWORD
+        };
+      } else {
+        const validationError = userModel.validateLogin(data);
+      }
+     
+      if (window.nyphAdminMode || !validationError) {
         mainView.triggerMethod('form:data:invalid', {}); // update form
         App.regions.getRegion('dialog').showLoader();
 
@@ -49,13 +57,13 @@ const API = {
             let response = '';
             if (err.xhr.responseText && (err.xhr.responseText === 'Missing name parameter'
               || err.xhr.responseText.indexOf('Bad') >= 0)) {
-              response = 'Bad Username or Password';
+              response = 'Unrecognised or missing user name or password';
             } else if (err.thrownError && err.thrownError.indexOf('Unauthorised') >= 0) {
               response = 'Invalid password';
             } else if (err.thrownError && typeof err.thrownError === 'string') {
               response = err.thrownError;
             } else {
-              response = 'Unknown error occurred';
+              response = 'An unknown error occurred, please try again.';
             }
 
             App.regions.getRegion('dialog').error({ message: response });
@@ -68,6 +76,7 @@ const API = {
       } else {
         mainView.triggerMethod('form:data:invalid', validationError);
       }
+      
     });
 
     // FOOTER

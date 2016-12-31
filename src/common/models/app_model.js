@@ -34,10 +34,15 @@ let AppModel = Backbone.Model.extend({
     // attr lock recorder on login
     userModel.on('login logout', () => {
       if (userModel.hasLogIn()) {
-          const surname = userModel.get('surname');
-          const name = userModel.get('name');
-          const recorder = `${surname}, ${name}`;
-          this.setAttrLock('recorder', recorder);
+          if (!window.nyphAdminMode) {
+            // only set and lock recorder name for normal user
+            // and not for the generic Plant Hunt admin account
+            
+            const surname = userModel.get('surname');
+            const name = userModel.get('name');
+            const recorder = `${surname}, ${name}`;
+            this.setAttrLock('recorder', recorder);
+          }
       } else {
         this.unsetAttrLock('recorder');
       }

@@ -46,6 +46,12 @@ let Sample = Morel.Sample.extend({
     if (!attrs.location_name) {
       sample['location name'] = 'missing';
     }
+    
+    if (window.nyphAdminMode) {
+      if (!attrs.recorder) {
+        sample['recorder'] = 'missing';
+      }
+    }
 
     // date
     if (!attrs.date) {

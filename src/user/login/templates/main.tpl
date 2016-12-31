@@ -1,3 +1,8 @@
+<% if (window.nyphAdminMode) { %>
+<div class="info-message">
+  <p>Click the sign-in button below to log in using the NYPH admin account.</p>
+</div>
+<% } else { %>
 <div class="info-message">
   <p>Please sign in with your iRecord account or register.</p>
 </div>
@@ -11,8 +16,9 @@
     <input id="user-password" name="password" type="password" placeholder="Password">
   </div>
 </div>
+<% } %>
 <button id="login-button" class="btn btn-narrow btn-positive btn-block">Sign in</button>
-
+<% if (!window.nyphAdminMode) { %>
 <ul class="table-view space-top">
   <li class="table-view-cell">
     <a href="#user/register" class="navigate-right">
@@ -28,3 +34,4 @@
     </a>
   </li>
 </ul>
+<% } %>
