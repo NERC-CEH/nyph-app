@@ -7,8 +7,19 @@ export default {
 
 // http://shebang.brandonmintern.com/foolproof-html-escaping-in-javascript/
   escape(string) {
-    const div = document.createElement('div');
-    div.appendChild(document.createTextNode(string.toString()));
-    return div.innerHTML;
+    //const div = document.createElement('div');
+    //div.appendChild(document.createTextNode(string.toString()));
+    //return div.innerHTML;
+    
+    try {
+      // IE (even v 11) sometimes fails here with 'Unknown runtime error', see http://blog.rakeshpai.me/2007/02/ies-unknown-runtime-error-when-using.html 
+      var textArea = document.createElement('textarea');
+      textArea.innerHTML = text;
+      return textArea.innerHTML.replace(/"/g, '&quot;');
+    } catch (e) {
+      var pre = document.createElement('pre');
+      pre.appendChild(document.createTextNode(text));
+      return pre.innerHTML.replace(/"/g, '&quot;');
+    }
   },
 };

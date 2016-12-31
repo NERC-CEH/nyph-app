@@ -111,7 +111,7 @@ const RecordView = Marionette.View.extend({
 
     const locationPrint = recordModel.printLocation();
     const location = recordModel.get('location') || {};
-    const location_name = recordModel.get('location_name');
+    const location_name = StringHelp.escape(recordModel.get('location_name'));
 
     // regardless of CONFIG.ENFORCE_DATE_CONSTRAINT, flag date range problems in UI
     const modelDate = new Date(recordModel.get('date'));
@@ -123,6 +123,8 @@ const RecordView = Marionette.View.extend({
       isLocating: recordModel.isGPSRunning(),
       location: locationPrint,
       location_name: location_name,
+      location_gridref: location.gridref,
+      recorder: StringHelp.escape(recordModel.get('recorder') || ''),
       isSynchronising: syncStatus === Morel.SYNCHRONISING,
       date,
       taxon,

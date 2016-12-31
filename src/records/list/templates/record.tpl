@@ -60,6 +60,9 @@
       <%  } else { %>
       <div class="location error">No location name</div>
       <% } %>
+      <% if (obj.location_gridref) { %>
+      <div class="location"><%= obj.location_gridref %></div>
+      <%  } %>
       <% } else { %>
       <% if (obj.isLocating) { %>
       <div class="location warn">Locating...</div>
@@ -68,6 +71,10 @@
       <% } else { %>
       <div class="location error">No location</div>
       <% } %>
+      <% } %>
+      
+      <% if (obj.recorder && window.nyphAdminMode) { %>
+      <div class="location"><%= obj.recorder %></div>
       <% } %>
 
       <div class="attributes">
