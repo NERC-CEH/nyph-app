@@ -5,8 +5,14 @@ export default {
     return value ? value.substring(0, charNum) + ellipsis : '';
   },
 
-// http://shebang.brandonmintern.com/foolproof-html-escaping-in-javascript/
+
+  /**
+   * 
+   * @param {string} string
+   * @returns {string}
+   */
   escape(string) {
+    // http://shebang.brandonmintern.com/foolproof-html-escaping-in-javascript/
     //const div = document.createElement('div');
     //div.appendChild(document.createTextNode(string.toString()));
     //return div.innerHTML;
@@ -14,12 +20,12 @@ export default {
     try {
       // IE (even v 11) sometimes fails here with 'Unknown runtime error', see http://blog.rakeshpai.me/2007/02/ies-unknown-runtime-error-when-using.html 
       var textArea = document.createElement('textarea');
-      textArea.innerHTML = text;
+      textArea.innerHTML = string;
       return textArea.innerHTML.replace(/"/g, '&quot;');
     } catch (e) {
       var pre = document.createElement('pre');
-      pre.appendChild(document.createTextNode(text));
+      pre.appendChild(document.createTextNode(string));
       return pre.innerHTML.replace(/"/g, '&quot;');
     }
-  },
+  }
 };
