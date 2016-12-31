@@ -41,8 +41,8 @@ const API = {
 
       if (window.nyphAdminMode) {
         data = {
-          email: CONFIG.nyphAdmin.USERNAME,
-          password: CONFIG.nyphAdmin.PASSWORD
+          email: CONFIG.nyphAdmin.username,
+          password: CONFIG.nyphAdmin.password
         };
       } else {
         const validationError = userModel.validateLogin(data);
