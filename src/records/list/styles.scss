@@ -275,6 +275,8 @@
           }
 
           .date,
+          .gridref,
+          .recorder,
           .location {
             float: left;
             font-size: 12px;
@@ -290,7 +292,6 @@
           }
 
           .location {
-            width: 50%;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;

@@ -61,7 +61,7 @@
       <div class="location error">No location name</div>
       <% } %>
       <% if (obj.location_gridref) { %>
-      <div class="location"><%= obj.location_gridref %></div>
+      <div class="gridref"><%= obj.location_gridref %></div>
       <%  } %>
       <% } else { %>
       <% if (obj.isLocating) { %>
@@ -74,7 +74,7 @@
       <% } %>
       
       <% if (obj.recorder && window.nyphAdminMode) { %>
-      <div class="location"><%= obj.recorder %></div>
+      <div class="recorder"><%= obj.recorder %></div>
       <% } %>
 
       <div class="attributes">
