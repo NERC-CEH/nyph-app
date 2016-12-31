@@ -20,11 +20,10 @@ const morelConfiguration = $.extend(CONFIG.morel.manager, {
 
       // training setting
       if (true) {
-        const training = false; // no more training mode
+        sample.occurrences.at(0).set('training', false); // no more training mode
       } else {
-        const training = appModel.get('useTraining');
+        sample.occurrences.at(0).set('training', appModel.get('useTraining'));
       }
-      sample.occurrences.at(0).set('training', training);
     } else {
       // don't send until the user has logged in
       return true;
