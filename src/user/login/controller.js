@@ -39,13 +39,14 @@ const API = {
         return;
       }
 
+      var validationError;
       if (window.nyphAdminMode) {
         data = {
           email: CONFIG.nyphAdmin.username,
           password: CONFIG.nyphAdmin.password
         };
       } else {
-        const validationError = userModel.validateLogin(data);
+        validationError = userModel.validateLogin(data);
       }
      
       if (window.nyphAdminMode || !validationError) {
