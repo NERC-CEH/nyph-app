@@ -69,10 +69,14 @@ const API = {
 
     // FOOTER
     App.regions.getRegion('footer').hide().empty();
+    
+    document.getElementById('main').style.zIndex = '2000';
   },
 
   exit(recordModel, locationIsLocked) {
     Log('Location:Controller: exiting.');
+    
+    document.getElementById('main').style.zIndex = 'auto';
 
     recordModel.save(null, {
       success: () => {
