@@ -101,8 +101,12 @@ export default {
           if (location.gridref) {
               // send GB and Channel Island refs as 'OSGB'; Irish as 'OSIE'
               
-              attributes.location_type = (/^.\d/.test(location.gridref)) ?
-                'OSIE' : 'OSGB';
+              if (/^(?:WA|WV)/i.test(location.gridref)) {
+                attributes.location_type = 'utm30ed50';
+              } else {
+                attributes.location_type = (/^.\d/.test(location.gridref)) ?
+                  'OSIE' : 'OSGB';
+              }
           } else {
               attributes.location_type = 4326;
           }
